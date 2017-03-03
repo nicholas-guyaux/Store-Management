@@ -6,11 +6,23 @@ import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 
+import database_console.DBConnect;
 import controller.MainScreen;
 import controller.CheckoutScreen;
 import controller.InventoryScreen;
@@ -30,7 +42,9 @@ public class MainFrame implements ActionListener {
 	
 	static JPanel containerPanel = new JPanel(new GridBagLayout() );
 	
-	private MainFrame()
+	public ArrayList<Product> allProducts = null;
+	
+	private MainFrame() throws ClassNotFoundException, SQLException
 	{
 		mainScreen.CheckoutButton.addActionListener(this);
 		mainScreen.InventoryButton.addActionListener(this);
@@ -41,12 +55,13 @@ public class MainFrame implements ActionListener {
 		paymentScreen.cashButton.addActionListener(this);
 		paymentScreen.creditButton.addActionListener(this);
 		paymentScreen.cancelButton.addActionListener(this);
-		
+		inventoryScreen.cancelButton.addActionListener(this);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setBounds(0,0,screenSize.width, screenSize.height);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		showMainScreen();
+		initProductList();
 		frame.setVisible(true);
 	};
 	
@@ -91,9 +106,61 @@ public class MainFrame implements ActionListener {
 		frame.repaint();
 	}
 	
+	public void getAllProduct() throws SQLException, ClassNotFoundException {
+	    Connection conn = DBConnect.getDBConnection();
+	    PreparedStatement stm = conn.prepareStatement("select * from products");
+	    ResultSet rst = stm.executeQuery();
+	    ArrayList<Product> productList = new ArrayList<>();
+	    while(rst.next())
+		{
+			Product product = new Product();
+			product.setProductID(rst.getInt("productID"));
+			product.setDescription(rst.getString("description"));
+			product.setPrice(rst.getFloat("price"));
+			product.setQuantity(rst.getInt("quantity"));
+			product.setExpDate(rst.getDate("expDate"));
+			product.setSupplierID(rst.getInt("supplierID"));
+		}
+	    this.allProducts = productList;
+	}
+	
+	public void initProductList() throws ClassNotFoundException, SQLException
+	{
+		getAllProduct();
+		  String col [] = {"ProductID", "Description", "Price", "Quantity", "ExpDate", "SupplierID"};
+		  
+		  DefaultTableModel tableModel = new DefaultTableModel(col,0);
+		  
+		  
+		  
+		
+		for(int i =0; i < allProducts.size(); i++)
+		  {
+			  int prodID = allProducts.get(i).getProductID();
+			  String desc = allProducts.get(i).getDescription();
+			  float price = allProducts.get(i).getPrice();
+			  int quant = allProducts.get(i).getQuantity();
+			  Date exp = allProducts.get(i).getExpDate();
+			  int supID = allProducts.get(i).getSupplierID();
+			  
+			  Object[] data = {prodID, desc, price, quant, exp, supID};
+			  tableModel.addRow(data);
+		  }
+		
+		JTable table = new JTable(tableModel);
+		inventoryScreen.setScrollPane(table);
+			
+		  
+	}
+	
 	public static void main (String[] args){ 
 		
-		new MainFrame();
+		try {
+			new MainFrame();
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 			
 	}
 
@@ -114,11 +181,11 @@ public class MainFrame implements ActionListener {
         }
         else if ("Add Item".equals(command)) {
             // do something
-        	checkoutScreen.addItem();
+        	//checkoutScreen.addItem();
         }
         else if ("Remove Item".equals(command)) {
             // do something
-        	checkoutScreen.removeItem();
+        	//checkoutScreen.removeItem();
         }
         else if ("Finish and Pay".equals(command)) {
             // do something
@@ -129,7 +196,8 @@ public class MainFrame implements ActionListener {
             // do something
         	showMainScreen();
         }
-        else if ("Update Inventory".equals(command)) {
+       
+        else if ("Cancel Payment".equals(command)) {
             // do something
         	showCheckoutScreen();
         }

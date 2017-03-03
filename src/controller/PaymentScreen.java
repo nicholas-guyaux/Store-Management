@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -16,11 +17,14 @@ public class PaymentScreen  extends JPanel {
 	
 	public JButton creditButton = new JButton("Credit");
 	
-	public JButton cancelButton = new JButton("Cancel");
+	public JButton cancelButton = new JButton("Cancel Payment");
 	
 	private float total = 0;
 	
 	public PaymentScreen() {
+		
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		
 		cashButton.setMaximumSize(new Dimension(800, 500));
 		cashButton.setFont(new Font("Arial", Font.BOLD, 90));
 		  add(cashButton);

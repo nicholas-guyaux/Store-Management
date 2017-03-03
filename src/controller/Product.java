@@ -9,6 +9,7 @@ public class Product {
 	private int quantity;
 	private float price;
 	private Date expDate;
+	private int supplierID;
 	
 	public LocalDate localDate = LocalDate.now();
 	
@@ -51,6 +52,13 @@ public class Product {
 	}
 	public void setExpDate(Date expDate) {
 		this.expDate = expDate;
+	}
+	
+	public int getSupplierID() {
+		return supplierID;
+	}
+	public void setSupplierID(int supplierID) {
+		this.supplierID = supplierID;
 	}
 
 }
