@@ -35,6 +35,10 @@ public class InventoryScreen  extends JPanel {
 		this.spTable = new JScrollPane(table);
 		initInventoryScreen();
 	}
+	public void setTable(JTable table)
+	{
+		this.tab = table;
+	}
 	
 	
 	public void initInventoryScreen()

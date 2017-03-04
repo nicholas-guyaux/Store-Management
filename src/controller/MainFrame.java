@@ -114,12 +114,13 @@ public class MainFrame implements ActionListener {
 	    while(rst.next())
 		{
 			Product product = new Product();
-			product.setProductID(rst.getInt("productID"));
-			product.setDescription(rst.getString("description"));
-			product.setPrice(rst.getFloat("price"));
-			product.setQuantity(rst.getInt("quantity"));
-			product.setExpDate(rst.getDate("expDate"));
-			product.setSupplierID(rst.getInt("supplierID"));
+			product.setProductID(rst.getInt("ProductID"));
+			product.setDescription(rst.getString("Description"));
+			product.setPrice(rst.getFloat("Price"));
+			product.setQuantity(rst.getInt("Quantity"));
+			product.setExpDate(rst.getDate("ExpDate"));
+			product.setSupplierID(rst.getInt("SupplierID"));
+			productList.add(product);
 		}
 	    this.allProducts = productList;
 	}
@@ -148,6 +149,7 @@ public class MainFrame implements ActionListener {
 		  }
 		
 		JTable table = new JTable(tableModel);
+		inventoryScreen.setTable(table);
 		inventoryScreen.setScrollPane(table);
 			
 		  
