@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 
 public class InventoryScreen  extends JPanel {
@@ -26,7 +27,9 @@ public class InventoryScreen  extends JPanel {
 	
 	public JPanel rightSide = new JPanel();
 	
-	public JTable tab = new JTable();
+	public DefaultTableModel tableModel;
+	
+	public JTable tab = new JTable(tableModel);
 	
 	public JScrollPane spTable = new JScrollPane(tab);
 	
@@ -35,9 +38,16 @@ public class InventoryScreen  extends JPanel {
 		this.spTable = new JScrollPane(table);
 		initInventoryScreen();
 	}
-	public void setTable(JTable table)
+	public void setTable(DefaultTableModel tableModel)
 	{
-		this.tab = table;
+		this.tableModel = tableModel;
+		this.tab = new JTable(tableModel);
+		setScrollPane(tab);
+	}
+	
+	public void addProductRow()
+	{
+		tableModel.addRow(new Object[]{});
 	}
 	
 	
@@ -51,31 +61,31 @@ public class InventoryScreen  extends JPanel {
 		
 		rightSide.setLayout(new BoxLayout(rightSide, BoxLayout.Y_AXIS));
 		
-		  addProductButton.setMaximumSize(new Dimension(800, 500));
-		  addProductButton.setFont(new Font("Arial", Font.BOLD, 90));
-		  rightSide.add(addProductButton);
+		addProductButton.setMaximumSize(new Dimension(800, 500));
+		addProductButton.setFont(new Font("Arial", Font.BOLD, 90));
+		rightSide.add(addProductButton);
 
-		  rightSide.add(Box.createVerticalStrut(30));
+		rightSide.add(Box.createVerticalStrut(30));
 		  
-		  editProductButton.setMaximumSize(new Dimension(800, 500));
-		  editProductButton.setFont(new Font("Arial", Font.BOLD, 90));
-		  rightSide.add(editProductButton);
+		editProductButton.setMaximumSize(new Dimension(800, 500));
+		editProductButton.setFont(new Font("Arial", Font.BOLD, 90));
+		rightSide.add(editProductButton);
 		  
-		  rightSide.add(Box.createVerticalStrut(30));
+		rightSide.add(Box.createVerticalStrut(30));
 		  
-		  updateButton.setMaximumSize(new Dimension(800, 500));
-		  updateButton.setFont(new Font("Arial", Font.BOLD, 90));
-		  rightSide.add(updateButton);
+		updateButton.setMaximumSize(new Dimension(800, 500));
+		updateButton.setFont(new Font("Arial", Font.BOLD, 90));
+		rightSide.add(updateButton);
 		  
-		  rightSide.add(Box.createVerticalStrut(30));
+		rightSide.add(Box.createVerticalStrut(30));
 		  
-		  cancelButton.setMaximumSize(new Dimension(800, 500));
-		  cancelButton.setFont(new Font("Arial", Font.BOLD, 90));
-		  rightSide.add(cancelButton);
+		cancelButton.setMaximumSize(new Dimension(800, 500));
+		cancelButton.setFont(new Font("Arial", Font.BOLD, 90));
+		rightSide.add(cancelButton);
 		  
-		  JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSide, rightSide);
+		JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSide, rightSide);
 		  
-		  add(pane);
+		add(pane);
 	}
 	
 	public InventoryScreen() {
