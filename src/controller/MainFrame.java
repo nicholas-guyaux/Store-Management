@@ -24,11 +24,12 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import database_console.DBConnect;
-import controller.MainScreen;
-import controller.CheckoutScreen;
-import controller.InventoryScreen;
-import controller.PaymentScreen;
+import model.DBConnect;
+import model.Product;
+import view.CheckoutScreen;
+import view.InventoryScreen;
+import view.MainScreen;
+import view.PaymentScreen;
 
 public class MainFrame implements ActionListener {
 	

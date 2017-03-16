@@ -1,4 +1,4 @@
-package database_console;
+package model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

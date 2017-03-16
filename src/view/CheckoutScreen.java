@@ -1,4 +1,4 @@
-package controller;
+package view;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -6,6 +6,7 @@ import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -16,6 +17,12 @@ import javax.swing.table.DefaultTableModel;
 public class CheckoutScreen  extends JPanel {
 	
 	public JPanel leftSide = new JPanel();
+	
+	public JLabel taxAmount;
+	
+	public JLabel subtotalAmount;
+	
+	public JLabel totalAmount;
 	
 	public JPanel rightSide = new JPanel();
 	
@@ -34,10 +41,61 @@ public class CheckoutScreen  extends JPanel {
 	public JButton CancelButton = new JButton("Cancel");
 	 
 	private float total = 0;
+	
+	private float tax = 0;
+	
+	public void updateSubTotalLabel()
+	{
+		subtotalAmount = new JLabel("Subtotal: $" + String.format("%.2f", getTotal()));
+	}
+	
+	public void updateTotalLabel()
+	{
+		totalAmount = new JLabel("Total: $" + String.format("%.2f", (getTotal()+getTax())));
+	}
+	
+	public void updateTaxLabel()
+	{
+		subtotalAmount = new JLabel("Tax: $" + String.format("%.2f", getTax()));
+	}
 	 
 	public CheckoutScreen() {
 		
+		updateCheckout();
+		
+	
+	}
+	
+	
+	public void updateCheckout()
+	{
+		leftSide.removeAll();
+		rightSide.removeAll();
+		this.removeAll();
+		
+		updateSubTotalLabel();
+		updateTaxLabel();
+		updateTotalLabel();
+		
+		leftSide.setLayout(new BoxLayout(leftSide, BoxLayout.Y_AXIS));
+		
 		leftSide.add(spTable);
+		
+		leftSide.add(Box.createVerticalStrut(30));
+		
+		subtotalAmount.setFont(new Font("Arial", Font.BOLD, 30));
+		leftSide.add(subtotalAmount);
+		
+		leftSide.add(Box.createVerticalStrut(20));
+		
+		taxAmount.setFont(new Font("Arial", Font.BOLD, 30));
+		leftSide.add(taxAmount);
+		
+		leftSide.add(Box.createVerticalStrut(20));
+		
+		totalAmount.setFont(new Font("Arial", Font.BOLD, 50));
+		leftSide.add(totalAmount);
+		
 		
 		rightSide.setLayout(new BoxLayout(rightSide, BoxLayout.Y_AXIS));
 				 
@@ -97,6 +155,14 @@ public class CheckoutScreen  extends JPanel {
 
 	public void setTotal(float total) {
 		this.total = total;
+	}
+
+	public float getTax() {
+		return tax;
+	}
+
+	public void updateTax() {
+		this.tax = (float) (getTotal() * 0.06);
 	}
 	
 	
