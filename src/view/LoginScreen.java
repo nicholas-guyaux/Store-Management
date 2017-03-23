@@ -81,7 +81,6 @@ public class LoginScreen  extends JPanel {
 		username.setFont(new Font("Arial", Font.BOLD, 90));
 		JLabel usernameText = new JLabel("Username:");
 		usernameText.setFont(new Font("Arial", Font.BOLD, 90));
-		usernameText.setHorizontalAlignment(SwingConstants.LEFT);
 		usernameText.setAlignmentX(RIGHT_ALIGNMENT);
 		pane.add(usernameText);
 		pane.add(username);
