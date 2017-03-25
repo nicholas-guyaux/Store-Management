@@ -5,18 +5,19 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 
-public class EditAccountScreen  extends JPanel {
+public class EditAccountScreen  extends JPanel implements ActionListener {
 
 	public JLabel AccountTypeLabel = new JLabel("Account Type: Cashier");
 	
@@ -77,7 +78,8 @@ public class EditAccountScreen  extends JPanel {
 		  
 		AccountTypeEditButton.setMaximumSize(new Dimension(900, 600));
 		AccountTypeEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		AccountTypePanel.add(AccountTypeEditButton);
+		AccountTypeEditButton.addActionListener(this);
+		//AccountTypePanel.add(AccountTypeEditButton);
 		
 		
 		JPanel NamePanel = new JPanel();
@@ -92,6 +94,7 @@ public class EditAccountScreen  extends JPanel {
 		  
 		NameEditButton.setMaximumSize(new Dimension(900, 600));
 		NameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
+		NameEditButton.addActionListener(this);
 		NamePanel.add(NameEditButton);
 		
 		
@@ -107,7 +110,8 @@ public class EditAccountScreen  extends JPanel {
 		  
 		UserNameEditButton.setMaximumSize(new Dimension(900, 600));
 		UserNameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		UserNamePanel.add(UserNameEditButton);
+		UserNameEditButton.addActionListener(this);
+		//UserNamePanel.add(UserNameEditButton);
 		
 		JPanel PasswordPanel = new JPanel();
 		PasswordPanel.setLayout(new BoxLayout(PasswordPanel, BoxLayout.X_AXIS));
@@ -121,6 +125,7 @@ public class EditAccountScreen  extends JPanel {
 		  
 		PasswordEditButton.setMaximumSize(new Dimension(900, 600));
 		PasswordEditButton.setFont(new Font("Arial", Font.BOLD, 42));
+		PasswordEditButton.addActionListener(this);
 		PasswordPanel.add(PasswordEditButton);
 		
 		
@@ -148,5 +153,29 @@ public class EditAccountScreen  extends JPanel {
 		pane.add(BackButtonPanel);
 		  
 		add(pane);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == NameEditButton){
+			JOptionPane.showInputDialog(
+                this,
+                "Name:",
+                "Name Edit dialog",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                "Jordan Knudsen");
+		}
+		if(e.getSource() == PasswordEditButton){
+			JOptionPane.showInputDialog(
+                this,
+                "Password:",
+                "Password Edit dialog",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                "password");
+		}
 	}
 }
