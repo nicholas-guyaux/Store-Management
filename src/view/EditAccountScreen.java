@@ -2,9 +2,6 @@ package view;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,165 +14,159 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
-public class EditAccountScreen  extends JPanel implements ActionListener {
+public class EditAccountScreen  extends Screen {
 
-	public JLabel AccountTypeLabel = new JLabel("Account Type: Cashier");
+	public JLabel mAccountTypeLabel = new JLabel("Account Type: Cashier");
 	
-	public JLabel NameLabel = new JLabel("Name: Jordan Knudsen");
+	public JLabel mNameLabel = new JLabel("Name: Jordan Knudsen");
 	
-	public JLabel UserNameLabel = new JLabel("Username: jordan");
+	public JLabel mUserNameLabel = new JLabel("Username: jordan");
 
-	public JLabel PasswordLabel = new JLabel("Password: password");
+	public JLabel mPasswordLabel = new JLabel("Password: password");
 	
-	public JButton AccountTypeEditButton = new JButton("Edit");
+	public JButton mAccountTypeEditButton = new JButton("Edit");
 	
-	public JButton NameEditButton = new JButton("Edit");
+	public JButton mNameEditButton = new JButton("Edit");
 
-	public JButton UserNameEditButton = new JButton("Edit");
+	public JButton mUserNameEditButton = new JButton("Edit");
 	
-	public JButton PasswordEditButton = new JButton("Edit");
+	public JButton mPasswordEditButton = new JButton("Edit");
 	
-	public JButton BackButton = new JButton("Back");
+	public JButton mBackButton = new JButton("Back");
 	
 	 
-	public EditAccountScreen() {
-		createLogin();
-	}
-
-	public static void main(String[] args){
-		JFrame frame = new JFrame("Store Management");
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setBounds(0,0,screenSize.width, screenSize.height);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocationRelativeTo(null);
-
-		JPanel containerPanel = new JPanel(new GridBagLayout() );
-		
-		EditAccountScreen login = new EditAccountScreen();
-		
-		containerPanel.removeAll();
-		containerPanel.add(login, new GridBagConstraints());
-		frame.add(containerPanel);
-		frame.revalidate();
-		frame.repaint();
-		
-		frame.setVisible(true);
-	}
+	public EditAccountScreen(JFrame frame) {
+		super(frame);
 	
-	
-	public void createLogin()
-	{
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		addPanel(mainPanel);
+		
+		
 		JPanel AccountTypePanel = new JPanel();
 		AccountTypePanel.setLayout(new BoxLayout(AccountTypePanel, BoxLayout.X_AXIS));
-
-		AccountTypeLabel.setMaximumSize(new Dimension(900, 600));
-		AccountTypeLabel.setFont(new Font("Arial", Font.BOLD, 42));
-		AccountTypePanel.add(AccountTypeLabel);
+		mainPanel.add(AccountTypePanel);
+		
+		mAccountTypeLabel.setMaximumSize(new Dimension(900, 600));
+		mAccountTypeLabel.setFont(new Font("Arial", Font.BOLD, 42));
+		AccountTypePanel.add(mAccountTypeLabel);
 
 		AccountTypePanel.add(Box.createHorizontalStrut(30));
 		AccountTypePanel.add(Box.createHorizontalGlue());
 		  
-		AccountTypeEditButton.setMaximumSize(new Dimension(900, 600));
-		AccountTypeEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		AccountTypeEditButton.addActionListener(this);
+		mAccountTypeEditButton.setMaximumSize(new Dimension(900, 600));
+		mAccountTypeEditButton.setFont(new Font("Arial", Font.BOLD, 42));
+		//mAccountTypeEditButton.addActionListener(this);
 		//AccountTypePanel.add(AccountTypeEditButton);
+		
+
+		mainPanel.add(Box.createVerticalStrut(30));
 		
 		
 		JPanel NamePanel = new JPanel();
 		NamePanel.setLayout(new BoxLayout(NamePanel, BoxLayout.X_AXIS));
+		mainPanel.add(NamePanel);
 		
-		NameLabel.setMaximumSize(new Dimension(900, 600));
-		NameLabel.setFont(new Font("Arial", Font.BOLD, 42));
-		NamePanel.add(NameLabel);
+		mNameLabel.setMaximumSize(new Dimension(900, 600));
+		mNameLabel.setFont(new Font("Arial", Font.BOLD, 42));
+		NamePanel.add(mNameLabel);
 
 		NamePanel.add(Box.createHorizontalStrut(30));
 		NamePanel.add(Box.createHorizontalGlue());
 		  
-		NameEditButton.setMaximumSize(new Dimension(900, 600));
-		NameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		NameEditButton.addActionListener(this);
-		NamePanel.add(NameEditButton);
+		mNameEditButton.setMaximumSize(new Dimension(900, 600));
+		mNameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
+		mNameEditButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showInputDialog(
+		                frame,
+		                "Name:",
+		                "Name Edit dialog",
+		                JOptionPane.PLAIN_MESSAGE,
+		                null,
+		                null,
+		                "Jordan Knudsen");
+			}
+		});
+		NamePanel.add(mNameEditButton);
+		
+
+		mainPanel.add(Box.createVerticalStrut(30));
 		
 		
 		JPanel UserNamePanel = new JPanel();
 		UserNamePanel.setLayout(new BoxLayout(UserNamePanel, BoxLayout.X_AXIS));
+		mainPanel.add(UserNamePanel);
 		
-		UserNameLabel.setMaximumSize(new Dimension(900, 600));
-		UserNameLabel.setFont(new Font("Arial", Font.BOLD, 42));
-		UserNamePanel.add(UserNameLabel);
+		mUserNameLabel.setMaximumSize(new Dimension(900, 600));
+		mUserNameLabel.setFont(new Font("Arial", Font.BOLD, 42));
+		UserNamePanel.add(mUserNameLabel);
 
 		UserNamePanel.add(Box.createHorizontalStrut(30));		  
 		UserNamePanel.add(Box.createHorizontalGlue());
 		  
-		UserNameEditButton.setMaximumSize(new Dimension(900, 600));
-		UserNameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		UserNameEditButton.addActionListener(this);
+		mUserNameEditButton.setMaximumSize(new Dimension(900, 600));
+		mUserNameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
+		//mUserNameEditButton.addActionListener(this);
 		//UserNamePanel.add(UserNameEditButton);
+		
+
+		mainPanel.add(Box.createVerticalStrut(30));
+		
 		
 		JPanel PasswordPanel = new JPanel();
 		PasswordPanel.setLayout(new BoxLayout(PasswordPanel, BoxLayout.X_AXIS));
+		mainPanel.add(PasswordPanel);
 		
-		PasswordLabel.setMaximumSize(new Dimension(900, 600));
-		PasswordLabel.setFont(new Font("Arial", Font.BOLD, 42));
-		PasswordPanel.add(PasswordLabel);
+		mPasswordLabel.setMaximumSize(new Dimension(900, 600));
+		mPasswordLabel.setFont(new Font("Arial", Font.BOLD, 42));
+		PasswordPanel.add(mPasswordLabel);
 
 		PasswordPanel.add(Box.createHorizontalStrut(30));
 		PasswordPanel.add(Box.createHorizontalGlue());
 		  
-		PasswordEditButton.setMaximumSize(new Dimension(900, 600));
-		PasswordEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		PasswordEditButton.addActionListener(this);
-		PasswordPanel.add(PasswordEditButton);
+		mPasswordEditButton.setMaximumSize(new Dimension(900, 600));
+		mPasswordEditButton.setFont(new Font("Arial", Font.BOLD, 42));
+		mPasswordEditButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showInputDialog(
+		                frame,
+		                "Password:",
+		                "Password Edit dialog",
+		                JOptionPane.PLAIN_MESSAGE,
+		                null,
+		                null,
+		                "password");
+			}
+		});
+		PasswordPanel.add(mPasswordEditButton);
+		
+		
+		mainPanel.add(Box.createVerticalStrut(30));
 		
 		
 		JPanel BackButtonPanel = new JPanel();
 		BackButtonPanel.setLayout(new BoxLayout(BackButtonPanel, BoxLayout.X_AXIS));
+		mainPanel.add(BackButtonPanel);
 
 		BackButtonPanel.add(Box.createHorizontalGlue());
 		  
-		BackButton.setMaximumSize(new Dimension(900, 600));
-		BackButton.setFont(new Font("Arial", Font.BOLD, 90));
-		BackButtonPanel.add(BackButton);
-
+		mBackButton.setMaximumSize(new Dimension(900, 600));
+		mBackButton.setFont(new Font("Arial", Font.BOLD, 90));
+		mBackButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO: make authentication
+				removePanel(mainPanel);
+				new CashierScreen(frame);
+			}
+		});
+		BackButtonPanel.add(mBackButton);
 		
-		JPanel pane = new JPanel();
-		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-
-		pane.add(AccountTypePanel);
-		pane.add(Box.createVerticalStrut(30));
-		pane.add(NamePanel);
-		pane.add(Box.createVerticalStrut(30));
-		pane.add(UserNamePanel);
-		pane.add(Box.createVerticalStrut(30));
-		pane.add(PasswordPanel);
-		pane.add(Box.createVerticalStrut(30));
-		pane.add(BackButtonPanel);
-		  
-		add(pane);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == NameEditButton){
-			JOptionPane.showInputDialog(
-                this,
-                "Name:",
-                "Name Edit dialog",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                "Jordan Knudsen");
-		}
-		if(e.getSource() == PasswordEditButton){
-			JOptionPane.showInputDialog(
-                this,
-                "Password:",
-                "Password Edit dialog",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                "password");
-		}
+		
+		frame.pack();
+		frame.setVisible(true);
 	}
 }
