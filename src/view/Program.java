@@ -5,6 +5,10 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
+import model.IDataAccess;
+import model.MockDataAccess;
+
+
 public class Program {
 	public static void main(String[] args) throws ClassNotFoundException {
 		new LoginScreen(Program.getInstance().getMainFrame());
@@ -14,10 +18,10 @@ public class Program {
 
 	private JFrame mMainFrame;
 
-	//private IDataAccess mDataAccess;
+	private IDataAccess mDataAccess;
 
 	private Program() throws ClassNotFoundException {
-		//mDataAccess = new SQLiteDataAccess();
+		mDataAccess = new MockDataAccess();
 
 		mMainFrame = new JFrame("Mr Smith's shop");
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -35,7 +39,7 @@ public class Program {
 		return mMainFrame;
 	}
 
-	//public IDataAccess getDataAccess() {
-	//	return mDataAccess;
-	//}
+	public IDataAccess getDataAccess() {
+		return mDataAccess;
+	}
 }

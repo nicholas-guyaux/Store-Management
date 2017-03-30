@@ -10,6 +10,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -62,6 +63,13 @@ public class CashierScreen  extends Screen {
 		 
 		mCheckoutButton.setMaximumSize(new Dimension(900, 600));
 		mCheckoutButton.setFont(new Font("Arial", Font.BOLD, 90));
+		mCheckoutButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removePanel(mainPanel);
+				new CheckoutScreen(frame,null,false);
+			}
+		});
 		mBottom.add(mCheckoutButton);
 
 		  

@@ -5,125 +5,141 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 
-public class ManagerScreen  extends JPanel {
-	
-	public JPanel bottom = new JPanel();
+public class ManagerScreen  extends Screen {
 
-	public JButton LogOutButton = new JButton("Logout");
+	public JButton mLogOutButton = new JButton("Logout");
 	
-	public JButton CheckoutButton = new JButton("Checkout");
+	public JButton mCheckoutButton = new JButton("Checkout");
 
-	public JButton EditAccountButton = new JButton("Edit Account");
+	public JButton mEditAccountButton = new JButton("Edit Account");
 	
-	public JButton InventoryButton = new JButton("Inventory");
+	public JButton mInventoryButton = new JButton("Inventory");
 	
-	public JButton ReturnsButton = new JButton("Returns");
+	public JButton mReturnsButton = new JButton("Returns");
 	
-	public JButton EditAccountsButton = new JButton("Edit Accounts");
+	public JButton mEditAccountsButton = new JButton("Edit Accounts");
 	
 	 
-	public ManagerScreen() {
-		createLogin();
-	}
-
-	public static void main(String[] args){
-		JFrame frame = new JFrame("Store Management");
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setBounds(0,0,screenSize.width, screenSize.height);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocationRelativeTo(null);
-
-		JPanel containerPanel = new JPanel(new GridBagLayout() );
-		
-		ManagerScreen login = new ManagerScreen();
-		
-		containerPanel.removeAll();
-		containerPanel.add(login, new GridBagConstraints());
-		frame.add(containerPanel);
-		frame.revalidate();
-		frame.repaint();
-		
-		frame.setVisible(true);
-	}
+	public ManagerScreen(JFrame frame) {
+		super(frame);
 	
-	
-	public void createLogin()
-	{
-		bottom.removeAll();
-		this.removeAll();
-		
-		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
-				 
-		CheckoutButton.setMaximumSize(new Dimension(900, 600));
-		CheckoutButton.setFont(new Font("Arial", Font.BOLD, 90));
-		bottom.add(CheckoutButton);
-
-		  
-		bottom.add(Box.createHorizontalStrut(30));
-		  
-		EditAccountButton.setMaximumSize(new Dimension(900, 600));
-		EditAccountButton.setFont(new Font("Arial", Font.BOLD, 90));
-		bottom.add(EditAccountButton);
-		
-
-		JPanel managerOptions = new JPanel();
-		managerOptions.setLayout(new BoxLayout(managerOptions, BoxLayout.X_AXIS));
-		
-		InventoryButton.setMaximumSize(new Dimension(900, 600));
-		InventoryButton.setFont(new Font("Arial", Font.BOLD, 90));
-		managerOptions.add(InventoryButton);
-
-
-		managerOptions.add(Box.createHorizontalStrut(30));
-		  
-		ReturnsButton.setMaximumSize(new Dimension(900, 600));
-		ReturnsButton.setFont(new Font("Arial", Font.BOLD, 90));
-		managerOptions.add(ReturnsButton);
-		
-		managerOptions.add(Box.createHorizontalStrut(30));
-		  
-		EditAccountsButton.setMaximumSize(new Dimension(900, 600));
-		EditAccountsButton.setFont(new Font("Arial", Font.BOLD, 90));
-		managerOptions.add(EditAccountsButton);
-		
-		
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		addPanel(mainPanel);
 		
 		
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
+		mainPanel.add(top);
 		
 		JLabel welcome = new JLabel("Hi Name!");
 		welcome.setFont(new Font("Arial", Font.BOLD, 90));
-		welcome.setAlignmentX(RIGHT_ALIGNMENT);
+		welcome.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
 		top.add(welcome);
 		
 		top.add(Box.createHorizontalStrut(300));
 
-		LogOutButton.setMaximumSize(new Dimension(300, 200));
-		LogOutButton.setFont(new Font("Arial", Font.BOLD, 42));
-		top.add(LogOutButton);
-
-		JPanel pane = new JPanel();
-		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+		mLogOutButton.setMaximumSize(new Dimension(300, 200));
+		mLogOutButton.setFont(new Font("Arial", Font.BOLD, 42));
+		mLogOutButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removePanel(mainPanel);
+				new LoginScreen(frame);
+			}
+		});
+		top.add(mLogOutButton);
 		
-		pane.add(top);
-		pane.add(Box.createVerticalStrut(200));
-		pane.add(bottom);
-		pane.add(Box.createVerticalStrut(30));
-		pane.add(managerOptions);
+
+		mainPanel.add(Box.createVerticalStrut(200));
+		
+		
+		JPanel mid = new JPanel();
+		mid.setLayout(new BoxLayout(mid, BoxLayout.X_AXIS));
+		mainPanel.add(mid);
+				 
+		mCheckoutButton.setMaximumSize(new Dimension(900, 600));
+		mCheckoutButton.setFont(new Font("Arial", Font.BOLD, 90));
+		mCheckoutButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removePanel(mainPanel);
+				new CheckoutScreen(frame,null,true);
+			}
+		});
+		mid.add(mCheckoutButton);
 		  
-		add(pane);
+		mid.add(Box.createHorizontalStrut(30));
+		  
+		mEditAccountButton.setMaximumSize(new Dimension(900, 600));
+		mEditAccountButton.setFont(new Font("Arial", Font.BOLD, 90));
+		mEditAccountButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removePanel(mainPanel);
+				new EditAccountScreen(frame);
+			}
+		});
+		mid.add(mEditAccountButton);
+		
+
+		mainPanel.add(Box.createVerticalStrut(30));
+		
+
+		JPanel managerOptions = new JPanel();
+		managerOptions.setLayout(new BoxLayout(managerOptions, BoxLayout.X_AXIS));
+		mainPanel.add(managerOptions);
+		
+		mInventoryButton.setMaximumSize(new Dimension(900, 600));
+		mInventoryButton.setFont(new Font("Arial", Font.BOLD, 90));
+		mInventoryButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "not implemented yet");
+			}
+		});
+		managerOptions.add(mInventoryButton);
+
+		managerOptions.add(Box.createHorizontalStrut(30));
+		  
+		mReturnsButton.setMaximumSize(new Dimension(900, 600));
+		mReturnsButton.setFont(new Font("Arial", Font.BOLD, 90));
+		mReturnsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "not implemented yet");
+			}
+		});
+		managerOptions.add(mReturnsButton);
+		
+		managerOptions.add(Box.createHorizontalStrut(30));
+		  
+		mEditAccountsButton.setMaximumSize(new Dimension(900, 600));
+		mEditAccountsButton.setFont(new Font("Arial", Font.BOLD, 90));
+		mEditAccountsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "not implemented yet");
+			}
+		});
+		managerOptions.add(mEditAccountsButton);
+		
+		
+		frame.pack();
+		frame.setVisible(true);
 	}
 }

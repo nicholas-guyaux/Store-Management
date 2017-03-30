@@ -25,11 +25,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import model.DBConnect;
-import model.Product;
-import view.CheckoutScreen;
+import model.Productold;
+import view.CheckoutScreenold;
 import view.InventoryScreen;
 import view.MainScreen;
-import view.PaymentScreen;
+import view.PaymentScreenold;
 
 public class MainFrame implements ActionListener {
 	
@@ -45,9 +45,9 @@ public class MainFrame implements ActionListener {
 	
 	private MainScreen mainScreen = new MainScreen();
 	
-	private CheckoutScreen checkoutScreen = new CheckoutScreen();
+	private CheckoutScreenold checkoutScreen = new CheckoutScreenold();
 	
-	private PaymentScreen paymentScreen = new PaymentScreen();
+	private PaymentScreenold paymentScreen = new PaymentScreenold();
 	
 	private InventoryScreen inventoryScreen = new InventoryScreen();
 	
@@ -55,7 +55,7 @@ public class MainFrame implements ActionListener {
 	
 	public DefaultTableModel tableModel;
 	
-	public ArrayList<Product> allProducts = null;
+	public ArrayList<Productold> allProducts = null;
 	
 	private MainFrame() throws ClassNotFoundException, SQLException
 	{
@@ -125,10 +125,10 @@ public class MainFrame implements ActionListener {
 	    Connection conn = DBConnect.getDBConnection();
 	    PreparedStatement stm = conn.prepareStatement("select * from products");
 	    ResultSet rst = stm.executeQuery();
-	    ArrayList<Product> productList = new ArrayList<>();
+	    ArrayList<Productold> productList = new ArrayList<>();
 	    while(rst.next())
 		{
-			Product product = new Product();
+			Productold product = new Productold();
 			product.setProductID(rst.getInt("ProductID"));
 			product.setDescription(rst.getString("Description"));
 			product.setPrice(rst.getFloat("Price"));
@@ -326,9 +326,9 @@ public class MainFrame implements ActionListener {
         else if ("Cash".equals(command)) {
         	//payment screen cash button
         	String cash = JOptionPane.showInputDialog(frame, "Enter cash amount");
-        	if(PaymentScreen.enoughCash(Float.parseFloat(cash)))
+        	if(PaymentScreenold.enoughCash(Float.parseFloat(cash)))
         	{
-        		float change = PaymentScreen.payWithCash(Float.parseFloat(cash));
+        		float change = PaymentScreenold.payWithCash(Float.parseFloat(cash));
         		JOptionPane.showMessageDialog(frame, "You get $" + String.format("%.2f", change) + " back.");
         		showMainScreen();
         	}

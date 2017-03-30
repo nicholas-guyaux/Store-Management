@@ -2,84 +2,130 @@ package view;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
+import model.Item;
+import model.Order;
 
+public class PaymentScreen extends Screen {
+	// View
+	private JButton mPayCash;
+	private JButton mPayCreditCard;
+	private JButton mPayDebitCard;
+	private JButton mCancelButton;
 
+	private JList<Item> mItemList;
+	private JLabel mTotalLabel;
 
-public class PaymentScreen  extends JPanel {
-	public JLabel totalLabel;
-	
-	public JButton cashButton = new JButton("Cash");
-	
-	public JButton creditButton = new JButton("Credit");
-	
-	public JButton cancelButton = new JButton("Cancel Payment");
-	
-	private static float total = 0;
-	
-	public PaymentScreen() {
-		
-		initScreen();
-	}
-	
-	public void initTotalLabel(float total)
-	{
-		totalLabel = new JLabel("Total: $" + String.format("%.2f", getTotal()));
-	}
-	
-	public void initScreen()
-	{
-		initTotalLabel(getTotal());
-		this.removeAll();
-		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-		totalLabel.setFont(new Font("Arial", Font.BOLD, 90));
-		add(totalLabel);
-		
-		add(Box.createVerticalStrut(50));
-		
-		cashButton.setMaximumSize(new Dimension(800, 500));
-		cashButton.setFont(new Font("Arial", Font.BOLD, 90));
-		add(cashButton);
+	// Controller
+	private Order mOrder;
 
-		add(Box.createVerticalStrut(30));
-				  
-		creditButton.setMaximumSize(new Dimension(800, 500));
-		creditButton.setFont(new Font("Arial", Font.BOLD, 90));
-		add(creditButton);
-		  
-		add(Box.createVerticalStrut(30));
-				
-		cancelButton.setMaximumSize(new Dimension(800, 500));
-		cancelButton.setFont(new Font("Arial", Font.BOLD, 90));
-		add(cancelButton);
+	public PaymentScreen(JFrame frame, Order order) {
+		super(frame);
+
+		createView(frame);
+
+		if (order == null) {
+			mOrder = new Order();
+		} else {
+			mOrder = order;
+			updateOrder();
+		}
+
+		// Display the window.
+		frame.pack();
+		frame.setVisible(true);
 	}
 
-	public static float getTotal() {
-		return total;
-	}
-	
-	public static boolean enoughCash(float cash)
-	{
-		if(getTotal()>cash)return false;
-		return true;
-	}
-	
-	public static float payWithCash(float cash)
-	{
-		float change = cash - getTotal();
-		return change;
+	private void createView(JFrame frame) {
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+		addPanel(mainPanel);
+
+		JPanel listPanel = new JPanel();
+		listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+		mainPanel.add(listPanel);
+
+		JLabel title = new JLabel("Payment");
+		title.setFont(new Font("Serif", Font.BOLD, 22));
+		title.setMaximumSize(new Dimension(Integer.MAX_VALUE, title.getMinimumSize().height));
+		listPanel.add(title);
+
+		mItemList = new JList<>();
+		JScrollPane scrolPane = new JScrollPane(mItemList);
+		scrolPane.setPreferredSize(new Dimension(300, 500));
+		listPanel.add(scrolPane);
+
+		mTotalLabel = new JLabel("$ 0", SwingConstants.RIGHT);
+		mTotalLabel.setFont(new Font("Serif", Font.BOLD, 18));
+		mTotalLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mTotalLabel.getMinimumSize().height));
+		listPanel.add(mTotalLabel);
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+		mainPanel.add(buttonPanel);
+
+		mPayCash = new JButton("Cash");
+		mPayCash.setMaximumSize(new Dimension(Integer.MAX_VALUE, mPayCash.getMinimumSize().height));
+		mPayCash.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "This functionality has not been implemented yet!!!");
+			}
+		});
+		buttonPanel.add(mPayCash);
+
+		mPayCreditCard = new JButton("Credit Card");
+		mPayCreditCard.setMaximumSize(new Dimension(Integer.MAX_VALUE, mPayCreditCard.getMinimumSize().height));
+		mPayCreditCard.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "This functionality has not been implemented yet!!!");
+			}
+		});
+		buttonPanel.add(mPayCreditCard);
+
+		mPayDebitCard = new JButton("Debit Card");
+		mPayDebitCard.setMaximumSize(new Dimension(Integer.MAX_VALUE, mPayDebitCard.getMinimumSize().height));
+		mPayDebitCard.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "This functionality has not been implemented yet!!!");
+			}
+		});
+		buttonPanel.add(mPayDebitCard);
+
+		mCancelButton = new JButton("Cancel");
+		mCancelButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mCancelButton.getMinimumSize().height));
+		mCancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removePanel(mainPanel);
+				new CheckoutScreen(frame, mOrder);
+			}
+		});
+		buttonPanel.add(mCancelButton);
 	}
 
-	public void setTotal(float total) {
-		this.total = total;
-	}
+	private void updateOrder() {
+		DefaultListModel<Item> itemListModel = new DefaultListModel<Item>();
+		for (Item item : mOrder.getOrderList()) {
+			itemListModel.addElement(item);
+		}
+		mItemList.setModel(itemListModel);
 
+		mTotalLabel.setText("$ " + Double.toString(mOrder.getTotal()));
+	}
 }

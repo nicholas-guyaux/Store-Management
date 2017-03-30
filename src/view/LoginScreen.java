@@ -62,7 +62,10 @@ public class LoginScreen  extends Screen {
 			public void actionPerformed(ActionEvent e) {
 				// TODO: make authentication
 				removePanel(mainPanel);
-				new CashierScreen(frame);
+				if(mUsername.getText().equals("m"))
+					new ManagerScreen(frame);
+				else
+					new CashierScreen(frame);
 			}
 		});
 		bottom.add(mLogInButton);
