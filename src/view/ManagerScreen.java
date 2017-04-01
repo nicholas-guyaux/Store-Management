@@ -109,7 +109,8 @@ public class ManagerScreen  extends Screen {
 		mInventoryButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "not implemented yet");
+				removePanel(mainPanel);
+				new InventoryScreen(frame,true);
 			}
 		});
 		managerOptions.add(mInventoryButton);

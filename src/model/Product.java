@@ -37,4 +37,8 @@ public class Product {
 	public int hashCode() {
 		return new Integer(mId).hashCode();
 	}
+	@Override
+	public String toString() {
+		return getName() + "        " + getUnitPrice() + "        " + mId ;
+	}
 }

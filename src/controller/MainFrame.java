@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import model.DBConnect;
 import model.Productold;
 import view.CheckoutScreenold;
-import view.InventoryScreen;
+import view.InventoryScreenold;
 import view.MainScreen;
 import view.PaymentScreenold;
 
@@ -49,7 +49,7 @@ public class MainFrame implements ActionListener {
 	
 	private PaymentScreenold paymentScreen = new PaymentScreenold();
 	
-	private InventoryScreen inventoryScreen = new InventoryScreen();
+	private InventoryScreenold inventoryScreen = new InventoryScreenold();
 	
 	static JPanel containerPanel = new JPanel(new GridBagLayout() );
 	
