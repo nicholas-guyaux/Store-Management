@@ -36,6 +36,22 @@ public class Employee {
 		return mIsManager;
 	}
 	
+	public void setName(String name) {
+		mName = name;
+	}
+	
+	public void setUsername(String username) {
+		mUsername = username;
+	}
+	
+	public void setPassword(String password) {
+		mPassword = password;
+	}
+	
+	public void setIsManager(boolean isManager) {
+		mIsManager = isManager;
+	}
+	
 	@Override
 	public boolean equals(Object other) {
 		if(other instanceof Employee){

@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -36,6 +37,8 @@ public class CheckoutScreen extends Screen {
 	private JMenuItem mRemoveMenuItem;
 
 	private JList<Item> mItemList;
+	private JLabel mSubTotalLabel;
+	private JLabel mTaxLabel;
 	private JLabel mTotalLabel;
 
 	// Controller
@@ -113,10 +116,60 @@ public class CheckoutScreen extends Screen {
 		scrolPane.setPreferredSize(new Dimension(300, 500));
 		listPanel.add(scrolPane);
 
-		mTotalLabel = new JLabel("$ 0", SwingConstants.RIGHT);
+		JPanel subtotalPanel = new JPanel();
+		subtotalPanel.setLayout(new BoxLayout(subtotalPanel, BoxLayout.X_AXIS));
+		listPanel.add(subtotalPanel);
+
+		JPanel taxPanel = new JPanel();
+		taxPanel.setLayout(new BoxLayout(taxPanel, BoxLayout.X_AXIS));
+		listPanel.add(taxPanel);
+
+		JPanel totalPanel = new JPanel();
+		totalPanel.setLayout(new BoxLayout(totalPanel, BoxLayout.X_AXIS));
+		listPanel.add(totalPanel);
+		
+
+		
+		
+		JLabel subTotalText = new JLabel("Sub-Total:", SwingConstants.LEFT);
+		subTotalText.setFont(new Font("Serif", Font.BOLD, 18));
+		subTotalText.setMaximumSize(new Dimension(Integer.MAX_VALUE, subTotalText.getMinimumSize().height));
+		subtotalPanel.add(subTotalText);
+		
+		subtotalPanel.add(Box.createHorizontalGlue());
+
+		mSubTotalLabel = new JLabel("$0.00", SwingConstants.RIGHT);
+		mSubTotalLabel.setFont(new Font("Serif", Font.BOLD, 18));
+		mSubTotalLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mSubTotalLabel.getMinimumSize().height));
+		subtotalPanel.add(mSubTotalLabel);
+
+		
+		JLabel TaxText = new JLabel("Tax:", SwingConstants.LEFT);
+		TaxText.setFont(new Font("Serif", Font.BOLD, 18));
+		TaxText.setMaximumSize(new Dimension(Integer.MAX_VALUE, TaxText.getMinimumSize().height));
+		taxPanel.add(TaxText);
+		
+		taxPanel.add(Box.createHorizontalGlue());
+		
+		mTaxLabel = new JLabel("$0.00", SwingConstants.RIGHT);
+		mTaxLabel.setFont(new Font("Serif", Font.BOLD, 18));
+		mTaxLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mTaxLabel.getMinimumSize().height));
+		taxPanel.add(mTaxLabel);
+		
+		
+		JLabel TotalText = new JLabel("Total:", SwingConstants.LEFT);
+		TotalText.setFont(new Font("Serif", Font.BOLD, 18));
+		TotalText.setMaximumSize(new Dimension(Integer.MAX_VALUE, TotalText.getMinimumSize().height));
+		totalPanel.add(TotalText);
+
+		totalPanel.add(Box.createHorizontalGlue());
+		
+		mTotalLabel = new JLabel("$0.00", SwingConstants.RIGHT);
 		mTotalLabel.setFont(new Font("Serif", Font.BOLD, 18));
 		mTotalLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mTotalLabel.getMinimumSize().height));
-		listPanel.add(mTotalLabel);
+		totalPanel.add(mTotalLabel);
+		
+		
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -229,6 +282,8 @@ public class CheckoutScreen extends Screen {
 			itemListModel.addElement(item);
 		}
 		mItemList.setModel(itemListModel);
-		mTotalLabel.setText("$ " + String.format("%.2f", mOrder.getTotal()));
+		mSubTotalLabel.setText("$" + String.format("%.2f", mOrder.getTotal()));
+		mTaxLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * .06)));
+		mTotalLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * 1.06)));
 	}
 }

@@ -10,4 +10,6 @@ public interface IDataAccess {
 	public boolean login(String user,String pass);
 	public Employee getCurrentUser();
 	public void logOut();
+	
+	public Employee[] getEmployeeList();
 }

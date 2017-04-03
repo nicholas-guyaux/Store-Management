@@ -13,31 +13,47 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import model.Employee;
+import model.Order;
+
 
 public class EditAccountScreen  extends Screen {
 
-	public JLabel mAccountTypeLabel = new JLabel("Account Type: Cashier");
-	
-	public JLabel mNameLabel = new JLabel("Name: Jordan Knudsen");
-	
-	public JLabel mUserNameLabel = new JLabel("Username: jordan");
-
-	public JLabel mPasswordLabel = new JLabel("Password: password");
+	public JLabel mAccountTypeLabel;
+	public JLabel mNameLabel;
+	public JLabel mUserNameLabel;
+	public JLabel mPasswordLabel;
 	
 	public JButton mAccountTypeEditButton = new JButton("Edit");
-	
 	public JButton mNameEditButton = new JButton("Edit");
-
 	public JButton mUserNameEditButton = new JButton("Edit");
-	
 	public JButton mPasswordEditButton = new JButton("Edit");
 	
 	public JButton mBackButton = new JButton("Back");
 	
 	 
-	public EditAccountScreen(JFrame frame) {
+	public EditAccountScreen(JFrame frame, Employee account) {
 		super(frame);
-	
+		
+		createView(frame, account);
+		
+		updateAccount(account);
+		
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+
+	private void updateAccount(Employee account) {	
+		mAccountTypeLabel.setText("Account Type: " + ((account.isManager())?"Manager":"Cashier"));
+		mNameLabel.setText("Name: " + account.getName());
+		mUserNameLabel.setText("Username: " + account.getUsername());
+		mPasswordLabel.setText("Password: " + account.getPassword());
+	}
+
+
+	private void createView(JFrame frame, Employee account) {
+
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		addPanel(mainPanel);
@@ -47,6 +63,7 @@ public class EditAccountScreen  extends Screen {
 		AccountTypePanel.setLayout(new BoxLayout(AccountTypePanel, BoxLayout.X_AXIS));
 		mainPanel.add(AccountTypePanel);
 		
+		mAccountTypeLabel = new JLabel("Account Type: ");
 		mAccountTypeLabel.setMaximumSize(new Dimension(900, 600));
 		mAccountTypeLabel.setFont(new Font("Arial", Font.BOLD, 42));
 		AccountTypePanel.add(mAccountTypeLabel);
@@ -67,6 +84,7 @@ public class EditAccountScreen  extends Screen {
 		NamePanel.setLayout(new BoxLayout(NamePanel, BoxLayout.X_AXIS));
 		mainPanel.add(NamePanel);
 		
+		mNameLabel = new JLabel("Name: ");
 		mNameLabel.setMaximumSize(new Dimension(900, 600));
 		mNameLabel.setFont(new Font("Arial", Font.BOLD, 42));
 		NamePanel.add(mNameLabel);
@@ -79,7 +97,7 @@ public class EditAccountScreen  extends Screen {
 		mNameEditButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showInputDialog(
+				String input = (String) JOptionPane.showInputDialog(
 		                frame,
 		                "Name:",
 		                "Name Edit dialog",
@@ -87,6 +105,8 @@ public class EditAccountScreen  extends Screen {
 		                null,
 		                null,
 		                "Jordan Knudsen");
+				account.setName(input);
+				updateAccount(account);
 			}
 		});
 		NamePanel.add(mNameEditButton);
@@ -98,7 +118,8 @@ public class EditAccountScreen  extends Screen {
 		JPanel UserNamePanel = new JPanel();
 		UserNamePanel.setLayout(new BoxLayout(UserNamePanel, BoxLayout.X_AXIS));
 		mainPanel.add(UserNamePanel);
-		
+
+		mUserNameLabel = new JLabel("Username: ");
 		mUserNameLabel.setMaximumSize(new Dimension(900, 600));
 		mUserNameLabel.setFont(new Font("Arial", Font.BOLD, 42));
 		UserNamePanel.add(mUserNameLabel);
@@ -118,7 +139,8 @@ public class EditAccountScreen  extends Screen {
 		JPanel PasswordPanel = new JPanel();
 		PasswordPanel.setLayout(new BoxLayout(PasswordPanel, BoxLayout.X_AXIS));
 		mainPanel.add(PasswordPanel);
-		
+
+		mPasswordLabel = new JLabel("Password: ");
 		mPasswordLabel.setMaximumSize(new Dimension(900, 600));
 		mPasswordLabel.setFont(new Font("Arial", Font.BOLD, 42));
 		PasswordPanel.add(mPasswordLabel);
@@ -131,7 +153,7 @@ public class EditAccountScreen  extends Screen {
 		mPasswordEditButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showInputDialog(
+				String input = (String) JOptionPane.showInputDialog(
 		                frame,
 		                "Password:",
 		                "Password Edit dialog",
@@ -139,6 +161,8 @@ public class EditAccountScreen  extends Screen {
 		                null,
 		                null,
 		                "password");
+				account.setPassword(input);
+				updateAccount(account);
 			}
 		});
 		PasswordPanel.add(mPasswordEditButton);
@@ -163,9 +187,5 @@ public class EditAccountScreen  extends Screen {
 			}
 		});
 		BackButtonPanel.add(mBackButton);
-		
-		
-		frame.pack();
-		frame.setVisible(true);
 	}
 }

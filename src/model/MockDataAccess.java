@@ -86,4 +86,9 @@ public class MockDataAccess implements IDataAccess {
 	public void logOut() {
 		currentUser = null;		
 	}
+
+	@Override
+	public Employee[] getEmployeeList() {
+		return  mEmployees.values().toArray(new Employee[0]);
+	}
 }

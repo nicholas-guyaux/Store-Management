@@ -103,7 +103,12 @@ public class ManagerScreen  extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
-				new EditAccountScreen(frame);
+				try {
+					new EditAccountScreen(frame,Program.getInstance().getDataAccess().getCurrentUser());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		mid.add(mEditAccountButton);
@@ -146,7 +151,8 @@ public class ManagerScreen  extends Screen {
 		mEditAccountsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "not implemented yet");
+				removePanel(mainPanel);
+				new EditAccountsScreen(frame);
 			}
 		});
 		managerOptions.add(mEditAccountsButton);

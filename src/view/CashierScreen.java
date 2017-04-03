@@ -93,7 +93,12 @@ public class CashierScreen  extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
-				new EditAccountScreen(frame);
+				try {
+					new EditAccountScreen(frame,Program.getInstance().getDataAccess().getCurrentUser());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		mBottom.add(mEditAccountButton);
