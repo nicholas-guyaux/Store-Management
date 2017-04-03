@@ -34,7 +34,7 @@ public class ManagerScreen  extends Screen {
 	public JButton mEditAccountsButton = new JButton("Edit Accounts");
 	
 	 
-	public ManagerScreen(JFrame frame) {
+	public ManagerScreen(JFrame frame){
 		super(frame);
 	
 		JPanel mainPanel = new JPanel();
@@ -46,18 +46,30 @@ public class ManagerScreen  extends Screen {
 		top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
 		mainPanel.add(top);
 		
-		JLabel welcome = new JLabel("Hi Name!");
+		String name = "";
+		try {
+			name = "Hi " + Program.getInstance().getDataAccess().getCurrentUser().getName();
+		} catch (ClassNotFoundException e2) {
+			e2.printStackTrace();
+		}
+		JLabel welcome = new JLabel(name);
 		welcome.setFont(new Font("Arial", Font.BOLD, 90));
 		welcome.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
 		top.add(welcome);
 		
-		top.add(Box.createHorizontalStrut(300));
+		top.add(Box.createHorizontalGlue());
 
 		mLogOutButton.setMaximumSize(new Dimension(300, 200));
 		mLogOutButton.setFont(new Font("Arial", Font.BOLD, 42));
 		mLogOutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				try {
+					Program.getInstance().getDataAccess().logOut();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				removePanel(mainPanel);
 				new LoginScreen(frame);
 			}
@@ -78,7 +90,7 @@ public class ManagerScreen  extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
-				new CheckoutScreen(frame,null,true);
+				new CheckoutScreen(frame,null);
 			}
 		});
 		mid.add(mCheckoutButton);

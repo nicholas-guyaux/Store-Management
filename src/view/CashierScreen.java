@@ -23,7 +23,7 @@ public class CashierScreen  extends Screen {
 	public JButton mEditAccountButton = new JButton("Edit Account");
 	
 	 
-	public CashierScreen(JFrame frame) {
+	public CashierScreen(JFrame frame){
 		super(frame);
 		
 		JPanel mainPanel = new JPanel();
@@ -35,18 +35,30 @@ public class CashierScreen  extends Screen {
 		top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
 		mainPanel.add(top);
 		
-		JLabel welcome = new JLabel("Hi Name!");
+		String name = "";
+		try {
+			name = "Hi " + Program.getInstance().getDataAccess().getCurrentUser().getName();
+		} catch (ClassNotFoundException e2) {
+			e2.printStackTrace();
+		}
+		JLabel welcome = new JLabel(name);
 		welcome.setFont(new Font("Arial", Font.BOLD, 90));
 		welcome.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
 		top.add(welcome);
 		
-		top.add(Box.createHorizontalStrut(300));
+		top.add(Box.createHorizontalGlue());
 
 		mLogOutButton.setMaximumSize(new Dimension(300, 200));
 		mLogOutButton.setFont(new Font("Arial", Font.BOLD, 42));
 		mLogOutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				try {
+					Program.getInstance().getDataAccess().logOut();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				removePanel(mainPanel);
 				new LoginScreen(frame);
 			}
@@ -67,7 +79,7 @@ public class CashierScreen  extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
-				new CheckoutScreen(frame,null,false);
+				new CheckoutScreen(frame,null);
 			}
 		});
 		mBottom.add(mCheckoutButton);

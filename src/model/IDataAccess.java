@@ -6,4 +6,8 @@ public interface IDataAccess {
 	public void removeProductById(int id);
 	public void modifyProductById(int id, Product p);
 	public void addProduct(Product p);
+	
+	public boolean login(String user,String pass);
+	public Employee getCurrentUser();
+	public void logOut();
 }

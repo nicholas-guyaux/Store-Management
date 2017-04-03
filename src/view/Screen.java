@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public abstract class Screen {
@@ -16,5 +17,17 @@ public abstract class Screen {
 
 	protected void removePanel(JPanel panel) {
 		mMainFrame.getContentPane().remove(panel);
+	}
+	
+	protected void openUserMainMenu(){
+		try {
+			if(Program.getInstance().getDataAccess().getCurrentUser().isManager())
+				new ManagerScreen(mMainFrame);
+			else
+				new CashierScreen(mMainFrame);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 }

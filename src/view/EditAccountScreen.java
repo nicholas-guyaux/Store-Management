@@ -158,9 +158,8 @@ public class EditAccountScreen  extends Screen {
 		mBackButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO: make authentication
 				removePanel(mainPanel);
-				new CashierScreen(frame);
+				openUserMainMenu();
 			}
 		});
 		BackButtonPanel.add(mBackButton);

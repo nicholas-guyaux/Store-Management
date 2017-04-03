@@ -10,8 +10,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import model.Product;
 
 
 public class LoginScreen  extends Screen {
@@ -60,12 +63,18 @@ public class LoginScreen  extends Screen {
 		mLogInButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO: make authentication
-				removePanel(mainPanel);
-				if(mUsername.getText().equals("m"))
-					new ManagerScreen(frame);
-				else
-					new CashierScreen(frame);
+				try {
+					if(Program.getInstance().getDataAccess().login(mUsername.getText(), mPassword.getText())){
+						removePanel(mainPanel);
+						openUserMainMenu();
+					}
+					else{
+						JOptionPane.showMessageDialog(frame, "Invalid username or password");
+					}
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		bottom.add(mLogInButton);

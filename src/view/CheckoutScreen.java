@@ -40,14 +40,10 @@ public class CheckoutScreen extends Screen {
 
 	// Controller
 	private Order mOrder;
-	public CheckoutScreen(JFrame frame, Order order){
-		this(frame,order,false);
-	}
-	
-	public CheckoutScreen(JFrame frame, Order order, boolean isManager) {
+	public CheckoutScreen(JFrame frame, Order order) {
 		super(frame);
 
-		createView(frame,isManager);
+		createView(frame);
 
 		if (order == null) {
 			mOrder = new Order();
@@ -61,7 +57,7 @@ public class CheckoutScreen extends Screen {
 		frame.setVisible(true);
 	}
 
-	private void createView(JFrame frame, boolean isManager) {
+	private void createView(JFrame frame) {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 		addPanel(mainPanel);
@@ -184,10 +180,7 @@ public class CheckoutScreen extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
-				if(isManager)
-					new ManagerScreen(frame);
-				else
-					new CashierScreen(frame);
+				openUserMainMenu();
 			}
 		});
 		buttonPanel.add(mCancelButton);
