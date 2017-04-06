@@ -12,47 +12,37 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import model.Employee;
-import model.Order;
 
 
-public class EditAccountScreen  extends Screen {
+public class AddNewAccount  extends Screen {
 
 	public JLabel mAccountTypeLabel;
 	public JLabel mNameLabel;
 	public JLabel mUserNameLabel;
 	public JLabel mPasswordLabel;
 	
-	public JButton mAccountTypeEditButton = new JButton("Edit");
-	public JButton mNameEditButton = new JButton("Edit");
-	public JButton mUserNameEditButton = new JButton("Edit");
-	public JButton mPasswordEditButton = new JButton("Edit");
-	
-	public JButton mBackButton = new JButton("Back");
+	public JTextField mAccountTypeEditButton = new JTextField(10);
+	public JTextField mNameEditButton = new JTextField(10);
+	public JTextField mUserNameEditButton = new JTextField(10);
+	public JTextField mPasswordEditButton = new JTextField(10);
+
+	public JButton mSaveButton = new JButton("Save");
+	public JButton mCancelButton = new JButton("Cancel");
 	
 	 
-	public EditAccountScreen(JFrame frame, Employee account) {
+	public AddNewAccount(JFrame frame) {
 		super(frame);
 		
-		createView(frame, account);
-		
-		updateAccount(account);
+		createView(frame);
 		
 		frame.pack();
 		frame.setVisible(true);
 	}
 
-
-	private void updateAccount(Employee account) {	
-		mAccountTypeLabel.setText("Account Type: " + ((account.isManager())?"Manager":"Cashier"));
-		mNameLabel.setText("Name: " + account.getName());
-		mUserNameLabel.setText("Username: " + account.getUsername());
-		mPasswordLabel.setText("Password: " + account.getPassword());
-	}
-
-
-	private void createView(JFrame frame, Employee account) {
+	private void createView(JFrame frame) {
 
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -73,16 +63,7 @@ public class EditAccountScreen  extends Screen {
 		  
 		mAccountTypeEditButton.setMaximumSize(new Dimension(900, 600));
 		mAccountTypeEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		//mAccountTypeEditButton.addActionListener(this);
-		try {
-			if(Program.getInstance().getDataAccess().getCurrentUser().getId() != account.getId()){
-				AccountTypePanel.add(mAccountTypeEditButton);
-			}
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
+		AccountTypePanel.add(mAccountTypeEditButton);
 
 		mainPanel.add(Box.createVerticalStrut(30));
 		
@@ -101,21 +82,6 @@ public class EditAccountScreen  extends Screen {
 		  
 		mNameEditButton.setMaximumSize(new Dimension(900, 600));
 		mNameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		mNameEditButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String input = (String) JOptionPane.showInputDialog(
-		                frame,
-		                "Name:",
-		                "Name Edit dialog",
-		                JOptionPane.PLAIN_MESSAGE,
-		                null,
-		                null,
-		                "Jordan Knudsen");
-				account.setName(input);
-				updateAccount(account);
-			}
-		});
 		NamePanel.add(mNameEditButton);
 		
 
@@ -136,16 +102,8 @@ public class EditAccountScreen  extends Screen {
 		  
 		mUserNameEditButton.setMaximumSize(new Dimension(900, 600));
 		mUserNameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		//mUserNameEditButton.addActionListener(this);
-		try {
-			if(Program.getInstance().getDataAccess().getCurrentUser().isManager()){
-				UserNamePanel.add(mUserNameEditButton);
-			}
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
+		UserNamePanel.add(mUserNameEditButton);
+		
 		mainPanel.add(Box.createVerticalStrut(30));
 		
 		
@@ -163,21 +121,6 @@ public class EditAccountScreen  extends Screen {
 		  
 		mPasswordEditButton.setMaximumSize(new Dimension(900, 600));
 		mPasswordEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		mPasswordEditButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String input = (String) JOptionPane.showInputDialog(
-		                frame,
-		                "Password:",
-		                "Password Edit dialog",
-		                JOptionPane.PLAIN_MESSAGE,
-		                null,
-		                null,
-		                "password");
-				account.setPassword(input);
-				updateAccount(account);
-			}
-		});
 		PasswordPanel.add(mPasswordEditButton);
 		
 		
@@ -190,15 +133,25 @@ public class EditAccountScreen  extends Screen {
 
 		BackButtonPanel.add(Box.createHorizontalGlue());
 		  
-		mBackButton.setMaximumSize(new Dimension(900, 600));
-		mBackButton.setFont(new Font("Arial", Font.BOLD, 90));
-		mBackButton.addActionListener(new ActionListener() {
+		mSaveButton.setMaximumSize(new Dimension(900, 600));
+		mSaveButton.setFont(new Font("Arial", Font.BOLD, 90));
+		mSaveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "not implemented yet");
+			}
+		});
+		BackButtonPanel.add(mSaveButton);
+		
+		mCancelButton.setMaximumSize(new Dimension(900, 600));
+		mCancelButton.setFont(new Font("Arial", Font.BOLD, 90));
+		mCancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
 				openUserMainMenu();
 			}
 		});
-		BackButtonPanel.add(mBackButton);
+		BackButtonPanel.add(mCancelButton);
 	}
 }

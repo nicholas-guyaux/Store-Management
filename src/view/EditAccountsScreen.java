@@ -77,6 +77,10 @@ public class EditAccountsScreen extends Screen {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(frame, "not implemented");
 				Employee selected = mItemList.getSelectedValue();
+
+				removePanel(mainPanel);
+				new EditAccountScreen(frame,selected);
+				
 				// TODO open edit window
 				//mOrder.editItem(selected.getProduct(), q);
 				try {
@@ -128,14 +132,8 @@ public class EditAccountsScreen extends Screen {
 		mAddButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "not implemented");
-				// TODO add account
-				try {
-					updateAccounts();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				removePanel(mainPanel);
+				new AddNewAccount(frame);
 			}
 		});
 		buttonPanel.add(mAddButton);

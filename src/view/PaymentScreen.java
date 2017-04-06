@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -18,6 +19,7 @@ import javax.swing.SwingConstants;
 
 import model.Item;
 import model.Order;
+import model.Product;
 
 public class PaymentScreen extends Screen {
 	// View
@@ -27,6 +29,8 @@ public class PaymentScreen extends Screen {
 	private JButton mCancelButton;
 
 	private JList<Item> mItemList;
+	private JLabel mSubTotalLabel;
+	private JLabel mTaxLabel;
 	private JLabel mTotalLabel;
 
 	// Controller
@@ -67,11 +71,60 @@ public class PaymentScreen extends Screen {
 		JScrollPane scrolPane = new JScrollPane(mItemList);
 		scrolPane.setPreferredSize(new Dimension(300, 500));
 		listPanel.add(scrolPane);
+	
 
-		mTotalLabel = new JLabel("$ 0", SwingConstants.RIGHT);
+		JPanel subtotalPanel = new JPanel();
+		subtotalPanel.setLayout(new BoxLayout(subtotalPanel, BoxLayout.X_AXIS));
+		listPanel.add(subtotalPanel);
+
+		JPanel taxPanel = new JPanel();
+		taxPanel.setLayout(new BoxLayout(taxPanel, BoxLayout.X_AXIS));
+		listPanel.add(taxPanel);
+
+		JPanel totalPanel = new JPanel();
+		totalPanel.setLayout(new BoxLayout(totalPanel, BoxLayout.X_AXIS));
+		listPanel.add(totalPanel);
+		
+
+		
+		
+		JLabel subTotalText = new JLabel("Sub-Total:", SwingConstants.LEFT);
+		subTotalText.setFont(new Font("Serif", Font.BOLD, 18));
+		subTotalText.setMaximumSize(new Dimension(Integer.MAX_VALUE, subTotalText.getMinimumSize().height));
+		subtotalPanel.add(subTotalText);
+		
+		subtotalPanel.add(Box.createHorizontalGlue());
+
+		mSubTotalLabel = new JLabel("$0.00", SwingConstants.RIGHT);
+		mSubTotalLabel.setFont(new Font("Serif", Font.BOLD, 18));
+		mSubTotalLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mSubTotalLabel.getMinimumSize().height));
+		subtotalPanel.add(mSubTotalLabel);
+
+		
+		JLabel TaxText = new JLabel("Tax:", SwingConstants.LEFT);
+		TaxText.setFont(new Font("Serif", Font.BOLD, 18));
+		TaxText.setMaximumSize(new Dimension(Integer.MAX_VALUE, TaxText.getMinimumSize().height));
+		taxPanel.add(TaxText);
+		
+		taxPanel.add(Box.createHorizontalGlue());
+		
+		mTaxLabel = new JLabel("$0.00", SwingConstants.RIGHT);
+		mTaxLabel.setFont(new Font("Serif", Font.BOLD, 18));
+		mTaxLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mTaxLabel.getMinimumSize().height));
+		taxPanel.add(mTaxLabel);
+		
+		
+		JLabel TotalText = new JLabel("Total:", SwingConstants.LEFT);
+		TotalText.setFont(new Font("Serif", Font.BOLD, 18));
+		TotalText.setMaximumSize(new Dimension(Integer.MAX_VALUE, TotalText.getMinimumSize().height));
+		totalPanel.add(TotalText);
+
+		totalPanel.add(Box.createHorizontalGlue());
+		
+		mTotalLabel = new JLabel("$0.00", SwingConstants.RIGHT);
 		mTotalLabel.setFont(new Font("Serif", Font.BOLD, 18));
 		mTotalLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mTotalLabel.getMinimumSize().height));
-		listPanel.add(mTotalLabel);
+		totalPanel.add(mTotalLabel);
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -82,7 +135,23 @@ public class PaymentScreen extends Screen {
 		mPayCash.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "This functionality has not been implemented yet!!!");
+				double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
+				final String paidamount = JOptionPane.showInputDialog(frame,"Amount due: $"+due+"\n Please enter the amount given in 0.00 format");
+			    final double paid = Double.parseDouble(paidamount.startsWith("$") ? paidamount.substring(1) : paidamount);
+			    if(due > paid){
+					JOptionPane.showMessageDialog(frame, "only allowed to pay with equal or more amount");
+					return;
+			    }
+			    due -= paid;
+			    due *= -1;
+			    due += .0000000000000001;//makes it positive if no change is due.
+				int confirmation = JOptionPane.showConfirmDialog(null,
+                        "give $"+ String.format("%.2f", due) + " back to the customer", "confirm?",
+                        JOptionPane.YES_NO_OPTION);
+				if(confirmation==0){
+					removePanel(mainPanel);
+					openUserMainMenu();
+				}
 			}
 		});
 		buttonPanel.add(mPayCash);
@@ -92,7 +161,14 @@ public class PaymentScreen extends Screen {
 		mPayCreditCard.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "This functionality has not been implemented yet!!!");
+				double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
+				int confirmation = JOptionPane.showConfirmDialog(null,
+	                    "Amount due: $"+ due + "\n Was transaction successful?", "confirm?",
+	                    JOptionPane.YES_NO_OPTION);
+				if(confirmation==0){
+					removePanel(mainPanel);
+					openUserMainMenu();
+				}
 			}
 		});
 		buttonPanel.add(mPayCreditCard);
@@ -102,7 +178,14 @@ public class PaymentScreen extends Screen {
 		mPayDebitCard.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "This functionality has not been implemented yet!!!");
+				double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
+				int confirmation = JOptionPane.showConfirmDialog(null,
+	                    "Amount due: $"+ due + "\n Was transaction successful?", "confirm?",
+	                    JOptionPane.YES_NO_OPTION);
+				if(confirmation==0){
+					removePanel(mainPanel);
+					openUserMainMenu();
+				}
 			}
 		});
 		buttonPanel.add(mPayDebitCard);
@@ -125,7 +208,8 @@ public class PaymentScreen extends Screen {
 			itemListModel.addElement(item);
 		}
 		mItemList.setModel(itemListModel);
-
-		mTotalLabel.setText("$ " + Double.toString(mOrder.getTotal()));
+		mSubTotalLabel.setText("$" + String.format("%.2f", mOrder.getTotal()));
+		mTaxLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * .06)));
+		mTotalLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * 1.06)));
 	}
 }
