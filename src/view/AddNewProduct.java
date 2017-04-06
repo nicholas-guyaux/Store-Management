@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import model.Employee;
+import model.Product;
 
 
 public class AddNewProduct  extends Screen {
@@ -69,7 +70,7 @@ public class AddNewProduct  extends Screen {
 		UserNamePanel.setLayout(new BoxLayout(UserNamePanel, BoxLayout.X_AXIS));
 		mainPanel.add(UserNamePanel);
 
-		mPriceLabel = new JLabel("Username: ");
+		mPriceLabel = new JLabel("Price: ");
 		mPriceLabel.setMaximumSize(new Dimension(900, 600));
 		mPriceLabel.setFont(new Font("Arial", Font.BOLD, 42));
 		UserNamePanel.add(mPriceLabel);
@@ -94,7 +95,24 @@ public class AddNewProduct  extends Screen {
 		mSaveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "not implemented yet");
+				int i = 1;
+				for(i = 1;i<Integer.MAX_VALUE;i++){
+					try {
+						if(Program.getInstance().getDataAccess().getProductById(i) == null)
+							break;
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				try {
+					Program.getInstance().getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Double.parseDouble(mPriceLabelField.getText())));
+				} catch (NumberFormatException | ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				removePanel(mainPanel);
+				new InventoryScreen(frame);
 			}
 		});
 		BackButtonPanel.add(mSaveButton);

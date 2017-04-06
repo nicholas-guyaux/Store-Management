@@ -15,6 +15,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import model.Product;
+
 
 public class AddNewAccount  extends Screen {
 
