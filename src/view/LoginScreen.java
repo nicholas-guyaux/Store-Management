@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import controller.Program;
 import model.Product;
 
 
@@ -26,11 +27,12 @@ public class LoginScreen  extends Screen {
 	public JButton mLogInButton = new JButton("Login");
 	
 	public JButton mCancelButton = new JButton("Cancel");
+	
+	public JPanel mainPanel = new JPanel();
 	 
 	public LoginScreen(JFrame frame) {
 		super(frame);
 
-		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		addPanel(mainPanel);
 		
@@ -63,18 +65,7 @@ public class LoginScreen  extends Screen {
 		mLogInButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if(Program.getInstance().getDataAccess().login(mUsername.getText(), mPassword.getText())){
-						removePanel(mainPanel);
-						openUserMainMenu();
-					}
-					else{
-						JOptionPane.showMessageDialog(frame, "Invalid username or password");
-					}
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				login();
 			}
 		});
 		bottom.add(mLogInButton);
@@ -93,6 +84,16 @@ public class LoginScreen  extends Screen {
 
 		frame.pack();
 		frame.setVisible(true);
+	}
+	
+	private void login(){
+		if(mController.getDataAccess().login(mUsername.getText(), mPassword.getText())){
+			removePanel(mainPanel);
+			openUserMainMenu();
+		}
+		else{
+			JOptionPane.showMessageDialog(mMainFrame, "Invalid username or password");
+		}
 	}
 }
 

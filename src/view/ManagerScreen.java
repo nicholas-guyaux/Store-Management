@@ -18,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import controller.Program;
+
 
 public class ManagerScreen  extends Screen {
 
@@ -47,11 +49,8 @@ public class ManagerScreen  extends Screen {
 		mainPanel.add(top);
 		
 		String name = "";
-		try {
-			name = "Hi " + Program.getInstance().getDataAccess().getCurrentUser().getName();
-		} catch (ClassNotFoundException e2) {
-			e2.printStackTrace();
-		}
+		name = "Hi " + mController.getDataAccess().getCurrentUser().getName();
+
 		JLabel welcome = new JLabel(name);
 		welcome.setFont(new Font("Arial", Font.BOLD, 90));
 		welcome.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
@@ -64,12 +63,7 @@ public class ManagerScreen  extends Screen {
 		mLogOutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					Program.getInstance().getDataAccess().logOut();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				mController.getDataAccess().logOut();
 				removePanel(mainPanel);
 				new LoginScreen(frame);
 			}
@@ -103,12 +97,7 @@ public class ManagerScreen  extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
-				try {
-					new EditAccountScreen(frame,Program.getInstance().getDataAccess().getCurrentUser());
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				new EditAccountScreen(frame,mController.getDataAccess().getCurrentUser());
 			}
 		});
 		mid.add(mEditAccountButton);

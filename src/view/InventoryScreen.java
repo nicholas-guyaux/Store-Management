@@ -20,6 +20,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
+import controller.Program;
 import model.Employee;
 import model.Product;
 
@@ -40,12 +41,7 @@ public class InventoryScreen extends Screen {
 
 		createView(frame);
 		
-		try {
-			updateList();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		updateList();
 
 		// Display the window.
 		frame.pack();
@@ -128,12 +124,7 @@ public class InventoryScreen extends Screen {
 					e1.printStackTrace();
 				}
 				if (p != null) {
-					try {
-						updateList(p.toString());
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					updateList(p.toString());
 				}
 			}
 		});
@@ -184,12 +175,12 @@ public class InventoryScreen extends Screen {
 		return null;
 	}
 
-	private void updateList() throws ClassNotFoundException {
+	private void updateList(){
 		updateList("");
 	}
-	private void updateList(String search) throws ClassNotFoundException {
+	private void updateList(String search){
 		DefaultListModel<Product> ProductListModel = new DefaultListModel<Product>();
-		for (Product Product : Program.getInstance().getDataAccess().getInventoryList(search)) {
+		for (Product Product : mController.getDataAccess().getInventoryList(search)) {
 			ProductListModel.addElement(Product);
 		}
 		mProductList.setModel(ProductListModel);

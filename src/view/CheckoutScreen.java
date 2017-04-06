@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import controller.Program;
 import model.Item;
 import model.Order;
 import model.Product;
@@ -180,12 +181,7 @@ public class CheckoutScreen extends Screen {
 		mAddOneButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Product p=null;
-				try {
-					p = askForProductId();
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-				}
+				Product p = askForProductId();
 				if (p != null) {
 					mOrder.addItem(p, 1);
 					updateOrder();
@@ -199,12 +195,7 @@ public class CheckoutScreen extends Screen {
 		mAddButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Product p=null;
-				try {
-					p = askForProductId();
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-				}
+				Product p = askForProductId();
 				if (p != null) {
 					Integer q = askForQuantity();
 					if (q != null) {
@@ -239,13 +230,13 @@ public class CheckoutScreen extends Screen {
 		buttonPanel.add(mCancelButton);
 	}
 
-	private Product askForProductId() throws ClassNotFoundException {
+	private Product askForProductId() {
 		String s = JOptionPane.showInputDialog(mMainFrame, "Enter the id of the product that you want:", "Product Id", JOptionPane.PLAIN_MESSAGE);
 
 		if ((s != null) && (s.length() > 0)) {
 			try {
 				int id = Integer.parseInt(s);
-				Product p = Program.getInstance().getDataAccess().getProductById(id);
+				Product p = mController.getDataAccess().getProductById(id);
 				if (p != null) {
 					return p;
 				} else {

@@ -10,11 +10,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import model.Employee;
+import controller.Program;
 import model.Product;
 
 
@@ -97,20 +96,11 @@ public class AddNewProduct  extends Screen {
 			public void actionPerformed(ActionEvent e) {
 				int i = 1;
 				for(i = 1;i<Integer.MAX_VALUE;i++){
-					try {
-						if(Program.getInstance().getDataAccess().getProductById(i) == null)
-							break;
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					if(mController.getDataAccess().getProductById(i) == null)
+						break;
 				}
-				try {
-					Program.getInstance().getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Double.parseDouble(mPriceLabelField.getText())));
-				} catch (NumberFormatException | ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				mController.getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Double.parseDouble(mPriceLabelField.getText())));
+
 				removePanel(mainPanel);
 				new InventoryScreen(frame);
 			}

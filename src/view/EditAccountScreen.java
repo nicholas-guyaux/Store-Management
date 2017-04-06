@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import controller.Program;
 import model.Employee;
 import model.Order;
 
@@ -74,15 +75,9 @@ public class EditAccountScreen  extends Screen {
 		mAccountTypeEditButton.setMaximumSize(new Dimension(900, 600));
 		mAccountTypeEditButton.setFont(new Font("Arial", Font.BOLD, 42));
 		//mAccountTypeEditButton.addActionListener(this);
-		try {
-			if(Program.getInstance().getDataAccess().getCurrentUser().getId() != account.getId()){
-				AccountTypePanel.add(mAccountTypeEditButton);
-			}
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		if(mController.getDataAccess().getCurrentUser().getId() != account.getId()){
+			AccountTypePanel.add(mAccountTypeEditButton);
 		}
-		
 
 		mainPanel.add(Box.createVerticalStrut(30));
 		

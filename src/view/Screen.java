@@ -4,8 +4,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import controller.Program;
+
 public abstract class Screen {
 	protected JFrame mMainFrame;
+	protected static Program mController;
 
 	public Screen(JFrame mainFrame) {
 		mMainFrame = mainFrame;
@@ -19,15 +22,14 @@ public abstract class Screen {
 		mMainFrame.getContentPane().remove(panel);
 	}
 	
+	public static void setController(Program controller){
+		mController = controller;
+	}
+	
 	protected void openUserMainMenu(){
-		try {
-			if(Program.getInstance().getDataAccess().getCurrentUser().isManager())
-				new ManagerScreen(mMainFrame);
-			else
-				new CashierScreen(mMainFrame);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+		if(mController.getDataAccess().getCurrentUser().isManager())
+			new ManagerScreen(mMainFrame);
+		else
+			new CashierScreen(mMainFrame);
 	}
 }

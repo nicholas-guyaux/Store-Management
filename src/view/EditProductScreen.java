@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import controller.Program;
 import model.Product;
 
 
@@ -105,15 +106,9 @@ public class EditProductScreen  extends Screen {
 		mPriceLabelButton.setMaximumSize(new Dimension(900, 600));
 		mPriceLabelButton.setFont(new Font("Arial", Font.BOLD, 42));
 		//mUserNameEditButton.addActionListener(this);
-		try {
-			if(Program.getInstance().getDataAccess().getCurrentUser().isManager()){
-				UserNamePanel.add(mPriceLabelButton);
-			}
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		if(mController.getDataAccess().getCurrentUser().isManager()){
+			UserNamePanel.add(mPriceLabelButton);
 		}
-
 		mainPanel.add(Box.createVerticalStrut(30));
 		
 		

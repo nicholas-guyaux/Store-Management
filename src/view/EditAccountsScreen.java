@@ -23,6 +23,7 @@ import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import controller.Program;
 import model.Employee;
 import model.Item;
 import model.Order;
@@ -44,13 +45,8 @@ public class EditAccountsScreen extends Screen {
 
 		createView(frame);
 
-		try {
-			updateAccounts();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		updateAccounts();
+		
 		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
@@ -82,12 +78,7 @@ public class EditAccountsScreen extends Screen {
 				
 				// TODO open edit window
 				//mOrder.editItem(selected.getProduct(), q);
-				try {
-					updateAccounts();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				updateAccounts();
 			}
 		});
 		popupMenu.add(mEditMenuItem);
@@ -149,9 +140,9 @@ public class EditAccountsScreen extends Screen {
 		buttonPanel.add(mBackButton);
 	}
 
-	private void updateAccounts() throws ClassNotFoundException {
+	private void updateAccounts(){
 		DefaultListModel<Employee> itemListModel = new DefaultListModel<Employee>();
-		for (Employee item : Program.getInstance().getDataAccess().getEmployeeList()) {
+		for (Employee item : mController.getDataAccess().getEmployeeList()) {
 			itemListModel.addElement(item);
 		}
 		mItemList.setModel(itemListModel);

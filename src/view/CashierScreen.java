@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import controller.Program;
+
 
 public class CashierScreen  extends Screen {
 
@@ -35,12 +37,7 @@ public class CashierScreen  extends Screen {
 		top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
 		mainPanel.add(top);
 		
-		String name = "";
-		try {
-			name = "Hi " + Program.getInstance().getDataAccess().getCurrentUser().getName();
-		} catch (ClassNotFoundException e2) {
-			e2.printStackTrace();
-		}
+		String name = "Hi " + mController.getDataAccess().getCurrentUser().getName();
 		JLabel welcome = new JLabel(name);
 		welcome.setFont(new Font("Arial", Font.BOLD, 90));
 		welcome.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
@@ -53,12 +50,7 @@ public class CashierScreen  extends Screen {
 		mLogOutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					Program.getInstance().getDataAccess().logOut();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				mController.getDataAccess().logOut();
 				removePanel(mainPanel);
 				new LoginScreen(frame);
 			}
@@ -93,12 +85,7 @@ public class CashierScreen  extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
-				try {
-					new EditAccountScreen(frame,Program.getInstance().getDataAccess().getCurrentUser());
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				new EditAccountScreen(frame,mController.getDataAccess().getCurrentUser());
 			}
 		});
 		mBottom.add(mEditAccountButton);
