@@ -18,11 +18,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import model.Item;
-import model.Order;
+import model.Employee;
 import model.Product;
 
 public class InventoryScreen extends Screen {
@@ -37,14 +35,10 @@ public class InventoryScreen extends Screen {
 	private JList<Product> mProductList;
 
 	// Controller
-	public InventoryScreen(JFrame frame){
-		this(frame,false);
-	}
-	
-	public InventoryScreen(JFrame frame, boolean isManager) {
+	public InventoryScreen(JFrame frame) {
 		super(frame);
 
-		createView(frame,isManager);
+		createView(frame);
 		
 		try {
 			updateList();
@@ -58,7 +52,7 @@ public class InventoryScreen extends Screen {
 		frame.setVisible(true);
 	}
 
-	private void createView(JFrame frame, boolean isManager) {
+	private void createView(JFrame frame) {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 		addPanel(mainPanel);
@@ -77,7 +71,10 @@ public class InventoryScreen extends Screen {
 		mEditMenuProduct.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO open edit window
+				Product selected = mProductList.getSelectedValue();
+	
+				removePanel(mainPanel);
+				new EditProductScreen(frame,selected);
 			}
 		});
 		popupMenu.add(mEditMenuProduct);
@@ -147,15 +144,8 @@ public class InventoryScreen extends Screen {
 		mAddButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Product p=null;
-				try {
-					p = askForProductId();
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-				}
-				if (p != null) {
-					// TODO change to add screen
-				}
+				removePanel(mainPanel);
+				new AddNewProduct(frame);
 			}
 		});
 		buttonPanel.add(mAddButton);
@@ -167,10 +157,7 @@ public class InventoryScreen extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
-				if(isManager)
-					new ManagerScreen(frame);
-				else
-					new CashierScreen(frame);
+				openUserMainMenu();
 			}
 		});
 		buttonPanel.add(mCancelButton);

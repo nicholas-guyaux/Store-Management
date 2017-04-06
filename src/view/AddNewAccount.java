@@ -8,13 +8,12 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import model.Employee;
 
 
 public class AddNewAccount  extends Screen {
@@ -24,7 +23,7 @@ public class AddNewAccount  extends Screen {
 	public JLabel mUserNameLabel;
 	public JLabel mPasswordLabel;
 	
-	public JTextField mAccountTypeEditButton = new JTextField(10);
+	public JCheckBox mAccountTypeEditButton = new JCheckBox("is Manager");
 	public JTextField mNameEditButton = new JTextField(10);
 	public JTextField mUserNameEditButton = new JTextField(10);
 	public JTextField mPasswordEditButton = new JTextField(10);
@@ -149,7 +148,7 @@ public class AddNewAccount  extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
-				openUserMainMenu();
+				new EditAccountsScreen(frame);
 			}
 		});
 		BackButtonPanel.add(mCancelButton);

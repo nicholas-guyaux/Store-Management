@@ -127,7 +127,7 @@ public class ManagerScreen  extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removePanel(mainPanel);
-				new InventoryScreen(frame,true);
+				new InventoryScreen(frame);
 			}
 		});
 		managerOptions.add(mInventoryButton);

@@ -75,7 +75,6 @@ public class EditAccountsScreen extends Screen {
 		mEditMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "not implemented");
 				Employee selected = mItemList.getSelectedValue();
 
 				removePanel(mainPanel);
