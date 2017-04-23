@@ -33,13 +33,14 @@ public class PaymentScreen extends Screen {
 	private JLabel mTaxLabel;
 	private JLabel mTotalLabel;
 
-	// Controller
 	private Order mOrder;
+	
+	private JPanel mainPanel = new JPanel();
 
 	public PaymentScreen(JFrame frame, Order order) {
 		super(frame);
 
-		createView(frame);
+		createView();
 
 		if (order == null) {
 			mOrder = new Order();
@@ -47,14 +48,13 @@ public class PaymentScreen extends Screen {
 			mOrder = order;
 			updateOrder();
 		}
-
-		// Display the window.
-		frame.pack();
-		frame.setVisible(true);
+		
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
 	}
 
-	private void createView(JFrame frame) {
-		JPanel mainPanel = new JPanel();
+	/** creates view */
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 		addPanel(mainPanel);
 
@@ -135,23 +135,7 @@ public class PaymentScreen extends Screen {
 		mPayCash.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
-				final String paidamount = JOptionPane.showInputDialog(frame,"Amount due: $"+due+"\n Please enter the amount given in 0.00 format");
-			    final double paid = Double.parseDouble(paidamount.startsWith("$") ? paidamount.substring(1) : paidamount);
-			    if(due > paid){
-					JOptionPane.showMessageDialog(frame, "only allowed to pay with equal or more amount");
-					return;
-			    }
-			    due -= paid;
-			    due *= -1;
-			    due += .0000000000000001;//makes it positive if no change is due.
-				int confirmation = JOptionPane.showConfirmDialog(null,
-                        "give $"+ String.format("%.2f", due) + " back to the customer", "confirm?",
-                        JOptionPane.YES_NO_OPTION);
-				if(confirmation==0){
-					removePanel(mainPanel);
-					openUserMainMenu();
-				}
+				payWithCash();
 			}
 		});
 		buttonPanel.add(mPayCash);
@@ -161,14 +145,7 @@ public class PaymentScreen extends Screen {
 		mPayCreditCard.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
-				int confirmation = JOptionPane.showConfirmDialog(null,
-	                    "Amount due: $"+ due + "\n Was transaction successful?", "confirm?",
-	                    JOptionPane.YES_NO_OPTION);
-				if(confirmation==0){
-					removePanel(mainPanel);
-					openUserMainMenu();
-				}
+				PayWithCreditCard();
 			}
 		});
 		buttonPanel.add(mPayCreditCard);
@@ -178,14 +155,7 @@ public class PaymentScreen extends Screen {
 		mPayDebitCard.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
-				int confirmation = JOptionPane.showConfirmDialog(null,
-	                    "Amount due: $"+ due + "\n Was transaction successful?", "confirm?",
-	                    JOptionPane.YES_NO_OPTION);
-				if(confirmation==0){
-					removePanel(mainPanel);
-					openUserMainMenu();
-				}
+				PayWithDebitCard();
 			}
 		});
 		buttonPanel.add(mPayDebitCard);
@@ -195,13 +165,13 @@ public class PaymentScreen extends Screen {
 		mCancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new CheckoutScreen(frame, mOrder);
+				CancelPayment();
 			}
 		});
 		buttonPanel.add(mCancelButton);
 	}
 
+	/** updates the view for changes in the order */
 	private void updateOrder() {
 		DefaultListModel<Item> itemListModel = new DefaultListModel<Item>();
 		for (Item item : mOrder.getOrderList()) {
@@ -211,5 +181,59 @@ public class PaymentScreen extends Screen {
 		mSubTotalLabel.setText("$" + String.format("%.2f", mOrder.getTotal()));
 		mTaxLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * .06)));
 		mTotalLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * 1.06)));
+	}
+	
+	/** processes payment with cash */
+	private void payWithCash() {
+		double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
+		final String paidamount = JOptionPane.showInputDialog(mMainFrame,"Amount due: $"+due+"\n Please enter the amount given in 0.00 format");
+	    final double paid = Double.parseDouble(paidamount.startsWith("$") ? paidamount.substring(1) : paidamount);
+	    if(due > paid){
+			JOptionPane.showMessageDialog(mMainFrame, "only allowed to pay with equal or more amount");
+			return;
+	    }
+	    due -= paid;
+	    due *= -1;
+	    due += .0000000000000001;//makes it positive if no change is due.
+		int confirmation = JOptionPane.showConfirmDialog(null,
+                "give $"+ String.format("%.2f", due) + " back to the customer", "confirm?",
+                JOptionPane.YES_NO_OPTION);
+		if(confirmation==0){
+			PaymentSuccess();
+		}
+	}
+	
+	/** processes payment with a credit card */
+	private void PayWithCreditCard() {
+		double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
+		int confirmation = JOptionPane.showConfirmDialog(null,
+                "Amount due: $"+ due + "\n Was transaction successful?", "confirm?",
+                JOptionPane.YES_NO_OPTION);
+		if(confirmation==0){
+			PaymentSuccess();
+		}
+	}
+
+	/** processes payment with a debit card */
+	private void PayWithDebitCard() {
+		double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
+		int confirmation = JOptionPane.showConfirmDialog(null,
+                "Amount due: $"+ due + "\n Was transaction successful?", "confirm?",
+                JOptionPane.YES_NO_OPTION);
+		if(confirmation==0){
+			PaymentSuccess();
+		}
+	}
+	
+	/** saves the order and returns to main screen for the current user */
+	private void PaymentSuccess(){
+		removePanel(mainPanel);
+		openUserMainMenu();
+	}
+
+	/** Cancel's the payment, and returns to the checkout screen for the same order */
+	private void CancelPayment() {
+		removePanel(mainPanel);
+		new CheckoutScreen(mMainFrame, mOrder);
 	}
 }

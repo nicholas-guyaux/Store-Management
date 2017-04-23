@@ -13,37 +13,40 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import model.Employee;
 
 
 public class AddNewAccount  extends Screen {
 
-	public JLabel mAccountTypeLabel;
-	public JLabel mNameLabel;
-	public JLabel mUserNameLabel;
-	public JLabel mPasswordLabel;
+	private JLabel mAccountTypeLabel;
+	private JLabel mNameLabel;
+	private JLabel mUserNameLabel;
+	private JLabel mPasswordLabel;
 	
-	public JCheckBox mAccountTypeEditButton = new JCheckBox("is Manager");
-	public JTextField mNameEditButton = new JTextField(10);
-	public JTextField mUserNameEditButton = new JTextField(10);
-	public JTextField mPasswordEditButton = new JTextField(10);
+	private JCheckBox mAccountTypeEditCheckBox = new JCheckBox("is Manager");
+	private JTextField mNameEditTextField = new JTextField(10);
+	private JTextField mUserNameEditTextField = new JTextField(10);
+	private JTextField mPasswordEditTextField = new JPasswordField(10);
 
-	public JButton mSaveButton = new JButton("Save");
-	public JButton mCancelButton = new JButton("Cancel");
+	private JButton mSaveButton = new JButton("Save");
+	private JButton mCancelButton = new JButton("Cancel");
 	
+	private JPanel mainPanel = new JPanel();
 	 
 	public AddNewAccount(JFrame frame) {
-		super(frame);
+		super(frame); 
 		
-		createView(frame);
+		createView();
 		
-		frame.pack();
-		frame.setVisible(true);
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
 	}
 
-	private void createView(JFrame frame) {
-
-		JPanel mainPanel = new JPanel();
+	/** creates view */
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		addPanel(mainPanel);
 		
@@ -60,9 +63,9 @@ public class AddNewAccount  extends Screen {
 		AccountTypePanel.add(Box.createHorizontalStrut(30));
 		AccountTypePanel.add(Box.createHorizontalGlue());
 		  
-		mAccountTypeEditButton.setMaximumSize(new Dimension(900, 600));
-		mAccountTypeEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		AccountTypePanel.add(mAccountTypeEditButton);
+		mAccountTypeEditCheckBox.setMaximumSize(new Dimension(900, 600));
+		mAccountTypeEditCheckBox.setFont(new Font("Arial", Font.BOLD, 42));
+		AccountTypePanel.add(mAccountTypeEditCheckBox);
 
 		mainPanel.add(Box.createVerticalStrut(30));
 		
@@ -79,9 +82,9 @@ public class AddNewAccount  extends Screen {
 		NamePanel.add(Box.createHorizontalStrut(30));
 		NamePanel.add(Box.createHorizontalGlue());
 		  
-		mNameEditButton.setMaximumSize(new Dimension(900, 600));
-		mNameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		NamePanel.add(mNameEditButton);
+		mNameEditTextField.setMaximumSize(new Dimension(900, 600));
+		mNameEditTextField.setFont(new Font("Arial", Font.BOLD, 42));
+		NamePanel.add(mNameEditTextField);
 		
 
 		mainPanel.add(Box.createVerticalStrut(30));
@@ -99,9 +102,9 @@ public class AddNewAccount  extends Screen {
 		UserNamePanel.add(Box.createHorizontalStrut(30));		  
 		UserNamePanel.add(Box.createHorizontalGlue());
 		  
-		mUserNameEditButton.setMaximumSize(new Dimension(900, 600));
-		mUserNameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		UserNamePanel.add(mUserNameEditButton);
+		mUserNameEditTextField.setMaximumSize(new Dimension(900, 600));
+		mUserNameEditTextField.setFont(new Font("Arial", Font.BOLD, 42));
+		UserNamePanel.add(mUserNameEditTextField);
 		
 		mainPanel.add(Box.createVerticalStrut(30));
 		
@@ -118,9 +121,9 @@ public class AddNewAccount  extends Screen {
 		PasswordPanel.add(Box.createHorizontalStrut(30));
 		PasswordPanel.add(Box.createHorizontalGlue());
 		  
-		mPasswordEditButton.setMaximumSize(new Dimension(900, 600));
-		mPasswordEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		PasswordPanel.add(mPasswordEditButton);
+		mPasswordEditTextField.setMaximumSize(new Dimension(900, 600));
+		mPasswordEditTextField.setFont(new Font("Arial", Font.BOLD, 42));
+		PasswordPanel.add(mPasswordEditTextField);
 		
 		
 		mainPanel.add(Box.createVerticalStrut(30));
@@ -137,7 +140,7 @@ public class AddNewAccount  extends Screen {
 		mSaveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "not implemented yet");
+				saveEmployee();
 			}
 		});
 		BackButtonPanel.add(mSaveButton);
@@ -147,10 +150,36 @@ public class AddNewAccount  extends Screen {
 		mCancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new EditAccountsScreen(frame);
+				cancel();
 			}
 		});
 		BackButtonPanel.add(mCancelButton);
+
+		mNameEditTextField.requestFocusInWindow(); 
+		mainPanel.getRootPane().setDefaultButton(mSaveButton);
+	}
+	
+	/** checks for empty fields, if all fields are filled out, a new user will be created and saved 
+	 *  The program will then return the the edit accounts screen */
+	private void saveEmployee() {
+		if(mNameEditTextField.getText().compareTo("") == 0 || mUserNameEditTextField.getText().compareTo("") == 0 || mPasswordEditTextField.getText().compareTo("") == 0 ){
+			JOptionPane.showMessageDialog(mMainFrame, "must fill out all fields");
+		}
+		else{
+			int i = 1;
+			for(i = 1;i<Integer.MAX_VALUE;i++){
+				if(mController.getDataAccess().getEmployeeById(i) == null)
+					break;
+			}
+			mController.getDataAccess().addEmployee(new Employee(i,mNameEditTextField.getText(), mUserNameEditTextField.getText(), mPasswordEditTextField.getText(), mAccountTypeEditCheckBox.isSelected()));
+			removePanel(mainPanel);
+			new EditAccountsScreen(mMainFrame);	
+		}
+	}
+	
+	/** cancels the creation of a new user */
+	private void cancel() {
+		removePanel(mainPanel);
+		new EditAccountsScreen(mMainFrame);
 	}
 }

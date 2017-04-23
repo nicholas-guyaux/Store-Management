@@ -42,12 +42,14 @@ public class CheckoutScreen extends Screen {
 	private JLabel mTaxLabel;
 	private JLabel mTotalLabel;
 
-	// Controller
 	private Order mOrder;
+	
+	private JPanel mainPanel = new JPanel();
+
 	public CheckoutScreen(JFrame frame, Order order) {
 		super(frame);
 
-		createView(frame);
+		createView();
 
 		if (order == null) {
 			mOrder = new Order();
@@ -57,12 +59,12 @@ public class CheckoutScreen extends Screen {
 		}
 
 		// Display the window.
-		frame.pack();
-		frame.setVisible(true);
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
 	}
-
-	private void createView(JFrame frame) {
-		JPanel mainPanel = new JPanel();
+	
+	/** creates view */
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 		addPanel(mainPanel);
 
@@ -80,12 +82,7 @@ public class CheckoutScreen extends Screen {
 		mEditMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Integer q = askForQuantity();
-				if (q != null) {
-					Item selected = mItemList.getSelectedValue();
-					mOrder.editItem(selected.getProduct(), q);
-					updateOrder();
-				}
+				EditItem();
 			}
 		});
 		popupMenu.add(mEditMenuItem);
@@ -94,12 +91,7 @@ public class CheckoutScreen extends Screen {
 		mRemoveMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int n = JOptionPane.showConfirmDialog(frame, "Are you sure?", "Remove item confirmation", JOptionPane.YES_NO_OPTION);
-				if (n == JOptionPane.YES_OPTION) {
-					Item selected = mItemList.getSelectedValue();
-					mOrder.removeItem(selected.getProduct());
-					updateOrder();
-				}
+				RemoveCurrentItem();
 			}
 		});
 		popupMenu.add(mRemoveMenuItem);
@@ -181,11 +173,7 @@ public class CheckoutScreen extends Screen {
 		mAddOneButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Product p = askForProductId();
-				if (p != null) {
-					mOrder.addItem(p, 1);
-					updateOrder();
-				}
+				AddProduct();
 			}
 		});
 		buttonPanel.add(mAddOneButton);
@@ -195,14 +183,7 @@ public class CheckoutScreen extends Screen {
 		mAddButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Product p = askForProductId();
-				if (p != null) {
-					Integer q = askForQuantity();
-					if (q != null) {
-						mOrder.addItem(p, q);
-						updateOrder();
-					}
-				}
+				AddProducts();
 			}
 		});
 		buttonPanel.add(mAddButton);
@@ -212,8 +193,7 @@ public class CheckoutScreen extends Screen {
 		mPaymentButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new PaymentScreen(frame, mOrder);
+				openPayment();
 			}
 		});
 		buttonPanel.add(mPaymentButton);
@@ -223,13 +203,13 @@ public class CheckoutScreen extends Screen {
 		mCancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				openUserMainMenu();
+				CancelCheckout();
 			}
 		});
 		buttonPanel.add(mCancelButton);
 	}
-
+	
+	/** shows a input dialog asking for a product id */
 	private Product askForProductId() {
 		String s = JOptionPane.showInputDialog(mMainFrame, "Enter the id of the product that you want:", "Product Id", JOptionPane.PLAIN_MESSAGE);
 
@@ -250,7 +230,7 @@ public class CheckoutScreen extends Screen {
 		}
 		return null;
 	}
-
+	/** shows a input dialog asking for the quantity of the desired item */
 	private Integer askForQuantity() {
 		String s = JOptionPane.showInputDialog(mMainFrame, "Enter the quantity of the product:", "Quantity", JOptionPane.PLAIN_MESSAGE);
 
@@ -266,7 +246,8 @@ public class CheckoutScreen extends Screen {
 		}
 		return null;
 	}
-
+	
+	/** updates view for any changes that was made */
 	private void updateOrder() {
 		DefaultListModel<Item> itemListModel = new DefaultListModel<Item>();
 		for (Item item : mOrder.getOrderList()) {
@@ -276,5 +257,58 @@ public class CheckoutScreen extends Screen {
 		mSubTotalLabel.setText("$" + String.format("%.2f", mOrder.getTotal()));
 		mTaxLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * .06)));
 		mTotalLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * 1.06)));
+	}
+
+	/** changes the current product's quantity*/
+	private void EditItem() {
+		Integer q = askForQuantity();
+		if (q != null) {
+			Item selected = mItemList.getSelectedValue();
+			mOrder.editItem(selected.getProduct(), q);
+			updateOrder();
+		}
+	}
+	
+	/** removes the item selected */
+	private void RemoveCurrentItem() {
+		int n = JOptionPane.showConfirmDialog(mMainFrame, "Are you sure?", "Remove item confirmation", JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			Item selected = mItemList.getSelectedValue();
+			mOrder.removeItem(selected.getProduct());
+			updateOrder();
+		}
+	}
+	
+	/** Adds a product to the checkout */
+	private void AddProduct() {
+		Product p = askForProductId();
+		if (p != null) {
+			mOrder.addItem(p, 1);
+			updateOrder();
+		}
+	}
+	
+	/** Adds a quantity of an item to the checkout */
+	private void AddProducts() {
+		Product p = askForProductId();
+		if (p != null) {
+			Integer q = askForQuantity();
+			if (q != null) {
+				mOrder.addItem(p, q);
+				updateOrder();
+			}
+		}
+	}
+	
+	/** proceeds the checkout process to payment */
+	private void openPayment() {
+		removePanel(mainPanel);
+		new PaymentScreen(mMainFrame, mOrder);
+	}
+	
+	/** cancels the current order and returns to the Main Screen for the current user */
+	private void CancelCheckout() {
+		removePanel(mainPanel);
+		openUserMainMenu();
 	}
 }

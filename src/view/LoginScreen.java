@@ -12,27 +12,32 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import controller.Program;
-import model.Product;
 
 
 public class LoginScreen  extends Screen {
 
-	public JTextField mUsername = new JTextField();
+	private JTextField mUsername = new JTextField();
+	private JTextField mPassword = new JPasswordField();
 	
-	public JTextField mPassword = new JTextField();
+	private JButton mLogInButton = new JButton("Login");
+	private JButton mCancelButton = new JButton("Cancel");
 	
-	public JButton mLogInButton = new JButton("Login");
-	
-	public JButton mCancelButton = new JButton("Cancel");
-	
-	public JPanel mainPanel = new JPanel();
+	private JPanel mainPanel = new JPanel();
 	 
 	public LoginScreen(JFrame frame) {
-		super(frame);
+		super(frame); 
+		
+		createView();
 
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
+	}
+
+	/** creates view */
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		addPanel(mainPanel);
 		
@@ -80,12 +85,13 @@ public class LoginScreen  extends Screen {
 				System.exit(0);
 			}
 		});
-		bottom.add(mCancelButton);	
-
-		frame.pack();
-		frame.setVisible(true);
+		bottom.add(mCancelButton);
+		
+		mainPanel.getRootPane().setDefaultButton(mLogInButton);
+		mUsername.requestFocusInWindow(); 
 	}
 	
+	/** Attempts to login with the values entered into the fields */
 	private void login(){
 		if(mController.getDataAccess().login(mUsername.getText(), mPassword.getText())){
 			removePanel(mainPanel);

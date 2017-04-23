@@ -18,17 +18,25 @@ import controller.Program;
 
 public class CashierScreen  extends Screen {
 
-	public JButton mLogOutButton = new JButton("Logout");
+	private JButton mLogOutButton = new JButton("Logout");
 	
-	public JButton mCheckoutButton = new JButton("Checkout");
+	private JButton mCheckoutButton = new JButton("Checkout");
+	private JButton mEditAccountButton = new JButton("Edit Account");
 	
-	public JButton mEditAccountButton = new JButton("Edit Account");
+	private JPanel mainPanel = new JPanel();
 	
 	 
 	public CashierScreen(JFrame frame){
 		super(frame);
 		
-		JPanel mainPanel = new JPanel();
+		createView();
+		
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
+	}
+	
+	/** creates view */
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		addPanel(mainPanel);
 		
@@ -50,9 +58,7 @@ public class CashierScreen  extends Screen {
 		mLogOutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mController.getDataAccess().logOut();
-				removePanel(mainPanel);
-				new LoginScreen(frame);
+				logout();
 			}
 		});
 		top.add(mLogOutButton);
@@ -70,12 +76,11 @@ public class CashierScreen  extends Screen {
 		mCheckoutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new CheckoutScreen(frame,null);
+				openCheckout();
 			}
 		});
 		mBottom.add(mCheckoutButton);
-
+		
 		  
 		mBottom.add(Box.createHorizontalStrut(30));
 		  
@@ -84,14 +89,28 @@ public class CashierScreen  extends Screen {
 		mEditAccountButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new EditAccountScreen(frame,mController.getDataAccess().getCurrentUser());
+				openEditAccount();
 			}
 		});
 		mBottom.add(mEditAccountButton);
-		
+	}
 
-		frame.pack();
-		frame.setVisible(true);
+	/** logs out */
+	private void logout(){
+		mController.getDataAccess().logOut();
+		removePanel(mainPanel);
+		new LoginScreen(mMainFrame);
+	}
+	
+	/** opens checkout screen */
+	private void openCheckout(){
+		removePanel(mainPanel);
+		new CheckoutScreen(mMainFrame,null);
+	}
+	
+	/** opens edit account screen */
+	private void openEditAccount(){
+		removePanel(mainPanel);
+		new EditAccountScreen(mMainFrame,mController.getDataAccess().getCurrentUser());
 	}
 }

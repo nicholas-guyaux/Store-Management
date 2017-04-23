@@ -10,37 +10,37 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import controller.Program;
 import model.Product;
 
 
 public class AddNewProduct  extends Screen {
 
-	public JLabel mNameLabel;
-	public JLabel mPriceLabel;
+	private JLabel mNameLabel;
+	private JLabel mPriceLabel;
 	
-	public JTextField mNameEditField = new JTextField(10);
-	public JTextField mPriceLabelField = new JTextField(10);
+	private JTextField mNameEditField = new JTextField(10);
+	private JTextField mPriceLabelField = new JTextField(10);
 
-	public JButton mSaveButton = new JButton("Save");
-	public JButton mCancelButton = new JButton("Cancel");
+	private JButton mSaveButton = new JButton("Save");
+	private JButton mCancelButton = new JButton("Cancel");
 	
+	private JPanel mainPanel = new JPanel();
 	 
 	public AddNewProduct(JFrame frame) {
 		super(frame);
 		
-		createView(frame);
+		createView();
 		
-		frame.pack();
-		frame.setVisible(true);
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
 	}
-
-	private void createView(JFrame frame) {
-
-		JPanel mainPanel = new JPanel();
+	
+	/** creates view */
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		addPanel(mainPanel);
 		
@@ -94,15 +94,7 @@ public class AddNewProduct  extends Screen {
 		mSaveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int i = 1;
-				for(i = 1;i<Integer.MAX_VALUE;i++){
-					if(mController.getDataAccess().getProductById(i) == null)
-						break;
-				}
-				mController.getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Double.parseDouble(mPriceLabelField.getText())));
-
-				removePanel(mainPanel);
-				new InventoryScreen(frame);
+				Save();
 			}
 		});
 		BackButtonPanel.add(mSaveButton);
@@ -112,10 +104,39 @@ public class AddNewProduct  extends Screen {
 		mCancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new InventoryScreen(frame);
+				cancel();
 			}
 		});
 		BackButtonPanel.add(mCancelButton);
+
+		mainPanel.getRootPane().setDefaultButton(mSaveButton);
+		mNameEditField.requestFocusInWindow(); 
+	}
+	
+	/** checks fields and if they are valid saves the product into the system */
+	private void Save() {
+		if(mNameEditField.getText().compareTo("") == 0 || mPriceLabelField.getText().compareTo("") == 0 ){
+			JOptionPane.showMessageDialog(mMainFrame, "must fill in all fields");
+			return;
+		}
+		if(mPriceLabelField.getText().matches("[0-9]+(.[0-9]{2})?") == false){
+			JOptionPane.showMessageDialog(mMainFrame, "price field must be in a correct format (ddddd or ddddd.dd)");
+			return;
+		}
+		int i = 1;
+		for(i = 1;i<Integer.MAX_VALUE;i++){
+			if(mController.getDataAccess().getProductById(i) == null)
+				break;
+		}
+		mController.getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Double.parseDouble(mPriceLabelField.getText())));
+
+		removePanel(mainPanel);
+		new InventoryScreen(mMainFrame);
+	}
+
+	/** cancels the creation of a new product */
+	private void cancel() {
+		removePanel(mainPanel);
+		new InventoryScreen(mMainFrame);
 	}
 }

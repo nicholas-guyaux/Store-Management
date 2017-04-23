@@ -1,38 +1,9 @@
 package controller;
 
-import java.awt.Dimension;
-import java.sql.*;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.logging.Logger;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
-
-import model.DBConnect;
-import model.Productold;
-import view.CheckoutScreenold;
-import view.InventoryScreenold;
-import view.MainScreen;
-import view.PaymentScreenold;
-
-public class MainFrame implements ActionListener {
-	
+public class MainFrame /*implements ActionListener*/ {
+	/*
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	static final String DB_URL = "jdbc:mysql://localhost:3306/store_management";
@@ -259,7 +230,7 @@ public class MainFrame implements ActionListener {
 						}
 						
 	            	}
-	              	*/				
+	              	* /				
 	            conn.close();
 	            }
 			} catch (SQLException e1) {
@@ -356,5 +327,5 @@ public class MainFrame implements ActionListener {
         	
         }
        
-	}
+	}*/
 }

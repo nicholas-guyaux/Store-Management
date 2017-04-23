@@ -23,23 +23,29 @@ import controller.Program;
 
 public class ManagerScreen  extends Screen {
 
-	public JButton mLogOutButton = new JButton("Logout");
+	private JButton mLogOutButton = new JButton("Logout");
 	
-	public JButton mCheckoutButton = new JButton("Checkout");
-
-	public JButton mEditAccountButton = new JButton("Edit Account");
+	private JButton mCheckoutButton = new JButton("Checkout");
+	private JButton mEditAccountButton = new JButton("Edit Account");
 	
-	public JButton mInventoryButton = new JButton("Inventory");
+	private JButton mInventoryButton = new JButton("Inventory");
+	private JButton mReturnsButton = new JButton("Returns");
+	private JButton mEditAccountsButton = new JButton("Edit Accounts");
 	
-	public JButton mReturnsButton = new JButton("Returns");
-	
-	public JButton mEditAccountsButton = new JButton("Edit Accounts");
+	private JPanel mainPanel = new JPanel();
 	
 	 
 	public ManagerScreen(JFrame frame){
 		super(frame);
 	
-		JPanel mainPanel = new JPanel();
+		createView();
+		
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
+	}
+	
+	/** creates view */
+	private void createView(){
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		addPanel(mainPanel);
 		
@@ -63,9 +69,7 @@ public class ManagerScreen  extends Screen {
 		mLogOutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mController.getDataAccess().logOut();
-				removePanel(mainPanel);
-				new LoginScreen(frame);
+				logout();
 			}
 		});
 		top.add(mLogOutButton);
@@ -83,8 +87,7 @@ public class ManagerScreen  extends Screen {
 		mCheckoutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new CheckoutScreen(frame,null);
+				openCheckout();
 			}
 		});
 		mid.add(mCheckoutButton);
@@ -96,8 +99,7 @@ public class ManagerScreen  extends Screen {
 		mEditAccountButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new EditAccountScreen(frame,mController.getDataAccess().getCurrentUser());
+				openEditAccount();
 			}
 		});
 		mid.add(mEditAccountButton);
@@ -115,8 +117,7 @@ public class ManagerScreen  extends Screen {
 		mInventoryButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new InventoryScreen(frame);
+				openInventoryScreen();
 			}
 		});
 		managerOptions.add(mInventoryButton);
@@ -128,7 +129,7 @@ public class ManagerScreen  extends Screen {
 		mReturnsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "not implemented yet");
+				openReturnsScreen();
 			}
 		});
 		managerOptions.add(mReturnsButton);
@@ -140,14 +141,45 @@ public class ManagerScreen  extends Screen {
 		mEditAccountsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new EditAccountsScreen(frame);
+				openEditAccountsScreen();
 			}
 		});
 		managerOptions.add(mEditAccountsButton);
-		
-		
-		frame.pack();
-		frame.setVisible(true);
+	}
+	
+	/** logs out */
+	private void logout(){
+		mController.getDataAccess().logOut();
+		removePanel(mainPanel);
+		new LoginScreen(mMainFrame);
+	}
+	
+	/** opens checkout screen */
+	private void openCheckout(){
+		removePanel(mainPanel);
+		new CheckoutScreen(mMainFrame,null);
+	}
+	
+	/** opens edit account screen */
+	private void openEditAccount(){
+		removePanel(mainPanel);
+		new EditAccountScreen(mMainFrame,mController.getDataAccess().getCurrentUser());
+	}
+	
+	/** opens inventory screen */
+	private void openInventoryScreen() {
+		removePanel(mainPanel);
+		new InventoryScreen(mMainFrame);
+	}
+	
+	/** opens return screen */
+	private void openReturnsScreen() {
+		JOptionPane.showMessageDialog(mMainFrame, "not implemented yet");
+	}
+	
+	/** opens edit accounts screen */
+	private void openEditAccountsScreen() {
+		removePanel(mainPanel);
+		new EditAccountsScreen(mMainFrame);
 	}
 }
