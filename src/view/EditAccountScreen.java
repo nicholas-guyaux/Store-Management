@@ -52,7 +52,8 @@ public class EditAccountScreen  extends Screen {
 	}
 
 	/** updates view for any changes */
-	private void updateAccount() {	
+	private void updateAccount() {
+		Program.getInstance().getDataAccess().modifyEmployeeById(account.getId(), account);
 		mAccountTypeLabel.setText("Account Type: " + ((account.isManager())?"Manager":"Cashier"));
 		mNameLabel.setText("Name: " + account.getName());
 		mUserNameLabel.setText("Username: " + account.getUsername());

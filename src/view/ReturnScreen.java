@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import controller.Program;
 import model.Item;
 import model.Order;
 import model.Product;
@@ -53,8 +54,7 @@ public class ReturnScreen extends Screen {
 
 		mOrder = new Order(order);
 		updateOrder();
-
-		// Display the window.
+		
 		mMainFrame.pack();
 		mMainFrame.setVisible(true);
 	}
@@ -231,7 +231,7 @@ public class ReturnScreen extends Screen {
 		if ((s != null) && (s.length() > 0)) {
 			try {
 				int id = Integer.parseInt(s);
-				Product p = mController.getDataAccess().getProductById(id);
+				Product p = Program.getInstance().getDataAccess().getProductById(id);
 				if (p != null) {
 					return p;
 				} else {

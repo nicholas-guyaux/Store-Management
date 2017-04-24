@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import controller.Program;
 import model.Product;
 
 
@@ -45,6 +46,7 @@ public class EditProductScreen  extends Screen {
 
 	/** updates view for changes */
 	private void updateProduct() {	
+		Program.getInstance().getDataAccess().modifyProductById(product.getId(), product);
 		mNameLabel.setText("Name: " + product.getName());
 		mPriceLabel.setText("Price: $" + String.format("%.2f", product.getUnitPrice()) );
 	}

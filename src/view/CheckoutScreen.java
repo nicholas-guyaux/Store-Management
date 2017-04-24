@@ -59,7 +59,7 @@ public class CheckoutScreen extends Screen {
 			updateOrder();
 		}
 
-		// Display the window.
+
 		mMainFrame.pack();
 		mMainFrame.setVisible(true);
 	}
