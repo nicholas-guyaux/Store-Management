@@ -1,7 +1,5 @@
 package controller;
 
-import java.awt.event.ActionListener;
-
 public class MainFrame /*implements ActionListener*/ {
 	/*
 	// JDBC driver name and database URL

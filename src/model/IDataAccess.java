@@ -17,5 +17,9 @@ public interface IDataAccess {
 	public void modifyEmployeeById(int id, Employee p);
 	public void addEmployee(Employee p);
 	
+	public void SaveOrder(Order o);
+	public Order getOrderById(int id);
+	public int getNextOrderId();
+	
 	
 }

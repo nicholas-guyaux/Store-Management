@@ -2,9 +2,6 @@ package view;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,10 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
-import controller.Program;
+import model.Order;
 
 
 public class ManagerScreen  extends Screen {
@@ -174,7 +169,32 @@ public class ManagerScreen  extends Screen {
 	
 	/** opens return screen */
 	private void openReturnsScreen() {
-		JOptionPane.showMessageDialog(mMainFrame, "not implemented yet");
+		String input = (String) JOptionPane.showInputDialog(
+				mMainFrame,
+                "Order ID:",
+                "Order ID dialog",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                "");
+		if(input == null)
+			return;
+		if(input.compareTo("") == 0){
+			JOptionPane.showMessageDialog(mMainFrame, "must enter a value");
+			return;
+		}
+		if(input.matches("[0-9]+") == false){
+			JOptionPane.showMessageDialog(mMainFrame, "order id must have the correct format (ddddd)");
+			return;
+		}
+		int id = Integer.parseInt(input);
+		Order o = mController.getDataAccess().getOrderById(id);
+		if(o == null){
+			JOptionPane.showMessageDialog(mMainFrame, "the order id "+ id + " does not exist");
+			return;
+		}		
+		removePanel(mainPanel);
+		new ReturnScreen(mMainFrame, o);
 	}
 	
 	/** opens edit accounts screen */

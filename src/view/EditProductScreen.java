@@ -37,16 +37,16 @@ public class EditProductScreen  extends Screen {
 		
 		createView();
 		
-		updateAccount();
+		updateProduct();
 		
 		mMainFrame.pack();
 		mMainFrame.setVisible(true);
 	}
 
 	/** updates view for changes */
-	private void updateAccount() {	
+	private void updateProduct() {	
 		mNameLabel.setText("Name: " + product.getName());
-		mPriceLabel.setText("Price: $" + String.format("%.2f", product.getUnitPrice()) ); // TODO
+		mPriceLabel.setText("Price: $" + String.format("%.2f", product.getUnitPrice()) );
 	}
 
 	/** creates view */
@@ -144,7 +144,7 @@ public class EditProductScreen  extends Screen {
 			return;
 		}
 		product.setName(input);
-		updateAccount();
+		updateProduct();
 	}
 
 	/** opens a edit dialog for the price */
@@ -168,7 +168,7 @@ public class EditProductScreen  extends Screen {
 			return;
 		}
 		product.setPrice(Double.parseDouble(input));
-		updateAccount();
+		updateProduct();
 	}
 
 	/** returns to the previous screen */
