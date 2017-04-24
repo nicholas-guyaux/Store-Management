@@ -203,7 +203,7 @@ public class ReturnScreen extends Screen {
 		});
 		buttonPanel.add(mReturnButton);
 
-		mPayoutButton = new JButton("Pay");
+		mPayoutButton = new JButton("Payout");
 		mPayoutButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mPayoutButton.getMinimumSize().height));
 		mPayoutButton.addActionListener(new ActionListener() {
 			@Override
