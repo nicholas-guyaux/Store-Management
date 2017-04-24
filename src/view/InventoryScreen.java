@@ -160,7 +160,7 @@ public class InventoryScreen extends Screen {
 	 * */
 	private void updateList(String search){
 		DefaultListModel<Product> ProductListModel = new DefaultListModel<Product>();
-		for (Product Product : mController.getDataAccess().getInventoryList(search)) {
+		for (Product Product : Program.getInstance().getDataAccess().getInventoryList(search)) {
 			ProductListModel.addElement(Product);
 		}
 		mProductList.setModel(ProductListModel);
@@ -179,7 +179,7 @@ public class InventoryScreen extends Screen {
 		int n = JOptionPane.showConfirmDialog(mMainFrame, "Are you sure?", "Remove Product confirmation", JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
 			Product selected = mProductList.getSelectedValue();
-			mController.getDataAccess().removeProductById(selected.getId());
+			Program.getInstance().getDataAccess().removeProductById(selected.getId());
 			updateList();
 		}
 	}

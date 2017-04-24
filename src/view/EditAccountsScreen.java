@@ -20,6 +20,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
+import controller.Program;
 import model.Employee;
 
 public class EditAccountsScreen extends Screen {
@@ -120,7 +121,7 @@ public class EditAccountsScreen extends Screen {
 	/** updates view for changes */
 	private void updateAccounts(){
 		DefaultListModel<Employee> itemListModel = new DefaultListModel<Employee>();
-		for (Employee item : mController.getDataAccess().getEmployeeList()) {
+		for (Employee item : Program.getInstance().getDataAccess().getEmployeeList()) {
 			itemListModel.addElement(item);
 		}
 		mItemList.setModel(itemListModel);
@@ -137,13 +138,13 @@ public class EditAccountsScreen extends Screen {
 	/** removes the current selected account */
 	private void removeSelectedAccount() {
 		Employee selected = mItemList.getSelectedValue();
-		if(selected.getId() == mController.getDataAccess().getCurrentUser().getId()){
+		if(selected.getId() == Program.getInstance().getDataAccess().getCurrentUser().getId()){
 			JOptionPane.showMessageDialog(mMainFrame, "Cannot remove your own account");
 			return;
 		}
 		int n = JOptionPane.showConfirmDialog(mMainFrame, "remove " + selected.getUsername() +" from employees", "Remove Employee confirmation", JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
-			mController.getDataAccess().removeEmployeeById(selected.getId());
+			Program.getInstance().getDataAccess().removeEmployeeById(selected.getId());
 			updateAccounts();
 		}
 	}

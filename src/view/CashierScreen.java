@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import controller.Program;
+
 
 public class CashierScreen  extends Screen {
 
@@ -42,7 +44,7 @@ public class CashierScreen  extends Screen {
 		top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
 		mainPanel.add(top);
 		
-		String name = "Hi " + mController.getDataAccess().getCurrentUser().getName();
+		String name = "Hi " + Program.getInstance().getDataAccess().getCurrentUser().getName();
 		JLabel welcome = new JLabel(name);
 		welcome.setFont(new Font("Arial", Font.BOLD, 90));
 		welcome.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
@@ -94,7 +96,7 @@ public class CashierScreen  extends Screen {
 
 	/** logs out */
 	private void logout(){
-		mController.getDataAccess().logOut();
+		Program.getInstance().getDataAccess().logOut();
 		removePanel(mainPanel);
 		new LoginScreen(mMainFrame);
 	}
@@ -108,6 +110,6 @@ public class CashierScreen  extends Screen {
 	/** opens edit account screen */
 	private void openEditAccount(){
 		removePanel(mainPanel);
-		new EditAccountScreen(mMainFrame,mController.getDataAccess().getCurrentUser());
+		new EditAccountScreen(mMainFrame,Program.getInstance().getDataAccess().getCurrentUser());
 	}
 }

@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import controller.Program;
+
 
 
 public class LoginScreen  extends Screen {
@@ -93,7 +95,7 @@ public class LoginScreen  extends Screen {
 	
 	/** Attempts to login with the values entered into the fields */
 	private void login(){
-		if(mController.getDataAccess().login(mUsername.getText(), mPassword.getText())){
+		if(Program.getInstance().getDataAccess().login(mUsername.getText(), mPassword.getText())){
 			removePanel(mainPanel);
 			openUserMainMenu();
 		}

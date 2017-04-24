@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
+import controller.Program;
 import model.Item;
 import model.Order;
 
@@ -222,7 +223,7 @@ public class PaymentScreen extends Screen {
 	
 	/** saves the order and returns to main screen for the current user */
 	private void PaymentSuccess(){
-		mController.getDataAccess().SaveOrder(mOrder);
+		Program.getInstance().getDataAccess().SaveOrder(mOrder);
 		System.out.println("id = " + mOrder.getId());
 		removePanel(mainPanel);
 		openUserMainMenu();

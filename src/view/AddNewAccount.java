@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import controller.Program;
 import model.Employee;
 
 
@@ -168,10 +169,10 @@ public class AddNewAccount  extends Screen {
 		else{
 			int i = 1;
 			for(i = 1;i<Integer.MAX_VALUE;i++){
-				if(mController.getDataAccess().getEmployeeById(i) == null)
+				if(Program.getInstance().getDataAccess().getEmployeeById(i) == null)
 					break;
 			}
-			mController.getDataAccess().addEmployee(new Employee(i,mNameEditTextField.getText(), mUserNameEditTextField.getText(), mPasswordEditTextField.getText(), mAccountTypeEditCheckBox.isSelected()));
+			Program.getInstance().getDataAccess().addEmployee(new Employee(i,mNameEditTextField.getText(), mUserNameEditTextField.getText(), mPasswordEditTextField.getText(), mAccountTypeEditCheckBox.isSelected()));
 			removePanel(mainPanel);
 			new EditAccountsScreen(mMainFrame);	
 		}

@@ -7,7 +7,6 @@ import controller.Program;
 
 public abstract class Screen {
 	protected JFrame mMainFrame;
-	protected static Program mController;
 
 	public Screen(JFrame mainFrame) {
 		mMainFrame = mainFrame;
@@ -27,16 +26,12 @@ public abstract class Screen {
 		mMainFrame.getContentPane().remove(panel);
 	}
 	
-	public static void setController(Program controller){
-		mController = controller;
-	}
-	
 	/** opens up either the Cashier main screen or the Manager main screen depending on which is logged in 	 */
 	protected void openUserMainMenu(){
-		if(mController.getDataAccess().getCurrentUser() == null){
+		if(Program.getInstance().getDataAccess().getCurrentUser() == null){
 			return;
 		}
-		if(mController.getDataAccess().getCurrentUser().isManager())
+		if(Program.getInstance().getDataAccess().getCurrentUser().isManager())
 			new ManagerScreen(mMainFrame);
 		else
 			new CashierScreen(mMainFrame);

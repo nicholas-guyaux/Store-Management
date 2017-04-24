@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import controller.Program;
 import model.Order;
 
 
@@ -50,7 +51,7 @@ public class ManagerScreen  extends Screen {
 		mainPanel.add(top);
 		
 		String name = "";
-		name = "Hi " + mController.getDataAccess().getCurrentUser().getName();
+		name = "Hi " + Program.getInstance().getDataAccess().getCurrentUser().getName();
 
 		JLabel welcome = new JLabel(name);
 		welcome.setFont(new Font("Arial", Font.BOLD, 90));
@@ -144,7 +145,7 @@ public class ManagerScreen  extends Screen {
 	
 	/** logs out */
 	private void logout(){
-		mController.getDataAccess().logOut();
+		Program.getInstance().getDataAccess().logOut();
 		removePanel(mainPanel);
 		new LoginScreen(mMainFrame);
 	}
@@ -158,7 +159,7 @@ public class ManagerScreen  extends Screen {
 	/** opens edit account screen */
 	private void openEditAccount(){
 		removePanel(mainPanel);
-		new EditAccountScreen(mMainFrame,mController.getDataAccess().getCurrentUser());
+		new EditAccountScreen(mMainFrame,Program.getInstance().getDataAccess().getCurrentUser());
 	}
 	
 	/** opens inventory screen */
@@ -188,7 +189,7 @@ public class ManagerScreen  extends Screen {
 			return;
 		}
 		int id = Integer.parseInt(input);
-		Order o = mController.getDataAccess().getOrderById(id);
+		Order o = Program.getInstance().getDataAccess().getOrderById(id);
 		if(o == null){
 			JOptionPane.showMessageDialog(mMainFrame, "the order id "+ id + " does not exist");
 			return;

@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import controller.Program;
 import model.Employee;
 
 
@@ -79,7 +80,7 @@ public class EditAccountScreen  extends Screen {
 		mAccountTypeEditButton.setMaximumSize(new Dimension(900, 600));
 		mAccountTypeEditButton.setFont(new Font("Arial", Font.BOLD, 42));
 		//mAccountTypeEditButton.addActionListener(this);
-		if(mController.getDataAccess().getCurrentUser().getId() != account.getId()){
+		if(Program.getInstance().getDataAccess().getCurrentUser().getId() != account.getId()){
 			AccountTypePanel.add(mAccountTypeEditButton);
 			mAccountTypeEditButton.addActionListener(new ActionListener() {
 				@Override
@@ -132,7 +133,7 @@ public class EditAccountScreen  extends Screen {
 		  
 		mUserNameEditButton.setMaximumSize(new Dimension(900, 600));
 		mUserNameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		if(mController.getDataAccess().getCurrentUser().isManager()){
+		if(Program.getInstance().getDataAccess().getCurrentUser().isManager()){
 			UserNamePanel.add(mUserNameEditButton);
 			mUserNameEditButton.addActionListener(new ActionListener() {
 				@Override
@@ -258,7 +259,7 @@ public class EditAccountScreen  extends Screen {
 	}
 	private void returnToPreviousScreen() {
 		removePanel(mainPanel);
-		if(mController.getDataAccess().getCurrentUser().getId() != account.getId())
+		if(Program.getInstance().getDataAccess().getCurrentUser().getId() != account.getId())
 			new EditAccountsScreen(mMainFrame);
 		else
 			openUserMainMenu();

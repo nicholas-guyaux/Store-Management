@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import controller.Program;
 import model.Product;
 
 
@@ -125,10 +126,10 @@ public class AddNewProduct  extends Screen {
 		}
 		int i = 1;
 		for(i = 1;i<Integer.MAX_VALUE;i++){
-			if(mController.getDataAccess().getProductById(i) == null)
+			if(Program.getInstance().getDataAccess().getProductById(i) == null)
 				break;
 		}
-		mController.getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Double.parseDouble(mPriceLabelField.getText())));
+		Program.getInstance().getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Double.parseDouble(mPriceLabelField.getText())));
 
 		removePanel(mainPanel);
 		new InventoryScreen(mMainFrame);

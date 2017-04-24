@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import controller.Program;
 import model.Item;
 import model.Order;
 import model.Product;
@@ -51,7 +52,7 @@ public class CheckoutScreen extends Screen {
 		createView();
 
 		if (order == null) {
-			int id = mController.getDataAccess().getNextOrderId();
+			int id = Program.getInstance().getDataAccess().getNextOrderId();
 			mOrder = new Order(id);
 		} else {
 			mOrder = order;
@@ -216,7 +217,7 @@ public class CheckoutScreen extends Screen {
 		if ((s != null) && (s.length() > 0)) {
 			try {
 				int id = Integer.parseInt(s);
-				Product p = mController.getDataAccess().getProductById(id);
+				Product p = Program.getInstance().getDataAccess().getProductById(id);
 				if (p != null) {
 					return p;
 				} else {
