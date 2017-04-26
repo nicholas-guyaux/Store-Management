@@ -27,39 +27,34 @@ import model.Item;
 import model.Order;
 import model.Product;
 
-public class CheckoutScreen extends Screen {
+public class ReturnScreen extends Screen {
 	// View
-	private JButton mAddButton;
-	private JButton mAddOneButton;
-	private JButton mPaymentButton;
+	private JButton mReturnButton;
+	private JButton mPayoutButton;
 	private JButton mCancelButton;
 
 	private JMenuItem mEditMenuItem;
 	private JMenuItem mRemoveMenuItem;
+	private JMenuItem mReturnMenuItem;
 
 	private JList<Item> mItemList;
 	private JLabel mSubTotalLabel;
 	private JLabel mTaxLabel;
 	private JLabel mTotalLabel;
+	private JLabel mPriceDifferenceLabel;
 
 	private Order mOrder;
 	
 	private JPanel mainPanel = new JPanel();
 
-	public CheckoutScreen(JFrame frame, Order order) {
+	public ReturnScreen(JFrame frame, Order order) {
 		super(frame);
 
 		createView();
 
-		if (order == null) {
-			int id = Program.getInstance().getDataAccess().getNextOrderId();
-			mOrder = new Order(id);
-		} else {
-			mOrder = order;
-			updateOrder();
-		}
-
-
+		mOrder = new Order(order);
+		updateOrder();
+		
 		mMainFrame.pack();
 		mMainFrame.setVisible(true);
 	}
@@ -73,36 +68,49 @@ public class CheckoutScreen extends Screen {
 		listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 		mainPanel.add(listPanel);
 
-		JLabel title = new JLabel("Check out");
+		JLabel title = new JLabel("Returns");
 		title.setFont(new Font("Serif", Font.BOLD, 22));
 		title.setMaximumSize(new Dimension(Integer.MAX_VALUE, title.getMinimumSize().height));
 		listPanel.add(title);
 
 		JPopupMenu popupMenu = new JPopupMenu();
+		mReturnMenuItem = new JMenuItem("Return");
+		mReturnMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ReturnItem();
+			}
+		});
+		popupMenu.add(mReturnMenuItem);
+		
+		JPopupMenu returnPopupMenu = new JPopupMenu();
 		mEditMenuItem = new JMenuItem("Edit");
 		mEditMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				EditItem();
+				EditReturn();
 			}
 		});
-		popupMenu.add(mEditMenuItem);
-		popupMenu.add(new JPopupMenu.Separator());
+		returnPopupMenu.add(mEditMenuItem);
+		returnPopupMenu.add(new JPopupMenu.Separator());
 		mRemoveMenuItem = new JMenuItem("Remove");
 		mRemoveMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				RemoveCurrentItem();
+				RemoveReturn();
 			}
 		});
-		popupMenu.add(mRemoveMenuItem);
+		returnPopupMenu.add(mRemoveMenuItem);
 
 		mItemList = new JList<>();
 		mItemList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent me) {
 				if (SwingUtilities.isRightMouseButton(me) && !mItemList.isSelectionEmpty() && mItemList.locationToIndex(me.getPoint()) == mItemList.getSelectedIndex()) {
-					popupMenu.show(mItemList, me.getX(), me.getY());
+					if(mItemList.getSelectedValue().getQuantity() > 0)
+						popupMenu.show(mItemList, me.getX(), me.getY());
+					else
+						returnPopupMenu.show(mItemList, me.getX(), me.getY());	
 				}
 			}
 		});
@@ -163,41 +171,47 @@ public class CheckoutScreen extends Screen {
 		mTotalLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mTotalLabel.getMinimumSize().height));
 		totalPanel.add(mTotalLabel);
 		
+		JPanel PriceDifferencePanel = new JPanel();
+		PriceDifferencePanel.setLayout(new BoxLayout(PriceDifferencePanel, BoxLayout.X_AXIS));
+		listPanel.add(PriceDifferencePanel);
+		
+		JLabel PriceDifferenceText = new JLabel("Return Total:", SwingConstants.LEFT);
+		PriceDifferenceText.setFont(new Font("Serif", Font.BOLD, 18));
+		PriceDifferenceText.setMaximumSize(new Dimension(Integer.MAX_VALUE, PriceDifferenceText.getMinimumSize().height));
+		PriceDifferencePanel.add(PriceDifferenceText);
+
+		PriceDifferencePanel.add(Box.createHorizontalGlue());
+		
+		mPriceDifferenceLabel = new JLabel("$0.00", SwingConstants.RIGHT);
+		mPriceDifferenceLabel.setFont(new Font("Serif", Font.BOLD, 18));
+		mPriceDifferenceLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mPriceDifferenceLabel.getMinimumSize().height));
+		PriceDifferencePanel.add(mPriceDifferenceLabel);
+		
 		
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 		mainPanel.add(buttonPanel);
 
-		mAddOneButton = new JButton("Add a product");
-		mAddOneButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mAddOneButton.getMinimumSize().height));
-		mAddOneButton.addActionListener(new ActionListener() {
+		mReturnButton = new JButton("Return Product");
+		mReturnButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mReturnButton.getMinimumSize().height));
+		mReturnButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AddProduct();
+				returnProduct();
 			}
 		});
-		buttonPanel.add(mAddOneButton);
+		buttonPanel.add(mReturnButton);
 
-		mAddButton = new JButton("Add products");
-		mAddButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mAddButton.getMinimumSize().height));
-		mAddButton.addActionListener(new ActionListener() {
+		mPayoutButton = new JButton("Payout");
+		mPayoutButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mPayoutButton.getMinimumSize().height));
+		mPayoutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AddProducts();
+				openPayoutScreen();
 			}
 		});
-		buttonPanel.add(mAddButton);
-
-		mPaymentButton = new JButton("Pay");
-		mPaymentButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mPaymentButton.getMinimumSize().height));
-		mPaymentButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openPayment();
-			}
-		});
-		buttonPanel.add(mPaymentButton);
+		buttonPanel.add(mPayoutButton);
 
 		mCancelButton = new JButton("Cancel");
 		mCancelButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mCancelButton.getMinimumSize().height));
@@ -251,76 +265,79 @@ public class CheckoutScreen extends Screen {
 	/** updates view for any changes that was made */
 	private void updateOrder() {
 		DefaultListModel<Item> itemListModel = new DefaultListModel<Item>();
-		for (Item item : mOrder.getOrderList()) {
+		for (Item item : mOrder.getReturnList()) {
 			itemListModel.addElement(item);
 		}
 		mItemList.setModel(itemListModel);
 		mSubTotalLabel.setText("$" + String.format("%.2f", mOrder.getTotal()));
 		mTaxLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * .06)));
 		mTotalLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * 1.06)));
+		mPriceDifferenceLabel.setText("$" + String.format("%.2f", (mOrder.getReturnPrice())));
 	}
 
 	/** changes the current product's quantity*/
-	private void EditItem() {
+	private void EditReturn() {
 		Integer q = askForQuantity();
 		if (q != null) {
+			if(q < 0)
+				q *= -1;
 			Item selected = mItemList.getSelectedValue();
-			if(q == 0){
-				mOrder.removeItem(selected.getProduct());
-				updateOrder();
+			if(q > mOrder.getQuantityOfProduct(selected.getProduct()) - selected.getQuantity()){
+				JOptionPane.showMessageDialog(mMainFrame, "Cannot return a quantity more than the items that were bought");
 				return;
 			}
-			if(q < 0){
-				JOptionPane.showMessageDialog(mMainFrame, "Quantity must be a positive number");
-				return;
-			}
-			mOrder.editItem(selected.getProduct(), q);
+			mOrder.editReturn(selected.getProduct(), q);
 			updateOrder();
 		}
 	}
 	
 	/** removes the item selected */
-	private void RemoveCurrentItem() {
+	private void RemoveReturn() {
 		int n = JOptionPane.showConfirmDialog(mMainFrame, "Are you sure?", "Remove item confirmation", JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
 			Item selected = mItemList.getSelectedValue();
-			mOrder.removeItem(selected.getProduct());
+			mOrder.removeReturn(selected.getProduct());
 			updateOrder();
 		}
 	}
 	
-	/** Adds a product to the checkout */
-	private void AddProduct() {
-		Product p = askForProductId();
-		if (p != null) {
-			mOrder.addItem(p, 1);
-			updateOrder();
-		}
+	private void ReturnItem(){
+		Item selected = mItemList.getSelectedValue();
+		mOrder.returnProduct(selected.getProduct(), mOrder.getQuantityOfProduct(selected.getProduct()));
+		updateOrder();
 	}
 	
 	/** Adds a quantity of an item to the checkout */
-	private void AddProducts() {
+	private void returnProduct() {
 		Product p = askForProductId();
 		if (p != null) {
-			Integer q = askForQuantity();
-			if (q != null) {
-				if(q == 0){
-					return;
+			int q = mOrder.getQuantityOfProduct(p);
+			if(q == 0){
+				JOptionPane.showMessageDialog(mMainFrame, "can only return products that are left in the current order");
+				return;
+			}
+			if(q > 1){
+				Integer rq = askForQuantity();
+				if (rq != null) {
+					if(rq > q){
+						JOptionPane.showMessageDialog(mMainFrame, "can only return up to the quantity of items that are left in the order");
+						return;
+					}
+					mOrder.returnProduct(p, rq);
+					updateOrder();
 				}
-				if(q < 0){
-					JOptionPane.showMessageDialog(mMainFrame, "Quantity must be a positive number");
-					return;
-				}
-				mOrder.addItem(p, q);
+			}
+			else{
+				mOrder.returnProduct(p, 1);
 				updateOrder();
 			}
 		}
 	}
 	
 	/** proceeds the checkout process to payment */
-	private void openPayment() {
+	private void openPayoutScreen() {
 		removePanel(mainPanel);
-		new PaymentScreen(mMainFrame, mOrder);
+		new PayoutScreen(mMainFrame, mOrder);
 	}
 	
 	/** cancels the current order and returns to the Main Screen for the current user */

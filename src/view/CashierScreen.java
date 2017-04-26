@@ -10,7 +10,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import controller.Program;
@@ -18,17 +17,25 @@ import controller.Program;
 
 public class CashierScreen  extends Screen {
 
-	public JButton mLogOutButton = new JButton("Logout");
+	private JButton mLogOutButton = new JButton("Logout");
 	
-	public JButton mCheckoutButton = new JButton("Checkout");
+	private JButton mCheckoutButton = new JButton("Checkout");
+	private JButton mEditAccountButton = new JButton("Edit Account");
 	
-	public JButton mEditAccountButton = new JButton("Edit Account");
+	private JPanel mainPanel = new JPanel();
 	
 	 
 	public CashierScreen(JFrame frame){
 		super(frame);
 		
-		JPanel mainPanel = new JPanel();
+		createView();
+		
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
+	}
+	
+	/** creates view */
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		addPanel(mainPanel);
 		
@@ -37,7 +44,7 @@ public class CashierScreen  extends Screen {
 		top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
 		mainPanel.add(top);
 		
-		String name = "Hi " + mController.getDataAccess().getCurrentUser().getName();
+		String name = "Hi " + Program.getInstance().getDataAccess().getCurrentUser().getName();
 		JLabel welcome = new JLabel(name);
 		welcome.setFont(new Font("Arial", Font.BOLD, 90));
 		welcome.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
@@ -50,9 +57,7 @@ public class CashierScreen  extends Screen {
 		mLogOutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mController.getDataAccess().logOut();
-				removePanel(mainPanel);
-				new LoginScreen(frame);
+				logout();
 			}
 		});
 		top.add(mLogOutButton);
@@ -70,12 +75,11 @@ public class CashierScreen  extends Screen {
 		mCheckoutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new CheckoutScreen(frame,null);
+				openCheckout();
 			}
 		});
 		mBottom.add(mCheckoutButton);
-
+		
 		  
 		mBottom.add(Box.createHorizontalStrut(30));
 		  
@@ -84,14 +88,28 @@ public class CashierScreen  extends Screen {
 		mEditAccountButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new EditAccountScreen(frame,mController.getDataAccess().getCurrentUser());
+				openEditAccount();
 			}
 		});
 		mBottom.add(mEditAccountButton);
-		
+	}
 
-		frame.pack();
-		frame.setVisible(true);
+	/** logs out */
+	private void logout(){
+		Program.getInstance().getDataAccess().logOut();
+		removePanel(mainPanel);
+		new LoginScreen(mMainFrame);
+	}
+	
+	/** opens checkout screen */
+	private void openCheckout(){
+		removePanel(mainPanel);
+		new CheckoutScreen(mMainFrame,null);
+	}
+	
+	/** opens edit account screen */
+	private void openEditAccount(){
+		removePanel(mainPanel);
+		new EditAccountScreen(mMainFrame,Program.getInstance().getDataAccess().getCurrentUser());
 	}
 }

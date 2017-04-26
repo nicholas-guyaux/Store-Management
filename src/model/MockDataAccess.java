@@ -8,6 +8,7 @@ public class MockDataAccess implements IDataAccess {
 
 	private Map<Integer, Product> mProducts;
 	private Map<Integer, Employee> mEmployees;
+	private Map<Integer, Order> mOrders;
 	Employee currentUser = null;
 
 	public MockDataAccess() {
@@ -22,6 +23,8 @@ public class MockDataAccess implements IDataAccess {
 		mEmployees.put(1, new Employee(1,"Jordan Knudsen", "jordan", "password", false));
 		mEmployees.put(2, new Employee(2,"Nicholas Guyaux", "nick", "password", false));
 		mEmployees.put(3, new Employee(3,"Mr. Smith", "smith", "password", true));
+		
+		mOrders = new HashMap<>();
 	}
 
 	public Product getProductById(int id) {
@@ -86,9 +89,49 @@ public class MockDataAccess implements IDataAccess {
 	public void logOut() {
 		currentUser = null;		
 	}
-
+	
+	@Override
+	public Employee getEmployeeById(int id){
+		return mEmployees.get(id);
+	}
+	
 	@Override
 	public Employee[] getEmployeeList() {
 		return  mEmployees.values().toArray(new Employee[0]);
+	}
+
+	@Override
+	public void removeEmployeeById(int id) {
+		mEmployees.remove(id);		
+	}
+
+	@Override
+	public void modifyEmployeeById(int id, Employee p) {
+		mEmployees.put(id, p);
+	}
+
+	@Override
+	public void addEmployee(Employee p) {
+		mEmployees.put(p.getId(),p);
+	}
+
+	@Override
+	public void SaveOrder(Order o) {
+		mOrders.put(o.getId(), o);
+	}
+
+	@Override
+	public Order getOrderById(int id) {
+		return  mOrders.get(id);
+	}
+
+	@Override
+	public int getNextOrderId() {
+		int i = 1;
+		for(i = 1;i<Integer.MAX_VALUE;i++){
+			if(getOrderById(i) == null)
+				break;
+		}
+		return i;
 	}
 }

@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -19,18 +18,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.ListModel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import controller.Program;
 import model.Employee;
-import model.Item;
-import model.Order;
-import model.Product;
 
 public class EditAccountsScreen extends Screen {
-	// View
+	
 	private JButton mAddButton;
 	private JButton mBackButton;
 
@@ -38,22 +32,22 @@ public class EditAccountsScreen extends Screen {
 	private JMenuItem mRemoveMenuItem;
 
 	private JList<Employee> mItemList;
-
-	// Controller
+	
+	private JPanel mainPanel = new JPanel();
+	
 	public EditAccountsScreen(JFrame frame) {
 		super(frame);
 
-		createView(frame);
+		createView();
 
 		updateAccounts();
 		
-		// Display the window.
-		frame.pack();
-		frame.setVisible(true);
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
 	}
 
-	private void createView(JFrame frame) {
-		JPanel mainPanel = new JPanel();
+	/** creates view */
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 		addPanel(mainPanel);
 
@@ -71,14 +65,7 @@ public class EditAccountsScreen extends Screen {
 		mEditMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Employee selected = mItemList.getSelectedValue();
-
-				removePanel(mainPanel);
-				new EditAccountScreen(frame,selected);
-				
-				// TODO open edit window
-				//mOrder.editItem(selected.getProduct(), q);
-				updateAccounts();
+				EditSelectedAccount();
 			}
 		});
 		popupMenu.add(mEditMenuItem);
@@ -87,14 +74,7 @@ public class EditAccountsScreen extends Screen {
 		mRemoveMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "not implemented");
-				/*int n = JOptionPane.showConfirmDialog(frame, "Are you sure?", "Remove item confirmation", JOptionPane.YES_NO_OPTION);
-				if (n == JOptionPane.YES_OPTION) {
-					Employee selected = mItemList.getSelectedValue();
-					// TODO remove code
-					//mOrder.removeItem(selected.getProduct());
-					updateAccounts();
-				}*/
+				removeSelectedAccount();
 			}
 		});
 		popupMenu.add(mRemoveMenuItem);
@@ -122,8 +102,7 @@ public class EditAccountsScreen extends Screen {
 		mAddButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new AddNewAccount(frame);
+				AddAccount();
 			}
 		});
 		buttonPanel.add(mAddButton);
@@ -133,18 +112,52 @@ public class EditAccountsScreen extends Screen {
 		mBackButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				openUserMainMenu();
+				returnToMainScreen();
 			}
 		});
 		buttonPanel.add(mBackButton);
 	}
 
+	/** updates view for changes */
 	private void updateAccounts(){
 		DefaultListModel<Employee> itemListModel = new DefaultListModel<Employee>();
-		for (Employee item : mController.getDataAccess().getEmployeeList()) {
+		for (Employee item : Program.getInstance().getDataAccess().getEmployeeList()) {
 			itemListModel.addElement(item);
 		}
 		mItemList.setModel(itemListModel);
+	}
+	
+	/** opens the edit account screen for the selected account */
+	private void EditSelectedAccount() {
+		Employee selected = mItemList.getSelectedValue();
+
+		removePanel(mainPanel);
+		new EditAccountScreen(mMainFrame,selected);
+	}
+
+	/** removes the current selected account */
+	private void removeSelectedAccount() {
+		Employee selected = mItemList.getSelectedValue();
+		if(selected.getId() == Program.getInstance().getDataAccess().getCurrentUser().getId()){
+			JOptionPane.showMessageDialog(mMainFrame, "Cannot remove your own account");
+			return;
+		}
+		int n = JOptionPane.showConfirmDialog(mMainFrame, "remove " + selected.getUsername() +" from employees", "Remove Employee confirmation", JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			Program.getInstance().getDataAccess().removeEmployeeById(selected.getId());
+			updateAccounts();
+		}
+	}
+	
+	/** opens the add new account screen */
+	private void AddAccount() {
+		removePanel(mainPanel);
+		new AddNewAccount(mMainFrame);
+	}
+
+	/** returns to the main screen */
+	private void returnToMainScreen() {
+		removePanel(mainPanel);
+		openUserMainMenu();
 	}
 }

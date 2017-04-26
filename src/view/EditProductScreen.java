@@ -19,36 +19,40 @@ import model.Product;
 
 public class EditProductScreen  extends Screen {
 
-	public JLabel mNameLabel;
-	public JLabel mPriceLabel;
+	private JLabel mNameLabel;
+	private JLabel mPriceLabel;
 	
-	public JButton mNameEditButton = new JButton("Edit");
-	public JButton mPriceLabelButton = new JButton("Edit");
+	private JButton mNameEditButton = new JButton("Edit");
+	private JButton mPriceLabelButton = new JButton("Edit");
 	
-	public JButton mBackButton = new JButton("Back");
+	private JButton mBackButton = new JButton("Back");
 	
-	 
+	private JPanel mainPanel = new JPanel();
+	
+	private Product product;
+	
 	public EditProductScreen(JFrame frame, Product product) {
 		super(frame);
 		
-		createView(frame, product);
+		this.product = product;
 		
-		updateAccount(product);
+		createView();
 		
-		frame.pack();
-		frame.setVisible(true);
+		updateProduct();
+		
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
 	}
 
-
-	private void updateAccount(Product product) {	
+	/** updates view for changes */
+	private void updateProduct() {	
+		Program.getInstance().getDataAccess().modifyProductById(product.getId(), product);
 		mNameLabel.setText("Name: " + product.getName());
-		mPriceLabel.setText("Price: $" + String.format("%.2f", product.getUnitPrice()) ); // TODO
+		mPriceLabel.setText("Price: $" + String.format("%.2f", product.getUnitPrice()) );
 	}
 
-
-	private void createView(JFrame frame, Product product) {
-
-		JPanel mainPanel = new JPanel();
+	/** creates view */
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		addPanel(mainPanel);
 		
@@ -73,16 +77,7 @@ public class EditProductScreen  extends Screen {
 		mNameEditButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String input = (String) JOptionPane.showInputDialog(
-		                frame,
-		                "Name:",
-		                "Name Edit dialog",
-		                JOptionPane.PLAIN_MESSAGE,
-		                null,
-		                null,
-		                "Jordan Knudsen");
-				//product.setName(input); // TODO
-				updateAccount(product);
+				EditName();
 			}
 		});
 		NamePanel.add(mNameEditButton);
@@ -105,10 +100,15 @@ public class EditProductScreen  extends Screen {
 		  
 		mPriceLabelButton.setMaximumSize(new Dimension(900, 600));
 		mPriceLabelButton.setFont(new Font("Arial", Font.BOLD, 42));
-		//mUserNameEditButton.addActionListener(this);
-		if(mController.getDataAccess().getCurrentUser().isManager()){
-			UserNamePanel.add(mPriceLabelButton);
-		}
+		mPriceLabelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EditPrice();
+			}
+		});
+		UserNamePanel.add(mPriceLabelButton);
+		
+		
 		mainPanel.add(Box.createVerticalStrut(30));
 		
 		
@@ -123,10 +123,59 @@ public class EditProductScreen  extends Screen {
 		mBackButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new InventoryScreen(frame);
+				returnToPreviousScreen();
 			}
 		});
 		BackButtonPanel.add(mBackButton);
+	}
+	
+	/** opens a edit dialog for the name */
+	private void EditName() {
+		String input = (String) JOptionPane.showInputDialog(
+				mMainFrame,
+                "Name:",
+                "Name Edit dialog",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                product.getName());
+		if(input == null)
+			return;
+		if(input.compareTo("") == 0){
+			JOptionPane.showMessageDialog(mMainFrame, "must enter a value");
+			return;
+		}
+		product.setName(input);
+		updateProduct();
+	}
+
+	/** opens a edit dialog for the price */
+	private void EditPrice() {
+		String input = (String) JOptionPane.showInputDialog(
+				mMainFrame,
+                "Name:",
+                "Name Edit dialog",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                product.getUnitPrice());
+		if(input == null)
+			return;
+		if(input.compareTo("") == 0){
+			JOptionPane.showMessageDialog(mMainFrame, "must enter a value");
+			return;
+		}
+		if(input.matches("[0-9]+(.[0-9]{2})?") == false){
+			JOptionPane.showMessageDialog(mMainFrame, "price field must be in a correct format (ddddd or ddddd.dd)");
+			return;
+		}
+		product.setPrice(Double.parseDouble(input));
+		updateProduct();
+	}
+
+	/** returns to the previous screen */
+	private void returnToPreviousScreen() {
+		removePanel(mainPanel);
+		new InventoryScreen(mMainFrame);
 	}
 }

@@ -8,54 +8,60 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import controller.Program;
 import model.Employee;
-import model.Order;
 
 
 public class EditAccountScreen  extends Screen {
 
-	public JLabel mAccountTypeLabel;
-	public JLabel mNameLabel;
-	public JLabel mUserNameLabel;
-	public JLabel mPasswordLabel;
+	private JLabel mAccountTypeLabel;
+	private JLabel mNameLabel;
+	private JLabel mUserNameLabel;
+	private JLabel mPasswordLabel;
 	
-	public JButton mAccountTypeEditButton = new JButton("Edit");
-	public JButton mNameEditButton = new JButton("Edit");
-	public JButton mUserNameEditButton = new JButton("Edit");
-	public JButton mPasswordEditButton = new JButton("Edit");
+	private JButton mAccountTypeEditButton = new JButton("Edit");
+	private JButton mNameEditButton = new JButton("Edit");
+	private JButton mUserNameEditButton = new JButton("Edit");
+	private JButton mPasswordEditButton = new JButton("Edit");
 	
-	public JButton mBackButton = new JButton("Back");
+	private JButton mBackButton = new JButton("Back");
 	
+	private JPanel mainPanel = new JPanel();
+	
+	private Employee account;
 	 
 	public EditAccountScreen(JFrame frame, Employee account) {
 		super(frame);
 		
-		createView(frame, account);
+		this.account = account;
 		
-		updateAccount(account);
+		createView();
 		
-		frame.pack();
-		frame.setVisible(true);
+		updateAccount();
+		
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
 	}
 
-
-	private void updateAccount(Employee account) {	
+	/** updates view for any changes */
+	private void updateAccount() {
+		Program.getInstance().getDataAccess().modifyEmployeeById(account.getId(), account);
 		mAccountTypeLabel.setText("Account Type: " + ((account.isManager())?"Manager":"Cashier"));
 		mNameLabel.setText("Name: " + account.getName());
 		mUserNameLabel.setText("Username: " + account.getUsername());
-		mPasswordLabel.setText("Password: " + account.getPassword());
+		mPasswordLabel.setText("Password: ******");
 	}
 
-
-	private void createView(JFrame frame, Employee account) {
-
-		JPanel mainPanel = new JPanel();
+	/** creates view */
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		addPanel(mainPanel);
 		
@@ -75,8 +81,14 @@ public class EditAccountScreen  extends Screen {
 		mAccountTypeEditButton.setMaximumSize(new Dimension(900, 600));
 		mAccountTypeEditButton.setFont(new Font("Arial", Font.BOLD, 42));
 		//mAccountTypeEditButton.addActionListener(this);
-		if(mController.getDataAccess().getCurrentUser().getId() != account.getId()){
+		if(Program.getInstance().getDataAccess().getCurrentUser().getId() != account.getId()){
 			AccountTypePanel.add(mAccountTypeEditButton);
+			mAccountTypeEditButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					EditAccountType();
+				}
+			});
 		}
 
 		mainPanel.add(Box.createVerticalStrut(30));
@@ -99,16 +111,7 @@ public class EditAccountScreen  extends Screen {
 		mNameEditButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String input = (String) JOptionPane.showInputDialog(
-		                frame,
-		                "Name:",
-		                "Name Edit dialog",
-		                JOptionPane.PLAIN_MESSAGE,
-		                null,
-		                null,
-		                "Jordan Knudsen");
-				account.setName(input);
-				updateAccount(account);
+				EditName();
 			}
 		});
 		NamePanel.add(mNameEditButton);
@@ -131,14 +134,14 @@ public class EditAccountScreen  extends Screen {
 		  
 		mUserNameEditButton.setMaximumSize(new Dimension(900, 600));
 		mUserNameEditButton.setFont(new Font("Arial", Font.BOLD, 42));
-		//mUserNameEditButton.addActionListener(this);
-		try {
-			if(Program.getInstance().getDataAccess().getCurrentUser().isManager()){
-				UserNamePanel.add(mUserNameEditButton);
-			}
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		if(Program.getInstance().getDataAccess().getCurrentUser().isManager()){
+			UserNamePanel.add(mUserNameEditButton);
+			mUserNameEditButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					EditUserName();
+				}
+			});
 		}
 
 		mainPanel.add(Box.createVerticalStrut(30));
@@ -161,16 +164,7 @@ public class EditAccountScreen  extends Screen {
 		mPasswordEditButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String input = (String) JOptionPane.showInputDialog(
-		                frame,
-		                "Password:",
-		                "Password Edit dialog",
-		                JOptionPane.PLAIN_MESSAGE,
-		                null,
-		                null,
-		                "password");
-				account.setPassword(input);
-				updateAccount(account);
+				EditPassword();
 			}
 		});
 		PasswordPanel.add(mPasswordEditButton);
@@ -190,10 +184,85 @@ public class EditAccountScreen  extends Screen {
 		mBackButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				openUserMainMenu();
+				returnToPreviousScreen();
 			}
 		});
 		BackButtonPanel.add(mBackButton);
+	}
+	private void EditAccountType() {
+		JCheckBox isManagerCheckBox = new JCheckBox();
+		isManagerCheckBox.setSelected(account.isManager());
+        Object[] ob = {new JLabel("is Manager:"),isManagerCheckBox};
+		int input = JOptionPane.showConfirmDialog(
+				mMainFrame,
+                ob,
+                "Account Type Edit dialog",
+                JOptionPane.OK_CANCEL_OPTION);
+		if(input == JOptionPane.OK_OPTION){
+			account.setIsManager(isManagerCheckBox.isSelected());
+			updateAccount();
+		}
+	}
+	private void EditName() {
+		String input = (String) JOptionPane.showInputDialog(
+				mMainFrame,
+                "Name:",
+                "Name Edit dialog",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                account.getName());
+		if(input == null)
+			return;
+		if(input.compareTo("") == 0){
+			JOptionPane.showMessageDialog(mMainFrame, "must enter a value");
+			return;
+		}
+		account.setName(input);
+		updateAccount();
+	}
+
+	private void EditUserName() {
+		String input = (String) JOptionPane.showInputDialog(
+				mMainFrame,
+                "Username:",
+                "Username Edit dialog",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                account.getUsername());
+		if(input == null)
+			return;
+		if(input.compareTo("") == 0){
+			JOptionPane.showMessageDialog(mMainFrame, "must enter a value");
+			return;
+		}
+		account.setUsername(input);
+		updateAccount();
+	}
+
+	private void EditPassword() {
+		JTextField password = new JPasswordField();
+        Object[] ob = {new JLabel("Password:"),password};
+		int input = JOptionPane.showConfirmDialog(
+				mMainFrame,
+                ob,
+                "Password Edit dialog",
+                JOptionPane.OK_CANCEL_OPTION);
+		if(input == JOptionPane.OK_OPTION){
+			if(password.getText().compareTo("") == 0){
+				JOptionPane.showMessageDialog(mMainFrame, "must enter a value");
+				return;
+			}
+			account.setPassword(password.getText());
+			updateAccount();
+		}
+	}
+	private void returnToPreviousScreen() {
+		removePanel(mainPanel);
+		if(Program.getInstance().getDataAccess().getCurrentUser().getId() != account.getId())
+			new EditAccountsScreen(mMainFrame);
+		else
+			openUserMainMenu();
 	}
 }

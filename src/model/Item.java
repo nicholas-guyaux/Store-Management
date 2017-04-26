@@ -16,6 +16,10 @@ public class Item {
 	public Product getProduct() {
 		return mProduct;
 	}
+	
+	public int getQuantity(){
+		return mQuantity;
+	}
 
 	@Override
 	public String toString() {

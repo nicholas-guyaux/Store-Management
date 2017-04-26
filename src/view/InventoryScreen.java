@@ -21,11 +21,9 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import controller.Program;
-import model.Employee;
 import model.Product;
 
 public class InventoryScreen extends Screen {
-	// View
 	private JButton mSearchButton;
 	private JButton mAddButton;
 	private JButton mCancelButton;
@@ -35,21 +33,20 @@ public class InventoryScreen extends Screen {
 
 	private JList<Product> mProductList;
 
-	// Controller
+	private JPanel mainPanel = new JPanel();
+	
 	public InventoryScreen(JFrame frame) {
 		super(frame);
 
-		createView(frame);
+		createView();
 		
 		updateList();
 
-		// Display the window.
-		frame.pack();
-		frame.setVisible(true);
+		mMainFrame.pack();
+		mMainFrame.setVisible(true);
 	}
 
-	private void createView(JFrame frame) {
-		JPanel mainPanel = new JPanel();
+	private void createView() {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 		addPanel(mainPanel);
 
@@ -67,10 +64,7 @@ public class InventoryScreen extends Screen {
 		mEditMenuProduct.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Product selected = mProductList.getSelectedValue();
-	
-				removePanel(mainPanel);
-				new EditProductScreen(frame,selected);
+				EditSelectedProduct();
 			}
 		});
 		popupMenu.add(mEditMenuProduct);
@@ -79,17 +73,7 @@ public class InventoryScreen extends Screen {
 		mRemoveMenuProduct.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int n = JOptionPane.showConfirmDialog(frame, "Are you sure?", "Remove Product confirmation", JOptionPane.YES_NO_OPTION);
-				if (n == JOptionPane.YES_OPTION) {
-					Product selected = mProductList.getSelectedValue();
-					try {
-						Program.getInstance().getDataAccess().removeProductById(selected.getId());
-						updateList();
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
+				RemoveSelectedProduct();
 			}
 		});
 		popupMenu.add(mRemoveMenuProduct);
@@ -117,15 +101,7 @@ public class InventoryScreen extends Screen {
 		mSearchButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Product p=null;
-				try {
-					p = askForProductId();
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-				}
-				if (p != null) {
-					updateList(p.toString());
-				}
+				Search();
 			}
 		});
 		buttonPanel.add(mSearchButton);
@@ -135,8 +111,7 @@ public class InventoryScreen extends Screen {
 		mAddButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				new AddNewProduct(frame);
+				AddNewProduct();
 			}
 		});
 		buttonPanel.add(mAddButton);
@@ -147,13 +122,13 @@ public class InventoryScreen extends Screen {
 		mCancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removePanel(mainPanel);
-				openUserMainMenu();
+				returnToMainScreen();
 			}
 		});
 		buttonPanel.add(mCancelButton);
 	}
-
+	
+	/** gets a product's id */
 	private Product askForProductId() throws ClassNotFoundException {
 		String s = JOptionPane.showInputDialog(mMainFrame, "Enter the id of the product that you want:", "Product Id", JOptionPane.PLAIN_MESSAGE);
 
@@ -175,14 +150,62 @@ public class InventoryScreen extends Screen {
 		return null;
 	}
 
+	/** updates list with a search query of "" */
 	private void updateList(){
 		updateList("");
 	}
+	
+	/** updates list with search as the search query 
+	 * @param search string to search for 
+	 * */
 	private void updateList(String search){
 		DefaultListModel<Product> ProductListModel = new DefaultListModel<Product>();
-		for (Product Product : mController.getDataAccess().getInventoryList(search)) {
+		for (Product Product : Program.getInstance().getDataAccess().getInventoryList(search)) {
 			ProductListModel.addElement(Product);
 		}
 		mProductList.setModel(ProductListModel);
+	}
+	
+	/** Edit the currently selected product */
+	private void EditSelectedProduct() {
+		Product selected = mProductList.getSelectedValue();
+
+		removePanel(mainPanel);
+		new EditProductScreen(mMainFrame,selected);
+	}
+	
+	/** removes the currently selected product */
+	private void RemoveSelectedProduct() {
+		int n = JOptionPane.showConfirmDialog(mMainFrame, "Are you sure?", "Remove Product confirmation", JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			Product selected = mProductList.getSelectedValue();
+			Program.getInstance().getDataAccess().removeProductById(selected.getId());
+			updateList();
+		}
+	}
+	
+	/** shows a dialog asking for the id to search for, then updates the list for that search */
+	private void Search() {
+		Product p=null;
+		try {
+			p = askForProductId();
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		if (p != null) {
+			updateList(p.toString());
+		}
+	}
+
+	/** displays the add product screen */
+	private void AddNewProduct() {
+		removePanel(mainPanel);
+		new AddNewProduct(mMainFrame);
+	}
+
+	/** returns to the main screen */
+	private void returnToMainScreen() {
+		removePanel(mainPanel);
+		openUserMainMenu();
 	}
 }

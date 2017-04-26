@@ -21,7 +21,7 @@ import controller.Program;
 import model.Item;
 import model.Order;
 
-public class PaymentScreen extends Screen {
+public class PayoutScreen extends Screen {
 	// View
 	private JButton mPayCash;
 	private JButton mPayCreditCard;
@@ -32,12 +32,13 @@ public class PaymentScreen extends Screen {
 	private JLabel mSubTotalLabel;
 	private JLabel mTaxLabel;
 	private JLabel mTotalLabel;
+	private JLabel mPriceDifferenceLabel;
 
 	private Order mOrder;
 	
 	private JPanel mainPanel = new JPanel();
 
-	public PaymentScreen(JFrame frame, Order order) {
+	public PayoutScreen(JFrame frame, Order order) {
 		super(frame);
 
 		createView();
@@ -121,6 +122,22 @@ public class PaymentScreen extends Screen {
 		mTotalLabel.setFont(new Font("Serif", Font.BOLD, 18));
 		mTotalLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mTotalLabel.getMinimumSize().height));
 		totalPanel.add(mTotalLabel);
+		
+		JPanel PriceDifferencePanel = new JPanel();
+		PriceDifferencePanel.setLayout(new BoxLayout(PriceDifferencePanel, BoxLayout.X_AXIS));
+		listPanel.add(PriceDifferencePanel);
+		
+		JLabel PriceDifferenceText = new JLabel("Return Total:", SwingConstants.LEFT);
+		PriceDifferenceText.setFont(new Font("Serif", Font.BOLD, 18));
+		PriceDifferenceText.setMaximumSize(new Dimension(Integer.MAX_VALUE, PriceDifferenceText.getMinimumSize().height));
+		PriceDifferencePanel.add(PriceDifferenceText);
+
+		PriceDifferencePanel.add(Box.createHorizontalGlue());
+		
+		mPriceDifferenceLabel = new JLabel("$0.00", SwingConstants.RIGHT);
+		mPriceDifferenceLabel.setFont(new Font("Serif", Font.BOLD, 18));
+		mPriceDifferenceLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, mPriceDifferenceLabel.getMinimumSize().height));
+		PriceDifferencePanel.add(mPriceDifferenceLabel);
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -170,27 +187,19 @@ public class PaymentScreen extends Screen {
 	/** updates the view for changes in the order */
 	private void updateOrder() {
 		DefaultListModel<Item> itemListModel = new DefaultListModel<Item>();
-		for (Item item : mOrder.getOrderList()) {
+		for (Item item : mOrder.getReturnList()) {
 			itemListModel.addElement(item);
 		}
 		mItemList.setModel(itemListModel);
 		mSubTotalLabel.setText("$" + String.format("%.2f", mOrder.getTotal()));
 		mTaxLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * .06)));
 		mTotalLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * 1.06)));
+		mPriceDifferenceLabel.setText("$" + String.format("%.2f", (mOrder.getReturnPrice())));
 	}
 	
 	/** processes payment with cash */
 	private void payWithCash() {
-		double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
-		final String paidamount = JOptionPane.showInputDialog(mMainFrame,"Amount due: $"+due+"\n Please enter the amount given in 0.00 format");
-	    final double paid = Double.parseDouble(paidamount.startsWith("$") ? paidamount.substring(1) : paidamount);
-	    if(due > paid){
-			JOptionPane.showMessageDialog(mMainFrame, "only allowed to pay with equal or more amount");
-			return;
-	    }
-	    due -= paid;
-	    due *= -1;
-	    due += .0000000000000001;//makes it positive if no change is due.
+		double due = mOrder.getReturnPrice();
 		int confirmation = JOptionPane.showConfirmDialog(null,
                 "give $"+ String.format("%.2f", due) + " back to the customer", "confirm?",
                 JOptionPane.YES_NO_OPTION);
@@ -201,9 +210,9 @@ public class PaymentScreen extends Screen {
 	
 	/** processes payment with a credit card */
 	private void PayWithCreditCard() {
-		double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
+		double due = mOrder.getReturnPrice();
 		int confirmation = JOptionPane.showConfirmDialog(null,
-                "Amount due: $"+ String.format("%.2f", due) + "\n Was transaction successful?", "confirm?",
+                "Amount to give back: $"+ String.format("%.2f", due) + "\n Was transaction successful?", "confirm?",
                 JOptionPane.YES_NO_OPTION);
 		if(confirmation==0){
 			PaymentSuccess();
@@ -212,9 +221,9 @@ public class PaymentScreen extends Screen {
 
 	/** processes payment with a debit card */
 	private void PayWithDebitCard() {
-		double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
+		double due = mOrder.getReturnPrice();
 		int confirmation = JOptionPane.showConfirmDialog(null,
-                "Amount due: $"+ String.format("%.2f", due) + "\n Was transaction successful?", "confirm?",
+                "Amount to give back: $"+ String.format("%.2f", due) + "\n Was transaction successful?", "confirm?",
                 JOptionPane.YES_NO_OPTION);
 		if(confirmation==0){
 			PaymentSuccess();
@@ -223,8 +232,8 @@ public class PaymentScreen extends Screen {
 	
 	/** saves the order and returns to main screen for the current user */
 	private void PaymentSuccess(){
+		mOrder.saveReturn();
 		Program.getInstance().getDataAccess().SaveOrder(mOrder);
-		System.out.println("id = " + mOrder.getId());
 		removePanel(mainPanel);
 		openUserMainMenu();
 	}
@@ -232,6 +241,6 @@ public class PaymentScreen extends Screen {
 	/** Cancel's the payment, and returns to the checkout screen for the same order */
 	private void CancelPayment() {
 		removePanel(mainPanel);
-		new CheckoutScreen(mMainFrame, mOrder);
+		new ReturnScreen(mMainFrame, mOrder);
 	}
 }

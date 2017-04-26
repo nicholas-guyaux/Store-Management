@@ -19,6 +19,14 @@ public class Product {
 		return mName;
 	}
 
+	public void setName(String name){
+		mName = name;
+	}
+	
+	public void setPrice(double price){
+		mUnitPrice = price;
+	}
+
 	public double getUnitPrice() {
 		return mUnitPrice;
 	}
