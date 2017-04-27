@@ -325,17 +325,17 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public void modifyEmployeeById(int id, Employee p) {
-		String query = "UPDATE Products SET Name = ?, Quantity = ?, Price = ?, Discount = ? WHERE ProductID = ?";
+		String query = "UPDATE Employees SET UserName = ?, EmployeeName = ?, EmployeePassword = ?, isManager = ? WHERE EmployeeID = ?";
 		PreparedStatement preparedStatement = c.prepareStatement(query)
 		
-		preparedStatement.setString(1, p.getName());
-		preparedStatement.setInt(2, p.getQuantity());
-		preparedStatement.setInt(3, p.getUnitPrice());
-		preparedStatement.setInt(4, p.getDiscount());
+		preparedStatement.setString(1, p.getUserName());
+		preparedStatement.setString(2, p.getName()));
+		preparedStatement.setString(3, p.getPassword());
+		preparedStatement.setInt(4, p.isManager());
 		preparedStatement.setInt(5, p.getId());
 		
 		ResultSet rs = preparedStatement.executeQuery();
-		System.out.println("Product update successful");;
+		System.out.println("Employee update successful");;
 		rs.close();
 		stmt.close();
 		return;
