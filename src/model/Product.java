@@ -4,11 +4,11 @@ public class Product {
 	private int mId;
 	private String mName;
 	private int mQuantity;
-	private double mUnitPrice;
+	private float mUnitPrice;
 	private int mDiscount;
 	
 	
-	public Product(int mId, String mName, int mQuantity, double mUnitPrice, int mDiscount) {
+	public Product(int mId, String mName, int mQuantity, float mUnitPrice, int mDiscount) {
 		super();
 		this.mId = mId;
 		this.mName = mName;
@@ -41,11 +41,11 @@ public class Product {
 		this.mQuantity = quantity;
 	}
 	
-	public double getUnitPrice() {
+	public float getUnitPrice() {
 		return mUnitPrice;
 	}
 	
-	public void setPrice(double price){
+	public void setPrice(float price){
 		mUnitPrice = price;
 	}
 	

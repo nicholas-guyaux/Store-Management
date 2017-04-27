@@ -12,8 +12,7 @@ public class Order {
 
 	private int mOrderID;
 	private int mCustomerID;
-	private double mTotal;
-	private int mOrderDate;
+	private float mTotal;
 	private int mEmployeeID;
 	private double mReturnTotal;
 
@@ -25,6 +24,38 @@ public class Order {
 		mReturnTotal = 0;
 	}
 	
+	public Order(int id, int custID, float total) {
+		this.mOrderID = id;
+		this.mCustomerID = custID;
+		this.mTotal = total;
+		mReturnTotal = 0;
+	}
+
+
+	public int getmEmployeeID() {
+		return mEmployeeID;
+	}
+
+
+
+	public void setmEmployeeID(int mEmployeeID) {
+		this.mEmployeeID = mEmployeeID;
+	}
+
+
+
+	public int getmCustomerID() {
+		return mCustomerID;
+	}
+
+
+
+	public void setmCustomerID(int mCustomerID) {
+		this.mCustomerID = mCustomerID;
+	}
+
+
+
 	/** makes an copy of copy */
 	public Order(Order copy){
 		this(copy.getId());
@@ -75,7 +106,7 @@ public class Order {
 		return itemList;
 	}
 
-	public double getTotal() {
+	public float getTotal() {
 		return mTotal;
 	}
 	

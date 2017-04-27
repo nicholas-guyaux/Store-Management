@@ -1,8 +1,10 @@
 package model;
 
+import java.util.List;
+
 public interface IDataAccess {
 	public Product getProductById(int id);
-	public Product[] getInventoryList(String search);
+	public List<Product> getInventoryList(String search);
 	public void removeProductById(int id);
 	public void modifyProductById(int id, Product p);
 	public void addProduct(Product p);
@@ -12,7 +14,7 @@ public interface IDataAccess {
 	public void logOut();
 
 	public Employee getEmployeeById(int id);
-	public Employee[] getEmployeeList();
+	public List<Employee> getEmployeeList();
 	public void removeEmployeeById(int id);
 	public void modifyEmployeeById(int id, Employee p);
 	public void addEmployee(Employee p);

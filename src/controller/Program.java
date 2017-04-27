@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import model.IDataAccess;
 import model.MockDataAccess;
 import model.Product;
+import model.SQLiteJDBC;
 import view.LoginScreen;
 
 
@@ -28,7 +29,7 @@ public class Program {
 	private IDataAccess mDataAccess;
 
 	private Program() throws ClassNotFoundException {
-		mDataAccess = new MockDataAccess();
+		mDataAccess = new SQLiteJDBC();
 
 		mMainFrame = new JFrame("Mr Smith's shop");
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();

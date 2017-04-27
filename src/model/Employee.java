@@ -7,12 +7,12 @@ public class Employee {
 	private String mPassword;
 	private boolean mIsManager;
 	
-	public Employee(int id, String userName, String name, String password, boolean isManager) {
+	public Employee(int id, String userName, String name, String password, boolean isManage) {
 		mId = id;
 		mName = name;
 		mUsername = userName;
 		mPassword = password;
-		mIsManager = isManager;
+		mIsManager = isManage;
 				
 	}
 	
@@ -70,5 +70,7 @@ public class Employee {
 	public String toString() {
 		return getName() + "        " + getUsername() + "        " + mId ;
 	}
+
+
 
 }

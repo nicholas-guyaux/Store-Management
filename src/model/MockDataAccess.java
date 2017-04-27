@@ -1,7 +1,9 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class MockDataAccess implements IDataAccess {
@@ -13,10 +15,10 @@ public class MockDataAccess implements IDataAccess {
 
 	public MockDataAccess() {
 		mProducts = new HashMap<>();
-		mProducts.put(1, new Product(1, "Apple", 12, 3.99, 0));
-		mProducts.put(2, new Product(2, "Apple Pie", 10, 6.99, 0));
-		mProducts.put(3, new Product(3, "Apple Juice", 12, 2.99, 0));
-		mProducts.put(4, new Product(4, "Apple Watch", 10, 399.99, 0));
+		mProducts.put(1, new Product(1, "Apple", 12, (float) 3.99, 0));
+		mProducts.put(2, new Product(2, "Apple Pie", 10, (float) 6.99, 0));
+		mProducts.put(3, new Product(3, "Apple Juice", 12, (float) 2.99, 0));
+		mProducts.put(4, new Product(4, "Apple Watch", 10, (float) 399.99, 0));
 		
 
 		mEmployees = new HashMap<>();
@@ -31,22 +33,16 @@ public class MockDataAccess implements IDataAccess {
 		return mProducts.get(id);
 	}
 
-	public Product[] getInventoryList(String search) {
-		Product[] list;
+	public List<Product> getInventoryList(String search) {
+		List<Product> list = new ArrayList<Product>();
 		if(search != ""){
 			if(mProducts.get(Integer.parseInt(search)) == null)
 				return null;
-			list = new Product[1];
-			list[0] = mProducts.get(Integer.parseInt(search));
+			list.add(mProducts.get(Integer.parseInt(search)));
 			return list;			
 		}
-		if(mProducts.size() < 10)
-			list = new Product[mProducts.size()];
-		else
-			list = new Product[10];
-		for(int i = 0;i<list.length;i++){
-			list[i] = (Product) mProducts.values().toArray()[i];
-		}
+		//list.addAll((Product) mProducts.values().toArray());
+		
 		return list;
 	}
 
@@ -96,8 +92,8 @@ public class MockDataAccess implements IDataAccess {
 	}
 	
 	@Override
-	public Employee[] getEmployeeList() {
-		return  mEmployees.values().toArray(new Employee[0]);
+	public List<Employee> getEmployeeList() {
+		return  (List<Employee>) mEmployees.values().toArray(new Employee[0]);
 	}
 
 	@Override

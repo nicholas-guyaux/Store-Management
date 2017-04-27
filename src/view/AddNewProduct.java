@@ -145,7 +145,7 @@ public class AddNewProduct  extends Screen {
 			if(Program.getInstance().getDataAccess().getProductById(i) == null)
 				break;
 		}
-		Program.getInstance().getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Integer.parseInt(mQuantityLabelField.getText()), Double.parseDouble(mPriceLabelField.getText()), 0));
+		Program.getInstance().getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Integer.parseInt(mQuantityLabelField.getText()), Float.parseFloat(mPriceLabelField.getText()), 0));
 
 		removePanel(mainPanel);
 		new InventoryScreen(mMainFrame);

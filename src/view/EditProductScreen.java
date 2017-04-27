@@ -169,7 +169,7 @@ public class EditProductScreen  extends Screen {
 			JOptionPane.showMessageDialog(mMainFrame, "price field must be in a correct format (ddddd or ddddd.dd)");
 			return;
 		}
-		product.setPrice(Double.parseDouble(input));
+		product.setPrice(Float.parseFloat(input));
 		updateProduct();
 	}
 
