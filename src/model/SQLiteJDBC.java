@@ -131,25 +131,23 @@ public class SQLiteJDBC implements IDataAccess {
 	}
 
 	@Override
-	public Product getProductById(int id) {
-		stmt = c.createStatement();
-		ResultSet rs = stmt.executeQuery( "SELECT * FROM PRODUCTS WHERE ID = ?", id );
+	public Product getProductById(int ProductID) {
+		String query = "SELECT * FROM PRODUCTS WHERE ID = ?";
+		PreparedStatement preparedStatement = c.prepareStatement(query)
+		preparedStatement.setInt(1, id);
+		ResultSet rs = preparedStatement.executeQuery();
 		while ( rs.next() ) {
-			int id = rs.getInt("id");
-			String  name = rs.getString("name");
-			int age  = rs.getInt("age");
-			String  address = rs.getString("address");
-			float salary = rs.getFloat("salary");
-			System.out.println( "ID = " + id );
-			System.out.println( "NAME = " + name );
-			System.out.println( "AGE = " + age );
-			System.out.println( "ADDRESS = " + address );
-			System.out.println( "SALARY = " + salary );
-			System.out.println();
-      }
-      rs.close();
-      stmt.close();
-      c.close();
+			int prodID = rs.getInt("ProductID");
+			String  name = rs.getString("Name");
+			int quantity  = rs.getInt("Quantity");
+			float  price = rs.getFloat("Price");
+			int discount = rs.getInt("Discount");
+	    }
+		Product temp = new Product(prodID, name, quantity, price, discount);
+		rs.close();
+		stmt.close();
+      	c.close();
+      	return temp;
 	}
 
 	@Override
@@ -173,7 +171,18 @@ public class SQLiteJDBC implements IDataAccess {
 	@Override
 	public void addProduct(Product p) {
 		// TODO Auto-generated method stub
-
+		String query = "INSERT INTO Products VALUES(?, ?, ?, ?, ?)";
+		//Create prepare statement
+		PreparedStatement preparedStatement = c.prepareStatement(query);
+		
+		preparedStatement.setInt(1,  p.getId());
+		preparedStatement.setString(2,  p.getName());
+		preparedStatement.setInt(3,  p.getQuantity());
+		preparedStatement.setDouble(4,  p.getUnitPrice());
+		preparedStatement.setInt(5,  p.getDiscount());
+		
+		preparedStatement.executeUpdate();
+		System.out.println("Insert product success");
 	}
 
 	@Override
@@ -232,8 +241,23 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public Order getOrderById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		String query = "SELECT * FROM Orders WHERE ID = ?";
+		PreparedStatement preparedStatement = c.prepareStatement(query)
+		preparedStatement.setInt(1, id);
+		ResultSet rs = preparedStatement.executeQuery();
+		while ( rs.next() ) {
+			int orderID = rs.getInt("OrderID");
+			int  custID = rs.getInt("CustomerID");
+			float totalPrice  = rs.getFloat("TotalPrice");
+			int  orderDate = rs.getint("OrderDate");
+			int emplID = rs.getInt("EmployeeID");
+	    }
+		Order temp = new Order(prodID, custID, totalPrice, orderDate, emplID);
+		rs.close();
+		stmt.close();
+      	c.close();
+      	return temp;
+	}
 	}
 
 	@Override

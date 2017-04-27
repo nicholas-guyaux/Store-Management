@@ -10,8 +10,11 @@ public class Order {
 	private Map<Product, Integer> mItemsList;
 	private Map<Product, Integer> mReturnList;
 
-	private double mTotal;
-	private int mId;
+	private int mOrderID;
+	private int mCustomerID;
+	private float mTotal;
+	private int mOrderDate;
+	private int mEmployeeID;
 	private double mReturnTotal;
 
 	public Order(int id) {
