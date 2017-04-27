@@ -29,6 +29,8 @@ public class SQLiteJDBC implements IDataAccess {
 		System.out.println("Opened database successfully");
 	}
 	
+	
+	//will put this in setup file
 	public void createTables(String fileName) {
 		//Create Products table
 		stmt = c.createStatement();
@@ -90,9 +92,26 @@ public class SQLiteJDBC implements IDataAccess {
 		stmt.executeUpdate(sql);
 		stmt.close();
 		
+		//Query insert to table product with 5 value
+		String query = "INSERT INTO Employees VALUES(?, ?, ?, ?, ?)";
+		//Create prepare statement
+		PreparedStatement preparedStatement = c.prepareStatement(query);
+		
+		//Get list product from file text
+		//Insert list to db
+		preparedStatement.setInt(1,  1);
+		preparedStatement.setString(2,  "admin");
+		preparedStatement.setString(3,  "John Smith");
+		preparedStatement.setString(4,  "password");
+		preparedStatement.setInt(5,  1);
+			
+		preparedStatement.executeUpdate();
+		System.out.println("Insert manager successful");
+		}
+		
 		//Create Contains table
 		stmt = c.createStatement();
-		String sql = "CREATE TABLE Employees " +
+		String sql = "CREATE TABLE Contains " +
                    "(	 `OrderID`	INTEGER NOT NULL, " + 
                    		"`ProductID`	INTEGER NOT NULL, " + 
                    		"`Quantity`	INTEGER NOT NULL, " +
@@ -103,7 +122,7 @@ public class SQLiteJDBC implements IDataAccess {
 		
 		//Create Customers table
 		stmt = c.createStatement();
-		String sql = "CREATE TABLE Employees " +
+		String sql = "CREATE TABLE Customers " +
                    "(	`CustomerID`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " + 
                    		"`CustomerName`	TEXT NOT NULL, " + 
                    		"`LoyaltyPoints`	INTEGER NOT NULL DEFAULT 0)"; 
@@ -112,7 +131,7 @@ public class SQLiteJDBC implements IDataAccess {
 		
 		//Create Orders table
 		stmt = c.createStatement();
-		String sql = "CREATE TABLE Employees " +
+		String sql = "CREATE TABLE Orders " +
                    "(	`OrderID`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + 
                    		"`CustomerID`	INTEGER, " + 
                    		"`TotalPrice`	REAL NOT NULL, " +

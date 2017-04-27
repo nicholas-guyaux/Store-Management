@@ -22,9 +22,11 @@ public class AddNewProduct  extends Screen {
 
 	private JLabel mNameLabel;
 	private JLabel mPriceLabel;
+	private JLabel mQuantityLabel;
 	
 	private JTextField mNameEditField = new JTextField(10);
 	private JTextField mPriceLabelField = new JTextField(10);
+	private JTextField mQuantityLabelField = new JTextField(10);
 
 	private JButton mSaveButton = new JButton("Save");
 	private JButton mCancelButton = new JButton("Cancel");
@@ -83,6 +85,20 @@ public class AddNewProduct  extends Screen {
 		UserNamePanel.add(mPriceLabelField);
 		
 		mainPanel.add(Box.createVerticalStrut(30));
+		
+		mQuantityLabel = new JLabel("Quantity: ");
+		mQuantityLabel.setMaximumSize(new Dimension(900, 600));
+		mQuantityLabel.setFont(new Font("Arial", Font.BOLD, 42));
+		UserNamePanel.add(mQuantityLabel);
+
+		UserNamePanel.add(Box.createHorizontalStrut(30));		  
+		UserNamePanel.add(Box.createHorizontalGlue());
+		  
+		mQuantityLabelField.setMaximumSize(new Dimension(900, 600));
+		mQuantityLabelField.setFont(new Font("Arial", Font.BOLD, 42));
+		UserNamePanel.add(mQuantityLabelField);
+		
+		mainPanel.add(Box.createVerticalStrut(30));
 				
 		JPanel BackButtonPanel = new JPanel();
 		BackButtonPanel.setLayout(new BoxLayout(BackButtonPanel, BoxLayout.X_AXIS));
@@ -129,7 +145,7 @@ public class AddNewProduct  extends Screen {
 			if(Program.getInstance().getDataAccess().getProductById(i) == null)
 				break;
 		}
-		Program.getInstance().getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Double.parseDouble(mPriceLabelField.getText())));
+		Program.getInstance().getDataAccess().addProduct(new Product(i, mNameEditField.getText(), Integer.parseInt(mQuantityLabelField.getText()), Double.parseDouble(mPriceLabelField.getText()), 0));
 
 		removePanel(mainPanel);
 		new InventoryScreen(mMainFrame);

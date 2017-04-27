@@ -13,10 +13,10 @@ public class MockDataAccess implements IDataAccess {
 
 	public MockDataAccess() {
 		mProducts = new HashMap<>();
-		mProducts.put(1, new Product(1, "Apple", 3.99));
-		mProducts.put(2, new Product(2, "Apple Pie", 6.99));
-		mProducts.put(3, new Product(3, "Apple Juice", 2.99));
-		mProducts.put(4, new Product(4, "Apple Watch", 399.99));
+		mProducts.put(1, new Product(1, "Apple", 12, 3.99, 0));
+		mProducts.put(2, new Product(2, "Apple Pie", 10, 6.99, 0));
+		mProducts.put(3, new Product(3, "Apple Juice", 12, 2.99, 0));
+		mProducts.put(4, new Product(4, "Apple Watch", 10, 399.99, 0));
 		
 
 		mEmployees = new HashMap<>();

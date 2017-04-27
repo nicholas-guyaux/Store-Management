@@ -12,13 +12,13 @@ public class Order {
 
 	private int mOrderID;
 	private int mCustomerID;
-	private float mTotal;
+	private double mTotal;
 	private int mOrderDate;
 	private int mEmployeeID;
 	private double mReturnTotal;
 
 	public Order(int id) {
-		mId = id;
+		mOrderID = id;
 		mItemsList = new HashMap<Product, Integer>();
 		mReturnList = new HashMap<Product, Integer>();
 		mTotal = 0;
@@ -80,7 +80,7 @@ public class Order {
 	}
 	
 	public int getId(){
-		return mId;
+		return mOrderID;
 	}
 	
 	public int getQuantityOfProduct(Product p){
