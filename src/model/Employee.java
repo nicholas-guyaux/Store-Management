@@ -7,10 +7,10 @@ public class Employee {
 	private String mPassword;
 	private boolean mIsManager;
 	
-	public Employee(int id, String name, String username, String password, boolean isManager) {
+	public Employee(int id, String userName, String name, String password, boolean isManager) {
 		mId = id;
 		mName = name;
-		mUsername = username;
+		mUsername = userName;
 		mPassword = password;
 		mIsManager = isManager;
 				

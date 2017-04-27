@@ -12,6 +12,8 @@ public class SQLiteJDBC implements IDataAccess {
 	public Connection c = null;
 	
     public Statement stmt = null;
+    
+	Employee currentUser = null;
 	
 	public SQLiteJDBC(String fileName) {
 	    try {
@@ -151,7 +153,7 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public Product getProductById(int ProductID) {
-		String query = "SELECT * FROM PRODUCTS WHERE ID = ?";
+		String query = "SELECT * FROM Products WHERE ProductID = ?";
 		PreparedStatement preparedStatement = c.prepareStatement(query)
 		preparedStatement.setInt(1, id);
 		ResultSet rs = preparedStatement.executeQuery();
@@ -165,14 +167,28 @@ public class SQLiteJDBC implements IDataAccess {
 		Product temp = new Product(prodID, name, quantity, price, discount);
 		rs.close();
 		stmt.close();
-      	c.close();
       	return temp;
 	}
 
 	@Override
-	public Product[] getInventoryList(String search) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Product> getInventoryList(String search) {
+		String query = "SELECT * FROM Products";
+		PreparedStatement preparedStatement = c.prepareStatement(query)
+		ResultSet rs = preparedStatement.executeQuery();
+		List<Product> inventory = new ArrayList<Product>();;
+		while ( rs.next() ) {
+			int prodID = rs.getInt("ProductID");
+			String  name = rs.getString("Name");
+			int quantity  = rs.getInt("Quantity");
+			float  price = rs.getFloat("Price");
+			int discount = rs.getInt("Discount");
+			Product temp = new Product(prodID, name, quantity, price, discount);
+			inventory.add(temp);
+	    }
+		
+		rs.close();
+		stmt.close();
+      	return inventory;
 	}
 
 	@Override
@@ -183,22 +199,33 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public void modifyProductById(int id, Product p) {
-		// TODO Auto-generated method stub
-
+		String query = "UPDATE Products SET Name = ?, Quantity = ?, Price = ?, Discount = ? WHERE ProductID = ?";
+		PreparedStatement preparedStatement = c.prepareStatement(query)
+		
+		preparedStatement.setString(1, p.getName());
+		preparedStatement.setInt(2, p.getQuantity());
+		preparedStatement.setInt(3, p.getUnitPrice());
+		preparedStatement.setInt(4, p.getDiscount());
+		preparedStatement.setInt(5, p.getId());
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		System.out.println("Product update successful");;
+		rs.close();
+		stmt.close();
+		return;
 	}
 
 	@Override
 	public void addProduct(Product p) {
 		// TODO Auto-generated method stub
-		String query = "INSERT INTO Products VALUES(?, ?, ?, ?, ?)";
+		String query = "INSERT INTO Products (Name, Quantity, Price, Discount) VALUES(?, ?, ?, ?)";
 		//Create prepare statement
 		PreparedStatement preparedStatement = c.prepareStatement(query);
 		
-		preparedStatement.setInt(1,  p.getId());
-		preparedStatement.setString(2,  p.getName());
-		preparedStatement.setInt(3,  p.getQuantity());
-		preparedStatement.setDouble(4,  p.getUnitPrice());
-		preparedStatement.setInt(5,  p.getDiscount());
+		preparedStatement.setString(1,  p.getName());
+		preparedStatement.setInt(2,  p.getQuantity());
+		preparedStatement.setDouble(3,  p.getUnitPrice());
+		preparedStatement.setInt(4,  p.getDiscount());
 		
 		preparedStatement.executeUpdate();
 		System.out.println("Insert product success");
@@ -206,55 +233,145 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public boolean login(String user, String pass) {
-		// TODO Auto-generated method stub
-		return false;
+		bool success = false;
+		String query = "SELECT * FROM Employees WHERE UserName = ?";
+		PreparedStatement preparedStatement = c.prepareStatement(query)
+		preparedStatement.setInt(1, user);
+		ResultSet rs = preparedStatement.executeQuery();
+		Employee temp = null;
+		while ( rs.next() ) {
+			int emploID = rs.getInt("EmployeeID");
+			String  userName = rs.getString("UserName");
+			String name  = rs.getString("EmployeeName");
+			String  pass = rs.getString("EmployeePassword");
+			bool isManage = rs.getInt("IsManager");
+			temp = new Employee(emplID, userName, name, pass, isManage);
+	    }
+		
+		if(temp!=null && pass == temp.getPassword()) {
+			currentUser = temp;
+			success = true;
+		} 
+		rs.close();
+		stmt.close();
+      	return success;
 	}
 
 	@Override
 	public Employee getCurrentUser() {
 		// TODO Auto-generated method stub
-		return null;
+		return currentUser;
 	}
 
 	@Override
 	public void logOut() {
 		// TODO Auto-generated method stub
-
+		currentUser = null;
 	}
 
 	@Override
 	public Employee getEmployeeById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		String query = "SELECT * FROM Employees WHERE EmployeeID = ?";
+		PreparedStatement preparedStatement = c.prepareStatement(query)
+		preparedStatement.setInt(1, id);
+		ResultSet rs = preparedStatement.executeQuery();
+		while ( rs.next() ) {
+			int emplID = rs.getInt("EmployeeID");
+			String  userName = rs.getString("UserName");
+			String name  = rs.getString("EmployeeName");
+			String  pass = rs.getString("EmployeePassword");
+			bool isManage = rs.getInt("IsManager");
+	    }
+		Employee temp = new Employee(emplID, userName, name, pass, isManage);
+		rs.close();
+		stmt.close();
+      	return temp;
 	}
 
 	@Override
-	public Employee[] getEmployeeList() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Employee> getEmployeeList() {
+		String query = "SELECT * FROM Employees";
+		PreparedStatement preparedStatement = c.prepareStatement(query)
+		ResultSet rs = preparedStatement.executeQuery();
+		List<Employee> staff = new ArrayList<Employee>();;
+		while ( rs.next() ) {
+			int emplID = rs.getInt("EmployeeID");
+			String  userName = rs.getString("UserName");
+			String name  = rs.getString("EmployeeName");
+			String  pass = rs.getString("EmployeePassword");
+			bool isManage = rs.getInt("IsManager");
+			Employee temp = new Employee(emplID, userName, name, pass, isManage);
+			
+			staff.add(temp);
+	    }
+		
+		rs.close();
+		stmt.close();
+      	return staff;
 	}
 
 	@Override
 	public void removeEmployeeById(int id) {
 		// TODO Auto-generated method stub
-
+		String query = "DELETE * FROM Employees WHERE EmployeeID = ?";
+		PreparedStatement preparedStatement = c.prepareStatement(query)
+		preparedStatement.setInt(1, id);
+		ResultSet rs = preparedStatement.executeQuery();
+		System.out.println("Employee removed sucessfully");
+		rs.close();
+		stmt.close();
+      	return temp;
 	}
 
 	@Override
 	public void modifyEmployeeById(int id, Employee p) {
-		// TODO Auto-generated method stub
+		String query = "UPDATE Products SET Name = ?, Quantity = ?, Price = ?, Discount = ? WHERE ProductID = ?";
+		PreparedStatement preparedStatement = c.prepareStatement(query)
+		
+		preparedStatement.setString(1, p.getName());
+		preparedStatement.setInt(2, p.getQuantity());
+		preparedStatement.setInt(3, p.getUnitPrice());
+		preparedStatement.setInt(4, p.getDiscount());
+		preparedStatement.setInt(5, p.getId());
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		System.out.println("Product update successful");;
+		rs.close();
+		stmt.close();
+		return;
 
 	}
 
 	@Override
 	public void addEmployee(Employee p) {
-		// TODO Auto-generated method stub
+		String query = "INSERT INTO Employees (UserName, EmployeeName, EmployeePassword, IsManager) VALUES(?, ?, ?, ?)";
+		//Create prepare statement
+		PreparedStatement preparedStatement = c.prepareStatement(query);
+		
+		preparedStatement.setString(1,  p.getUserName());
+		preparedStatement.setString(2,  p.getName());
+		preparedStatement.setString(3,  p.getPassword());
+		preparedStatement.setInt(4,  p.isManager());
+		
+		preparedStatement.executeUpdate();
+		System.out.println("Insert employee success");
 
 	}
 
 	@Override
 	public void SaveOrder(Order o) {
-		// TODO Auto-generated method stub
+		String query = "INSERT INTO Orders (CustomerID, TotalPrice, OrderDate, EmployeeID) VALUES(?, ?, ?, ?, ?)";
+		//Create prepare statement
+		PreparedStatement preparedStatement = c.prepareStatement(query);
+		
+		preparedStatement.setString(1,  p.getCustomerID());
+		preparedStatement.setString(2,  p.getTotalPrice());
+		preparedStatement.setString(3,  p.getOrderDate());
+		preparedStatement.setInt(4,  p.getEmployeeID());
+		
+		preparedStatement.executeUpdate();
+		System.out.println("Insert order success");
+
 
 	}
 
@@ -277,7 +394,7 @@ public class SQLiteJDBC implements IDataAccess {
       	c.close();
       	return temp;
 	}
-	}
+	
 
 	@Override
 	public int getNextOrderId() {
