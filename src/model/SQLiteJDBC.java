@@ -186,7 +186,7 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public List<Product> getInventoryList(String search) {
-		String query = "SELECT * FROM Products";
+		String query = "SELECT ProductID, Name, Quantity, Price, Discount FROM Products";
 		List<Product> inventory = new ArrayList<Product>();
 		PreparedStatement preparedStatement;
 		try {
@@ -305,11 +305,10 @@ public class SQLiteJDBC implements IDataAccess {
 			System.out.println(pass);
 			if(temp != null && pass.equals(temp.getPassword())) {
 				currentUser = temp;
-				System.out.println("Login sucess");
+				System.out.println(temp.isManager());
 				success = true;
 			} 
 			rs.close();
-			return success;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
