@@ -1,6 +1,6 @@
 package model;
 
-public class SQLiteDataAccess implements IDataAccess {
+public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public Product getProductById(int id) {
