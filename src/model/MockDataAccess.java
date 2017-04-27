@@ -20,9 +20,9 @@ public class MockDataAccess implements IDataAccess {
 		
 
 		mEmployees = new HashMap<>();
-		mEmployees.put(1, new Employee(1,"Jordan Knudsen", "jordan", "password", false));
-		mEmployees.put(2, new Employee(2,"Nicholas Guyaux", "nick", "password", false));
-		mEmployees.put(3, new Employee(3,"Mr. Smith", "smith", "password", true));
+		mEmployees.put(1, new Employee(1, "jordan","Jordan Knudsen", "password", false));
+		mEmployees.put(2, new Employee(2,"nick","Nicholas Guyaux",  "password", false));
+		mEmployees.put(3, new Employee(3,"smith","Mr. Smith",  "password", true));
 		
 		mOrders = new HashMap<>();
 	}
