@@ -24,17 +24,22 @@ public class SQLiteJDBC implements IDataAccess {
 	
 	public SQLiteJDBC() {
 	    try {
-	    	File f = new File("score.db");
+	    	File f = new File("store.db");
 	    	if(!f.exists()) {
 	    		System.out.println("Database does not exist");
 	    	    f.createNewFile();
 	    		System.out.println("Created database");
+	    		System.out.println("Database exists");
+		    	connectToDatabase();
+		    	System.out.println("Connected to database");
 	    	 	createTables("doc/products.txt");
 	    		System.out.println("Created tables");
-	    	}
-	    	System.out.println("Database exists");
-	    	connectToDatabase();
-	    	System.out.println("Connected to database");
+	    	} else {
+	    		System.out.println("Database exists");
+		    	connectToDatabase();
+		    	System.out.println("Connected to database");
+	    	}   	
+	    	
 	    } catch ( Exception e ) {
 	    	System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 	    	System.exit(0);
@@ -60,13 +65,14 @@ public class SQLiteJDBC implements IDataAccess {
 		try {
 			stmt = c.createStatement();
 		
-			String sql = "CREATE TABLE Products " +
-	                   "(	`ProductID`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + 
+			String sql = "CREATE TABLE IF NOT EXISTS Products " +
+	                   "(	`ProductID`	INTEGER NOT NULL PRIMARY KEY, " + 
 	                   		"`Name`	TEXT NOT NULL, " + 
 	                   		"`Quantity`	INTEGER NOT NULL, " +
 	                   		"`Price`	REAL NOT NULL, " +
 	                   		"`Discount`	INTEGER NOT NULL DEFAULT 0)"; 
-			stmt.executeUpdate(sql);
+			stmt.execute(sql);
+			System.out.println("create Products");
 			stmt.close();
 			
 			//Query insert to table product with 5 value
@@ -90,13 +96,13 @@ public class SQLiteJDBC implements IDataAccess {
 			
 			//Create Employee table
 			stmt = c.createStatement();
-			sql = "CREATE TABLE Employees " +
+			sql = "CREATE TABLE IF NOT EXISTS Employees " +
 	                   "(	`EmployeeID`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " + 
 	                   		"`UserName`	TEXT NOT NULL UNIQUE, " + 
 	                   		"`EmployeeName`	TEXT NOT NULL, " +
 	                   		"`EmployeePassword`	TEXT NOT NULL, " +
 	                   		"`IsManager`	INTEGER NOT NULL DEFAULT 0)"; 
-			stmt.executeUpdate(sql);
+			stmt.execute(sql);
 			stmt.close();
 			
 			//Query insert to table product with 5 value
@@ -118,38 +124,51 @@ public class SQLiteJDBC implements IDataAccess {
 			
 			//Create Contains table
 			stmt = c.createStatement();
-			sql = "CREATE TABLE Contains " +
+			sql = "CREATE TABLE IF NOT EXISTS Contains " +
 	                   "(	 `OrderID`	INTEGER NOT NULL, " + 
 	                   		"`ProductID`	INTEGER NOT NULL, " + 
 	                   		"`Quantity`	INTEGER NOT NULL, " +
 	                   		"`Price`	REAL NOT NULL, " +
-	                   		"`PRIMARY KEY(`OrderID`,`ProductID`)"; 
-			stmt.executeUpdate(sql);
+	                   		"PRIMARY KEY(`OrderID`,`ProductID`) )"; 
+			stmt.execute(sql);
 			stmt.close();
+			
+			System.out.println("Contains created successfully");
 			
 			//Create Customers table
 			stmt = c.createStatement();
-			sql = "CREATE TABLE Customers " +
+			sql = "CREATE TABLE IF NOT EXISTS Customers " +
 	                   "(	`CustomerID`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " + 
 	                   		"`CustomerName`	TEXT NOT NULL, " + 
 	                   		"`LoyaltyPoints`	INTEGER NOT NULL DEFAULT 0)"; 
-			stmt.executeUpdate(sql);
+			stmt.execute(sql);
 			stmt.close();
+			
+			//Query insert to table product with 5 value
+			query = "INSERT INTO Customers VALUES(?, ?, ?)";
+			//Create prepare statement
+			preparedStatement = c.prepareStatement(query);
+			
+			//Get list product from file text
+			//Insert list to db
+			preparedStatement.setInt(1,  1);
+			preparedStatement.setString(2,  "Billy Joel");
+			preparedStatement.setInt(3,  10000);
+				
+			preparedStatement.executeUpdate();
+			System.out.println("Insert manager successful");
 			
 			//Create Orders table
 			stmt = c.createStatement();
-			sql = "CREATE TABLE Orders " +
+			sql = "CREATE TABLE IF NOT EXISTS Orders " +
 	                   "(	`OrderID`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + 
 	                   		"`CustomerID`	INTEGER, " + 
 	                   		"`TotalPrice`	REAL NOT NULL, " +
 	                   		"`OrderDate`	INTEGER NOT NULL, " +
 	                   		"`EmployeeID`	INTEGER NOT NULL)"; 
-			stmt.executeUpdate(sql);
+			stmt.execute(sql);
 			stmt.close();
 			
-			
-			
-			c.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -456,7 +475,7 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public void SaveOrder(Order o) {
-		String query1 = "insert or replace into Orders (OrderID, CustomerID, TotalPrice, OrderDate, EmployeeID) VALUES(?, ?, ?, ?, ?)";
+		String query1 = "insert or replace into Orders (OrderID, CustomerID, TotalPrice, EmployeeID) VALUES(?, ?, ?, ?)";
 		//Create prepare statement
 		PreparedStatement preparedStatement;
 		try {
@@ -464,8 +483,7 @@ public class SQLiteJDBC implements IDataAccess {
 			preparedStatement.setInt(1,  o.getId());
 			preparedStatement.setInt(2,  o.getmCustomerID());
 			preparedStatement.setFloat(3,  o.getTotal());
-			preparedStatement.setTimestamp(4, new java.sql.Timestamp(jDateChooser1.getDate().getTime()));
-			preparedStatement.setInt(5,  currentUser.getId());
+			preparedStatement.setInt(4,  currentUser.getId());
 			
 			preparedStatement.executeUpdate();
 			System.out.println("Insert order success");
@@ -563,48 +581,7 @@ public class SQLiteJDBC implements IDataAccess {
       	return temp;
 	}
 	
-	public static ArrayList<Product> getListProductFromTextFile(String filePath) {
-		FileInputStream fis = null;
-		InputStreamReader isr = null;
-		BufferedReader  bReader = null;
-		ArrayList<Product> listResult = new ArrayList<Product>();
-		try {
-			fis = new FileInputStream(filePath);
-			isr = new InputStreamReader(fis);
-			bReader = new BufferedReader(isr);
-			//String save line get from text file
-			String line = null;
-			//Array save product
-			String[]strProduct = null;
-			
-			//Loop and get all data in text file
-			while(true) {
-				//Get 1 line
-				line = bReader.readLine();
-				//Check line get empty, exit loop
-				if(line==null) {
-					break;
-				} else {
-					strProduct = line.split(",");
-					listResult.add(new Product(Integer.parseInt(strProduct[0]), strProduct[1], Integer.parseInt(strProduct[2]), Float.parseFloat(strProduct[3]), Integer.parseInt(strProduct[4])));
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("Read file error");
-			e.printStackTrace();
-		} finally {
-			//close file
-			try{
-				bReader.close();
-				isr.close();
-				fis.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		}
-		return listResult;
-	}
+	
 
 	@Override
 	public Map<Product, Integer> getOrderAndProducts(int mOrderID) {
@@ -703,6 +680,51 @@ public class SQLiteJDBC implements IDataAccess {
 		}
 		
 		return;
+	}
+	
+	public static ArrayList<Product> getListProductFromTextFile(String filePath) {
+		FileInputStream fis = null;
+		InputStreamReader isr = null;
+		BufferedReader  bReader = null;
+		System.out.println("trying to read file");
+		ArrayList<Product> listResult = new ArrayList<Product>();
+		try {
+			System.out.println("trying to read file");
+			fis = new FileInputStream(filePath);
+			isr = new InputStreamReader(fis);
+			bReader = new BufferedReader(isr);
+			//String save line get from text file
+			String line = null;
+			//Array save product
+			String[]strProduct = null;
+			
+			//Loop and get all data in text file
+			while(true) {
+				//Get 1 line
+				line = bReader.readLine();
+				//Check line get empty, exit loop
+				if(line==null) {
+					break;
+				} else {
+					strProduct = line.split(",");
+					listResult.add(new Product(Integer.parseInt(strProduct[0]), strProduct[1], Integer.parseInt(strProduct[2]), Float.parseFloat(strProduct[3]), Integer.parseInt(strProduct[4])));
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Read file error");
+			e.printStackTrace();
+		} finally {
+			//close file
+			try{
+				bReader.close();
+				isr.close();
+				fis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		return listResult;
 	}
 
 }
