@@ -21,9 +21,13 @@ public class EditProductScreen  extends Screen {
 
 	private JLabel mNameLabel;
 	private JLabel mPriceLabel;
+	private JLabel mQuantityLabel;
+	private JLabel mDiscountLabel;
 	
 	private JButton mNameEditButton = new JButton("Edit");
 	private JButton mPriceLabelButton = new JButton("Edit");
+	private JButton mQuantityLabelButton = new JButton("Edit");
+	private JButton mDiscountLabelButton = new JButton("Edit");
 	
 	private JButton mBackButton = new JButton("Back");
 	
@@ -46,9 +50,12 @@ public class EditProductScreen  extends Screen {
 
 	/** updates view for changes */
 	private void updateProduct() {	
+		System.out.println("update product");
 		Program.getInstance().getDataAccess().modifyProductById(product.getId(), product);
 		mNameLabel.setText("Name: " + product.getName());
 		mPriceLabel.setText("Price: $" + String.format("%.2f", product.getUnitPrice()) );
+		mQuantityLabel.setText("Quantity: " + product.getQuantity());
+		mDiscountLabel.setText("Discount: " + product.getDiscount() + "%");
 	}
 
 	/** creates view */
@@ -86,17 +93,17 @@ public class EditProductScreen  extends Screen {
 		mainPanel.add(Box.createVerticalStrut(30));
 		
 		
-		JPanel UserNamePanel = new JPanel();
-		UserNamePanel.setLayout(new BoxLayout(UserNamePanel, BoxLayout.X_AXIS));
-		mainPanel.add(UserNamePanel);
+		JPanel PricePanel = new JPanel();
+		PricePanel.setLayout(new BoxLayout(PricePanel, BoxLayout.X_AXIS));
+		mainPanel.add(PricePanel);
 
-		mPriceLabel = new JLabel("Username: ");
+		mPriceLabel = new JLabel("Price: ");
 		mPriceLabel.setMaximumSize(new Dimension(900, 600));
 		mPriceLabel.setFont(new Font("Arial", Font.BOLD, 42));
-		UserNamePanel.add(mPriceLabel);
+		PricePanel.add(mPriceLabel);
 
-		UserNamePanel.add(Box.createHorizontalStrut(30));		  
-		UserNamePanel.add(Box.createHorizontalGlue());
+		PricePanel.add(Box.createHorizontalStrut(30));		  
+		PricePanel.add(Box.createHorizontalGlue());
 		  
 		mPriceLabelButton.setMaximumSize(new Dimension(900, 600));
 		mPriceLabelButton.setFont(new Font("Arial", Font.BOLD, 42));
@@ -106,7 +113,57 @@ public class EditProductScreen  extends Screen {
 				EditPrice();
 			}
 		});
-		UserNamePanel.add(mPriceLabelButton);
+		PricePanel.add(mPriceLabelButton);
+		
+		
+		mainPanel.add(Box.createVerticalStrut(30));
+		
+		JPanel QuantityPanel = new JPanel();
+		QuantityPanel.setLayout(new BoxLayout(QuantityPanel, BoxLayout.X_AXIS));
+		mainPanel.add(QuantityPanel);
+		
+		mQuantityLabel = new JLabel("Quantity: ");
+		mQuantityLabel.setMaximumSize(new Dimension(900, 600));
+		mQuantityLabel.setFont(new Font("Arial", Font.BOLD, 42));
+		QuantityPanel.add(mQuantityLabel);
+
+		QuantityPanel.add(Box.createHorizontalStrut(30));		  
+		QuantityPanel.add(Box.createHorizontalGlue());
+		  
+		mQuantityLabelButton.setMaximumSize(new Dimension(900, 600));
+		mQuantityLabelButton.setFont(new Font("Arial", Font.BOLD, 42));
+		mQuantityLabelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EditQuantity();
+			}
+		});
+		QuantityPanel.add(mQuantityLabelButton);
+		
+		mainPanel.add(Box.createVerticalStrut(30));
+		
+
+		JPanel DiscountPanel = new JPanel();
+		DiscountPanel.setLayout(new BoxLayout(DiscountPanel, BoxLayout.X_AXIS));
+		mainPanel.add(DiscountPanel);
+		
+		mDiscountLabel = new JLabel("Discount: ");
+		mDiscountLabel.setMaximumSize(new Dimension(900, 600));
+		mDiscountLabel.setFont(new Font("Arial", Font.BOLD, 42));
+		DiscountPanel.add(mDiscountLabel);
+
+		DiscountPanel.add(Box.createHorizontalStrut(30));		  
+		DiscountPanel.add(Box.createHorizontalGlue());
+		  
+		mDiscountLabelButton.setMaximumSize(new Dimension(900, 600));
+		mDiscountLabelButton.setFont(new Font("Arial", Font.BOLD, 42));
+		mDiscountLabelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EditDiscount();
+			}
+		});
+		DiscountPanel.add(mDiscountLabelButton);
 		
 		
 		mainPanel.add(Box.createVerticalStrut(30));
@@ -170,6 +227,52 @@ public class EditProductScreen  extends Screen {
 			return;
 		}
 		product.setPrice(Float.parseFloat(input));
+		updateProduct();
+	}
+	
+	private void EditQuantity() {
+		String input = (String) JOptionPane.showInputDialog(
+				mMainFrame,
+                "Quantity:",
+                "Quantity Edit dialog",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                product.getQuantity());
+		if(input == null)
+			return;
+		if(input.compareTo("") == 0){
+			JOptionPane.showMessageDialog(mMainFrame, "must enter a value");
+			return;
+		}
+		if(input.matches("0*[1-9][0-9]*?") == false){
+			JOptionPane.showMessageDialog(mMainFrame, "quantity field must be in a correct format (ddddd) and non negative");
+			return;
+		}
+		product.setQuantity(Integer.parseInt(input));
+		updateProduct();
+	}
+	
+	private void EditDiscount() {
+		String input = (String) JOptionPane.showInputDialog(
+				mMainFrame,
+                "Discount:",
+                "Discount Edit dialog",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                product.getDiscount());
+		if(input == null)
+			return;
+		if(input.compareTo("") == 0){
+			JOptionPane.showMessageDialog(mMainFrame, "must enter a value");
+			return;
+		}
+		if(input.matches("[0-9][0-9]?") == false){
+			JOptionPane.showMessageDialog(mMainFrame, "discount field must be in a correct format (dd) and < 100 ");
+			return;
+		}
+		product.setDiscount(Integer.parseInt(input));
 		updateProduct();
 	}
 

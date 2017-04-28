@@ -169,7 +169,7 @@ public class InventoryScreen extends Screen {
 	/** Edit the currently selected product */
 	private void EditSelectedProduct() {
 		Product selected = mProductList.getSelectedValue();
-
+		System.out.println("get selected product");
 		removePanel(mainPanel);
 		new EditProductScreen(mMainFrame,selected);
 	}
@@ -194,6 +194,8 @@ public class InventoryScreen extends Screen {
 		}
 		if (p != null) {
 			updateList(p.toString());
+		} else {
+			JOptionPane.showMessageDialog(mMainFrame, "Invalid PrductID", "INVALID ID", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

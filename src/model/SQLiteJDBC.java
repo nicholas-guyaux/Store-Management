@@ -158,15 +158,14 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public Product getProductById(int id) {
-		String query = "SELECT * FROM Products WHERE ProductID = ?";
+		String query = "SELECT * FROM Products WHERE ProductID = " + id;
 		PreparedStatement preparedStatement;
 		Product temp = null;
 		try {
 			preparedStatement = c.prepareStatement(query);
-			preparedStatement.setInt(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			
-			while ( rs.next() ) {
+			while (rs.next() ) {
 				int prodID = rs.getInt("ProductID");
 				String  name = rs.getString("Name");
 				int quantity  = rs.getInt("Quantity");
@@ -175,7 +174,6 @@ public class SQLiteJDBC implements IDataAccess {
 				temp = new Product(prodID, name, quantity, price, discount);
 		    }
 			rs.close();
-			stmt.close();
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -187,13 +185,14 @@ public class SQLiteJDBC implements IDataAccess {
 	@Override
 	public List<Product> getInventoryList(String search) {
 		String query;
+		System.out.println("getting inventory");
 		if(search == "")
 		{
-			query = "SELECT ProductID, Name, Quantity, Price, Discount FROM Products";
+			query = "SELECT * FROM Products";
 		} else {
-			query = "SELECT ProductID, Name, Quantity, Price, Discount FROM Products WHERE ProductID = " + search;
+			query = "SELECT * FROM Products WHERE ProductID = " + search;
 		}
-		
+		System.out.println(query);
 		List<Product> inventory = new ArrayList<Product>();
 		PreparedStatement preparedStatement;
 		try {
@@ -208,29 +207,29 @@ public class SQLiteJDBC implements IDataAccess {
 				int discount = rs.getInt("Discount");
 				Product temp = new Product(prodID, name, quantity, price, discount);
 				inventory.add(temp);
+				System.out.println(temp.toString());
 		    }
+			
 			rs.close();
-			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		System.out.println("return inventory");
       	return inventory;
 	}
 
 	@Override
 	public void removeProductById(int id) {
 		// TODO Auto-generated method stub
-		String query = "DELETE * FROM Products WHERE ProductID = ?";
+		String query = "DELETE * FROM Products WHERE ProductID = " + id;
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
-			preparedStatement.setInt(1, id);
+			//preparedStatement.setInt(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			System.out.println("Product removed sucessfully");
 			rs.close();
-			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -251,10 +250,8 @@ public class SQLiteJDBC implements IDataAccess {
 			preparedStatement.setInt(4, p.getDiscount());
 			preparedStatement.setInt(5, p.getId());
 			
-			ResultSet rs = preparedStatement.executeQuery();
-			System.out.println("Product update successful");;
-			rs.close();
-			stmt.close();
+			preparedStatement.executeUpdate();
+			System.out.println("Product update successful");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -356,7 +353,6 @@ public class SQLiteJDBC implements IDataAccess {
 		    }
 			
 			rs.close();
-			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -386,7 +382,6 @@ public class SQLiteJDBC implements IDataAccess {
 		    }
 			
 			rs.close();
-			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -406,7 +401,6 @@ public class SQLiteJDBC implements IDataAccess {
 			ResultSet rs = preparedStatement.executeQuery();
 			System.out.println("Employee removed sucessfully");
 			rs.close();
-			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -430,7 +424,6 @@ public class SQLiteJDBC implements IDataAccess {
 			ResultSet rs = preparedStatement.executeQuery();
 			System.out.println("Employee update successful");;
 			rs.close();
-			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -505,8 +498,6 @@ public class SQLiteJDBC implements IDataAccess {
 		    }
 			
 			rs.close();
-			stmt.close();
-	      	c.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
