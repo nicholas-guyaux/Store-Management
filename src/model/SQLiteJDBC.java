@@ -222,14 +222,13 @@ public class SQLiteJDBC implements IDataAccess {
 	@Override
 	public void removeProductById(int id) {
 		// TODO Auto-generated method stub
-		String query = "DELETE * FROM Products WHERE ProductID = " + id;
+		String query = "DELETE FROM Products WHERE ProductID = " + id;
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
 			//preparedStatement.setInt(1, id);
-			ResultSet rs = preparedStatement.executeQuery();
+			preparedStatement.executeUpdate();
 			System.out.println("Product removed sucessfully");
-			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

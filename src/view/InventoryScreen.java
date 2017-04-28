@@ -193,7 +193,7 @@ public class InventoryScreen extends Screen {
 			e1.printStackTrace();
 		}
 		if (p != null) {
-			updateList(p.toString());
+			updateList(Integer.toString(p.getId()));
 		} else {
 			JOptionPane.showMessageDialog(mMainFrame, "Invalid PrductID", "INVALID ID", JOptionPane.ERROR_MESSAGE);
 		}

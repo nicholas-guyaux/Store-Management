@@ -68,35 +68,39 @@ public class AddNewProduct  extends Screen {
 		mainPanel.add(Box.createVerticalStrut(30));
 		
 		
-		JPanel UserNamePanel = new JPanel();
-		UserNamePanel.setLayout(new BoxLayout(UserNamePanel, BoxLayout.X_AXIS));
-		mainPanel.add(UserNamePanel);
+		JPanel PricePanel = new JPanel();
+		PricePanel.setLayout(new BoxLayout(PricePanel, BoxLayout.X_AXIS));
+		mainPanel.add(PricePanel);
 
 		mPriceLabel = new JLabel("Price: ");
 		mPriceLabel.setMaximumSize(new Dimension(900, 600));
 		mPriceLabel.setFont(new Font("Arial", Font.BOLD, 42));
-		UserNamePanel.add(mPriceLabel);
+		PricePanel.add(mPriceLabel);
 
-		UserNamePanel.add(Box.createHorizontalStrut(30));		  
-		UserNamePanel.add(Box.createHorizontalGlue());
+		PricePanel.add(Box.createHorizontalStrut(30));		  
+		PricePanel.add(Box.createHorizontalGlue());
 		  
 		mPriceLabelField.setMaximumSize(new Dimension(900, 600));
 		mPriceLabelField.setFont(new Font("Arial", Font.BOLD, 42));
-		UserNamePanel.add(mPriceLabelField);
+		PricePanel.add(mPriceLabelField);
 		
 		mainPanel.add(Box.createVerticalStrut(30));
+		
+		JPanel QuantityPanel = new JPanel();
+		QuantityPanel.setLayout(new BoxLayout(QuantityPanel, BoxLayout.X_AXIS));
+		mainPanel.add(QuantityPanel);
 		
 		mQuantityLabel = new JLabel("Quantity: ");
 		mQuantityLabel.setMaximumSize(new Dimension(900, 600));
 		mQuantityLabel.setFont(new Font("Arial", Font.BOLD, 42));
-		UserNamePanel.add(mQuantityLabel);
+		QuantityPanel.add(mQuantityLabel);
 
-		UserNamePanel.add(Box.createHorizontalStrut(30));		  
-		UserNamePanel.add(Box.createHorizontalGlue());
+		QuantityPanel.add(Box.createHorizontalStrut(30));		  
+		QuantityPanel.add(Box.createHorizontalGlue());
 		  
 		mQuantityLabelField.setMaximumSize(new Dimension(900, 600));
 		mQuantityLabelField.setFont(new Font("Arial", Font.BOLD, 42));
-		UserNamePanel.add(mQuantityLabelField);
+		QuantityPanel.add(mQuantityLabelField);
 		
 		mainPanel.add(Box.createVerticalStrut(30));
 				

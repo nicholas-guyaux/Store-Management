@@ -75,6 +75,6 @@ public class Product {
 	}
 	@Override
 	public String toString() {
-		return "ID:" + mId + "    " + getName() + "    Price:" + getUnitPrice() + "    Quantity:" + mQuantity + "    Discount:" + mDiscount;
+		return "ID:" + mId + "    " + getName() + "    Price:" + getUnitPrice() + "    Quantity:" + mQuantity + "    Discount:" + mDiscount + "%";
 	}
 }
