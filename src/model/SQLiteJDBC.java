@@ -186,7 +186,14 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public List<Product> getInventoryList(String search) {
-		String query = "SELECT ProductID, Name, Quantity, Price, Discount FROM Products";
+		String query;
+		if(search == "")
+		{
+			query = "SELECT ProductID, Name, Quantity, Price, Discount FROM Products";
+		} else {
+			query = "SELECT ProductID, Name, Quantity, Price, Discount FROM Products WHERE ProductID = " + search;
+		}
+		
 		List<Product> inventory = new ArrayList<Product>();
 		PreparedStatement preparedStatement;
 		try {
