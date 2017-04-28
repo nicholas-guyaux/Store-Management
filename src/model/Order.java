@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import controller.Program;
+
 public class Order {
 	private Map<Product, Integer> mItemsList;
 	private Map<Product, Integer> mReturnList;
@@ -16,26 +18,31 @@ public class Order {
 	private int mEmployeeID;
 	private double mReturnTotal;
 
-	public Order(int id) {
+	public Order(int id, int custID, float totalPrice) {
 		mOrderID = id;
 		mItemsList = new HashMap<Product, Integer>();
 		mReturnList = new HashMap<Product, Integer>();
-		mTotal = 0;
+		mTotal = totalPrice;
 		mReturnTotal = 0;
+		mCustomerID = custID;
 	}
 	
-	public Order(int id, int custID, float total) {
-		this.mOrderID = id;
-		this.mCustomerID = custID;
-		this.mTotal = total;
+	public Order(Order o) {
+		this.mOrderID = o.getId();
+		this.mCustomerID = o.getmCustomerID();
+		this.mTotal = o.getTotal();
 		mReturnTotal = 0;
+		mItemsList = Program.getInstance().getDataAccess().getOrderAndProducts(mOrderID);
 	}
 
 
 	public int getmEmployeeID() {
 		return mEmployeeID;
 	}
-
+	
+	public Map<Product, Integer> getMItemsList() {
+		return mItemsList;
+	}
 
 
 	public void setmEmployeeID(int mEmployeeID) {
@@ -57,16 +64,16 @@ public class Order {
 
 
 	/** makes an copy of copy */
-	public Order(Order copy){
-		this(copy.getId());
-		for (Item i : copy.getReturnList()){
-			if(i.getQuantity() > 0)
-				addItem(i.getProduct(), i.getQuantity());
-			else
-				returnProduct(i.getProduct(),i.getQuantity());
-		}
-		
-	}
+//	public Order(Order copy){
+//		this(copy.getId());
+//		for (Item i : copy.getReturnList()){
+//			if(i.getQuantity() > 0)
+//				addItem(i.getProduct(), i.getQuantity());
+//			else
+//				returnProduct(i.getProduct(),i.getQuantity());
+//		}
+//		
+//	}
 
 	/** adds a product to the order */
 	public void addItem(Product product, int quantity) {
@@ -77,14 +84,23 @@ public class Order {
 			q = q + quantity;
 		}
 		mItemsList.put(product, q);
-		mTotal = mTotal + product.getUnitPrice() * quantity;
+		if(mCustomerID == 0) {
+			mTotal = mTotal + product.getUnitPrice() * quantity;
+		} else {
+			mTotal = mTotal + (product.getUnitPrice()*(100-product.getDiscount())/100) * quantity;
+		}
+		
 	}
 
 	public void editItem(Product product, int quantity) {
 		Integer q = mItemsList.get(product);
 		if (q != null) {
 			mItemsList.put(product, quantity);
-			mTotal = mTotal - product.getUnitPrice() * (q - quantity);
+			if(mCustomerID == 0) {
+				mTotal = mTotal - product.getUnitPrice() * (q - quantity);
+			} else {
+				mTotal = mTotal - (product.getUnitPrice()*(100-product.getDiscount())/100 )* (q - quantity);
+			}
 		}
 	}
 
@@ -93,6 +109,11 @@ public class Order {
 		if (q != null) {
 			mItemsList.remove(product);
 			mTotal = mTotal - product.getUnitPrice() * q;
+			if(mCustomerID == 0) {
+				mTotal = mTotal - product.getUnitPrice() * q;
+			} else {
+				mTotal = mTotal - (product.getUnitPrice()*(100-product.getDiscount())/100 )* q;
+			}
 		}
 	}
 
@@ -108,6 +129,10 @@ public class Order {
 
 	public float getTotal() {
 		return mTotal;
+	}
+	
+	public int getCustomerID() {
+		return mCustomerID;
 	}
 	
 	public int getId(){

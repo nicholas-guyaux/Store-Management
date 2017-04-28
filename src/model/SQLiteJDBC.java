@@ -9,7 +9,10 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Date;
+import java.util.HashMap;
 
 public class SQLiteJDBC implements IDataAccess {
 
@@ -453,25 +456,42 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public void SaveOrder(Order o) {
-		String query = "INSERT INTO Orders (CustomerID, TotalPrice, OrderDate, EmployeeID) VALUES(?, ?, ?, ?, ?)";
+		String query1 = "insert or replace into Orders (OrderID, CustomerID, TotalPrice, OrderDate, EmployeeID) VALUES(?, ?, ?, ?, ?)";
 		//Create prepare statement
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = c.prepareStatement(query);
-			preparedStatement.setInt(1,  o.getmCustomerID());
-			preparedStatement.setFloat(2,  o.getTotal());
-			preparedStatement.setString(3, new SimpleDateFormat("yyyy.MM.dd").format(new Date()));
-			preparedStatement.setInt(4,  currentUser.getId());
+			preparedStatement = c.prepareStatement(query1);
+			preparedStatement.setInt(1,  o.getId());
+			preparedStatement.setInt(2,  o.getmCustomerID());
+			preparedStatement.setFloat(3,  o.getTotal());
+			preparedStatement.setTimestamp(4, new java.sql.Timestamp(jDateChooser1.getDate().getTime()));
+			preparedStatement.setInt(5,  currentUser.getId());
 			
 			preparedStatement.executeUpdate();
 			System.out.println("Insert order success");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} try {
+			String query2 = "insert or replace into Contains (Quantity, Price) VALUES(?, ?) WHERE OrderID = " + o.getId() + " and ProductID = ?";
+			preparedStatement = c.prepareStatement(query2);
+			for (Entry<Product, Integer> entry : o.getMItemsList().entrySet()) { 			
+				preparedStatement.setInt(1,  entry.getValue()); 
+				if(o.getCustomerID()!=0) {
+					preparedStatement.setFloat(2,  entry.getKey().getUnitPrice()*(100-entry.getKey().getDiscount())/100); 
+				} else {
+					preparedStatement.setFloat(2,  entry.getKey().getUnitPrice()); 
+				}
+				preparedStatement.setInt(3,  entry.getKey().getId()); 
+				preparedStatement.executeUpdate();
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-	
-
+		return;
 
 	}
 
@@ -503,8 +523,44 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public int getNextOrderId() {
-		// TODO Auto-generated method stub
-		return 0;
+		PreparedStatement preparedStatement;
+		String query = "SELECT * FROM Orders";
+		int max = 0;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				int id = rs.getInt("OrderID");
+				if(id>max)max=id;
+			}
+			rs.close();	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+			
+		return max + 1;
+	}
+	
+	@Override
+	public boolean checkCustomerById(int id) {
+		String query = "SELECT * FROM Customers WHERE CustomerID = " + id;
+		boolean temp = false;
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				int custID = rs.getInt("CustomerID");
+				if(custID == id) temp = true;
+		    }
+			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+      	return temp;
 	}
 	
 	public static ArrayList<Product> getListProductFromTextFile(String filePath) {
@@ -548,6 +604,105 @@ public class SQLiteJDBC implements IDataAccess {
 			
 		}
 		return listResult;
+	}
+
+	@Override
+	public Map<Product, Integer> getOrderAndProducts(int mOrderID) {
+		String query = "SELECT * FROM Contains WHERE OrderID = " + mOrderID;
+		Map<Product, Integer> temp = new HashMap<Product, Integer>();
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				int prodID = rs.getInt("ProductID");
+				int quant = rs.getInt("Quantity");
+				float price = rs.getFloat("Price");;
+		    }
+			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+      	return temp;
+	}
+
+	@Override
+	public String getCustomerNameById(int custID) {
+		String query = "SELECT * FROM Customers WHERE CustomerID = " + custID;
+		String temp = null;
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				String name = rs.getString("CustomerName");
+				temp = name;
+		    }
+			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+      	return temp;
+	}
+	
+	@Override
+	public int getLoyaltyPointsById(int custID) {
+		String query = "SELECT * FROM Customers WHERE CustomerID = " + custID;
+		int temp = 0;
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				int points = rs.getInt("LoyaltyPoints");
+				temp = points;
+		    }
+			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+      	return temp;
+	}
+	
+	@Override
+	public void addLoyaltyPoints(int custID, int points) {
+		String query = "UPDATE Customers SET LoyaltyPoints = " + (getLoyaltyPointsById(custID) + points) +" WHERE CustomerID = " + custID;
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);			
+			preparedStatement.executeUpdate();
+			System.out.println("LoyaltyPoint update successful");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return;
+	}
+	
+	@Override
+	public void setLoyaltyPoints(int custID, int points) {
+		String query = "UPDATE Customers SET LoyaltyPoints = " + points +" WHERE CustomerID = " + custID;
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);			
+			preparedStatement.executeUpdate();
+			System.out.println("LoyaltyPoint update successful");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return;
 	}
 
 }

@@ -1,6 +1,7 @@
 package model;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IDataAccess {
 	public Product getProductById(int id);
@@ -23,5 +24,11 @@ public interface IDataAccess {
 	public Order getOrderById(int id);
 	public int getNextOrderId();
 	
+	public boolean checkCustomerById(int id);
+	public Map<Product, Integer> getOrderAndProducts(int mOrderID);
+	public String getCustomerNameById(int custID);
+	int getLoyaltyPointsById(int custID);
+	void addLoyaltyPoints(int custID, int points);
+	void setLoyaltyPoints(int custID, int points);
 	
 }

@@ -23,6 +23,7 @@ import model.Order;
 
 public class PaymentScreen extends Screen {
 	// View
+	private JButton mPayPoints;
 	private JButton mPayCash;
 	private JButton mPayCreditCard;
 	private JButton mPayDebitCard;
@@ -34,14 +35,17 @@ public class PaymentScreen extends Screen {
 	private JLabel mTotalLabel;
 
 	private Order mOrder;
+	private int loyaltyPoints = 0;
 	
 	private JPanel mainPanel = new JPanel();
 
 	public PaymentScreen(JFrame frame, Order order) {
 		super(frame);
-
+		System.out.println("get loyalty points");
+		loyaltyPoints = Program.getInstance().getDataAccess().getLoyaltyPointsById(order.getCustomerID());
+		System.out.println("have points create view");
 		createView();
-
+		System.out.println("get loyalty points");
 		mOrder = order;
 		updateOrder();
 		
@@ -126,6 +130,18 @@ public class PaymentScreen extends Screen {
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 		mainPanel.add(buttonPanel);
 
+		if(loyaltyPoints > 100) {
+			mPayPoints = new JButton("Loyalty Points");
+			mPayPoints.setMaximumSize(new Dimension(Integer.MAX_VALUE, mPayPoints.getMinimumSize().height));
+			mPayPoints.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					payWithPoints();
+				}
+			});
+			buttonPanel.add(mPayPoints);
+		}
+		
 		mPayCash = new JButton("Cash");
 		mPayCash.setMaximumSize(new Dimension(Integer.MAX_VALUE, mPayCash.getMinimumSize().height));
 		mPayCash.addActionListener(new ActionListener() {
@@ -179,6 +195,19 @@ public class PaymentScreen extends Screen {
 		mTotalLabel.setText("$" + String.format("%.2f", (mOrder.getTotal() * 1.06)));
 	}
 	
+	/** processes payment with points */
+	private void payWithPoints() {
+		double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
+		if((loyaltyPoints) > due*100) {
+			loyaltyPoints -= due*100;
+			JOptionPane.showMessageDialog(mMainFrame, "You paid the full amount with you loyalty points\n" + "You now have " + loyaltyPoints + " loyalty points.");
+			Program.getInstance().getDataAccess().setLoyaltyPoints(mOrder.getCustomerID(), loyaltyPoints);
+			PaymentSuccess();
+		} else {
+			
+		}
+	}
+	
 	/** processes payment with cash */
 	private void payWithCash() {
 		double due = Double.parseDouble(String.format("%.2f", (mOrder.getTotal() * 1.06)));
@@ -195,6 +224,7 @@ public class PaymentScreen extends Screen {
                 "give $"+ String.format("%.2f", due) + " back to the customer", "confirm?",
                 JOptionPane.YES_NO_OPTION);
 		if(confirmation==0){
+			Program.getInstance().getDataAccess().addLoyaltyPoints(mOrder.getCustomerID(), (int) (mOrder.getTotal()%100));
 			PaymentSuccess();
 		}
 	}
@@ -206,6 +236,7 @@ public class PaymentScreen extends Screen {
                 "Amount due: $"+ String.format("%.2f", due) + "\n Was transaction successful?", "confirm?",
                 JOptionPane.YES_NO_OPTION);
 		if(confirmation==0){
+			Program.getInstance().getDataAccess().addLoyaltyPoints(mOrder.getCustomerID(), (int) (mOrder.getTotal()%100));
 			PaymentSuccess();
 		}
 	}
@@ -217,6 +248,7 @@ public class PaymentScreen extends Screen {
                 "Amount due: $"+ String.format("%.2f", due) + "\n Was transaction successful?", "confirm?",
                 JOptionPane.YES_NO_OPTION);
 		if(confirmation==0){
+			Program.getInstance().getDataAccess().addLoyaltyPoints(mOrder.getCustomerID(), (int) (mOrder.getTotal()%100));
 			PaymentSuccess();
 		}
 	}
