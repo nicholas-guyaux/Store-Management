@@ -303,7 +303,7 @@ public class ReturnScreen extends Screen {
 	
 	private void ReturnItem(){
 		Item selected = mItemList.getSelectedValue();
-		mOrder.returnProduct(selected.getProduct(), mOrder.getQuantityOfProduct(selected.getProduct()));
+		mOrder.returnProduct(selected.getProduct(), mOrder.getQuantityOfProduct(selected.getProduct()), mOrder.getCustomerID());
 		updateOrder();
 	}
 	

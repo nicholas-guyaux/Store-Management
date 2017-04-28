@@ -727,4 +727,50 @@ public class SQLiteJDBC implements IDataAccess {
 		return listResult;
 	}
 
+	@Override
+	public int getQuantityByOrderAndProdId(int orderID, int prodID) {
+		String query = "SELECT * FROM Contains WHERE OrderID = " + orderID + " and ProductID = " + prodID;
+		int temp = 0;
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				int quantity = rs.getInt("Quantity");
+				temp = quantity;
+		    }
+			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+      	return temp;
+	}
+
+	@Override
+	public float getPriceByOrderAndProdId(int orderID, int prodID) {
+		String query = "SELECT * FROM Contains WHERE OrderID = " + orderID + " and ProductID = " + prodID;
+		float temp = 0;
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				float price = rs.getInt("Price");
+				temp = price;
+		    }
+			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+      	return temp;
+	}
+
+
+
 }

@@ -30,5 +30,7 @@ public interface IDataAccess {
 	int getLoyaltyPointsById(int custID);
 	void addLoyaltyPoints(int custID, int points);
 	void setLoyaltyPoints(int custID, int points);
+	public int getQuantityByOrderAndProdId(int orderID, int prodID);
+	public float getPriceByOrderAndProdId(int orderID, int prodID);
 	
 }

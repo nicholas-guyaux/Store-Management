@@ -165,7 +165,7 @@ public class Order {
 	public double getReturnPrice(){
 		return (mTotal*1.06) - ((mTotal - mReturnTotal) * 1.06);
 	}
-	public void returnProduct(Product product, int quantity){
+	public void returnProduct(Product product, int quantity, int cust){
 		Integer q = mReturnList.get(product);
 		if (q == null) {
 			q = quantity;
@@ -173,7 +173,11 @@ public class Order {
 			q = q + quantity;
 		}
 		mReturnList.put(product, q);
-		mReturnTotal = mReturnTotal + product.getUnitPrice() * quantity;
+		if(cust!=0) {
+			mReturnTotal = mReturnTotal + (product.getUnitPrice()*(100-product.getDiscount())/100) * quantity;
+		} else {
+			mReturnTotal = mReturnTotal + product.getUnitPrice() * quantity;
+		}
 	}
 	public void editReturn(Product product, int quantity) {
 		Integer q = mReturnList.get(product);
