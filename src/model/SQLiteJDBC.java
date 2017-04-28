@@ -335,12 +335,11 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public Employee getEmployeeById(int id) {
-		String query = "SELECT * FROM Employees WHERE EmployeeID = ?";
+		String query = "SELECT * FROM Employees WHERE EmployeeID = " + id;
 		Employee temp = null;
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
-			preparedStatement.setInt(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			while ( rs.next() ) {
 				int emplID = rs.getInt("EmployeeID");
@@ -392,14 +391,12 @@ public class SQLiteJDBC implements IDataAccess {
 	@Override
 	public void removeEmployeeById(int id) {
 		// TODO Auto-generated method stub
-		String query = "DELETE * FROM Employees WHERE EmployeeID = ?";
+		String query = "DELETE FROM Employees WHERE EmployeeID = " + id;
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
-			preparedStatement.setInt(1, id);
-			ResultSet rs = preparedStatement.executeQuery();
+			preparedStatement.executeUpdate();
 			System.out.println("Employee removed sucessfully");
-			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -410,7 +407,7 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public void modifyEmployeeById(int id, Employee p) {
-		String query = "UPDATE Employees SET UserName = ?, EmployeeName = ?, EmployeePassword = ?, isManager = ? WHERE EmployeeID = ?";
+		String query = "UPDATE Employees SET UserName = ?, EmployeeName = ?, EmployeePassword = ?, isManager = ? WHERE EmployeeID = " + id;
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
@@ -418,11 +415,9 @@ public class SQLiteJDBC implements IDataAccess {
 			preparedStatement.setString(2, p.getName());
 			preparedStatement.setString(3, p.getPassword());
 			preparedStatement.setBoolean(4, p.isManager());
-			preparedStatement.setInt(5, p.getId());
 			
-			ResultSet rs = preparedStatement.executeQuery();
-			System.out.println("Employee update successful");;
-			rs.close();
+			preparedStatement.executeUpdate();
+			System.out.println("Employee update successful");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
