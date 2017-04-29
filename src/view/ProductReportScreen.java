@@ -1,3 +1,4 @@
+
 package view;
 
 import java.awt.Dimension;
@@ -22,7 +23,7 @@ import model.OrderReport;
 import model.Product;
 import model.ProductReport;
 
-public class OrderReportScreen extends Screen {
+public class ProductReportScreen extends Screen {
 
 
 
@@ -32,11 +33,11 @@ public class OrderReportScreen extends Screen {
 	private JButton mOrderButton;
 	private JButton mCancelButton;
 
-	private JList<OrderReport> mOrderList;
+	private JList<ProductReport> mProductList;
 	
 	private JPanel mainPanel = new JPanel();
 
-	public OrderReportScreen(JFrame frame, int range) {
+	public ProductReportScreen(JFrame frame, int range) {
 		super(frame);
 		
 		
@@ -62,17 +63,17 @@ public class OrderReportScreen extends Screen {
 		title.setMaximumSize(new Dimension(Integer.MAX_VALUE, title.getMinimumSize().height));
 		listPanel.add(title);
 
-		mOrderList = new JList<>();
+		mProductList = new JList<>();
 				
-		JScrollPane scrolPane1 = new JScrollPane(mOrderList);
+		JScrollPane scrolPane1 = new JScrollPane(mProductList);
 		scrolPane1.setPreferredSize(new Dimension(300, 500));
 		listPanel.add(scrolPane1);	
 		
-		DefaultListModel<OrderReport> OrderListModel = new DefaultListModel<OrderReport>();
-		for (OrderReport customer : Program.getInstance().getDataAccess().getOrderReportList(range)) {
-			OrderListModel.addElement(customer);
+		DefaultListModel<ProductReport> ProductListModel = new DefaultListModel<ProductReport>();
+		for (ProductReport product : Program.getInstance().getDataAccess().getProductReportList(range)) {
+			ProductListModel.addElement(product);
 		}
-		mOrderList.setModel(OrderListModel);
+		mProductList.setModel(ProductListModel);
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -176,12 +177,6 @@ public class OrderReportScreen extends Screen {
 		}
 	}
 
-
-
-	
-	
-	
-	
 	
 	/** cancels the current order and returns to the Main Screen for the current user */
 	private void CancelCheckout() {
