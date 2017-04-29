@@ -168,16 +168,18 @@ public class Order {
 		return mOrderID;
 	}
 	
-	/*
-	public int getQuantityOfProduct(Product p){
-		if(!mItemsList.containsKey(p))
+
+	public int getQuantityOfProduct(int productID){
+		int pos1 = getProdPosition(mItemList, productID);
+		if(pos1 < 0)
 			return 0;
-		if(!mReturnList.containsKey(p))
-			return mItemsList.get(p);
-		return mItemsList.get(p)-mReturnList.get(p);
+		int pos2 = getProdPosition(mReturnList, productID);
+		if(pos2 < 0)
+			return mItemList.get(pos1).getQuantity();
+		return mItemList.get(pos1).getQuantity() - mReturnList.get(pos2).getQuantity();
 	}
 	
-	
+/*	
 	public List<Item> getReturnList(){
 		List<Item> itemList = new LinkedList<>();
 		for (Entry<Product, Integer> entry : mItemsList.entrySet()) {

@@ -225,14 +225,14 @@ public class ReturnScreen extends Screen {
 	}
 	
 	/** shows a input dialog asking for a product id */
-	private Product askForProductId() {
+	private int askForProductId() {
 		String s = JOptionPane.showInputDialog(mMainFrame, "Enter the id of the product that you want:", "Product Id", JOptionPane.PLAIN_MESSAGE);
 
 		if ((s != null) && (s.length() > 0)) {
 			try {
 				int id = Integer.parseInt(s);
-				Product p = Program.getInstance().getDataAccess().getProductById(id);
-				if (p != null) {
+				int p = id;
+				if (mOrder.getProdPosition(mOrder.getmItemList(), id)>=0) {
 					return p;
 				} else {
 					JOptionPane.showMessageDialog(mMainFrame, "Product id is not found");
@@ -243,7 +243,7 @@ public class ReturnScreen extends Screen {
 		} else {
 			JOptionPane.showMessageDialog(mMainFrame, "You need to enter something");
 		}
-		return null;
+		return -1;
 	}
 	/** shows a input dialog asking for the quantity of the desired item */
 	private Integer askForQuantity() {
@@ -303,13 +303,13 @@ public class ReturnScreen extends Screen {
 	
 	private void ReturnItem(){
 		Item selected = mItemList.getSelectedValue();
-		mOrder.returnProduct(selected.getProductID(), mOrder.getQuantityOfProduct(selected.getProductID()), mOrder.getCustomerID());
+		mOrder.returnProduct(selected.getProductID(), mOrder.getQuantityOfProduct(selected.getProductID()));
 		updateOrder();
 	}
 	
 	/** Adds a quantity of an item to the checkout */
 	private void returnProduct() {
-		Product p = askForProductId();
+		int p = askForProductId();
 		if (p != null) {
 			int q = mOrder.getQuantityOfProduct(p);
 			if(q == 0){
