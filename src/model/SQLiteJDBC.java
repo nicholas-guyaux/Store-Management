@@ -11,8 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class SQLiteJDBC implements IDataAccess {
 
@@ -32,7 +45,7 @@ public class SQLiteJDBC implements IDataAccess {
 	    		System.out.println("Database exists");
 		    	connectToDatabase();
 		    	System.out.println("Connected to database");
-	    	 	createTables("doc/products.txt");
+	    	 	createTables("doc/products.xlsx");
 	    		System.out.println("Created tables");
 	    	} else {
 	    		System.out.println("Database exists");
@@ -81,7 +94,8 @@ public class SQLiteJDBC implements IDataAccess {
 			PreparedStatement preparedStatement = c.prepareStatement(query);
 			
 			//Get list product from file text
-			ArrayList<Product> listProduct = getListProductFromTextFile(fileName);
+			//ArrayList<Product> listProduct = getListProductFromTextFile(fileName);
+			ArrayList<Product> listProduct = getProductListFromXLS(fileName);
 			//Insert list to db
 			for(int i =0; i< listProduct.size(); i++) {
 				preparedStatement.setInt(1,  listProduct.get(i).getId());
@@ -682,50 +696,7 @@ public class SQLiteJDBC implements IDataAccess {
 		return;
 	}
 	
-	public static ArrayList<Product> getListProductFromTextFile(String filePath) {
-		FileInputStream fis = null;
-		InputStreamReader isr = null;
-		BufferedReader  bReader = null;
-		System.out.println("trying to read file");
-		ArrayList<Product> listResult = new ArrayList<Product>();
-		try {
-			System.out.println("trying to read file");
-			fis = new FileInputStream(filePath);
-			isr = new InputStreamReader(fis);
-			bReader = new BufferedReader(isr);
-			//String save line get from text file
-			String line = null;
-			//Array save product
-			String[]strProduct = null;
-			
-			//Loop and get all data in text file
-			while(true) {
-				//Get 1 line
-				line = bReader.readLine();
-				//Check line get empty, exit loop
-				if(line==null) {
-					break;
-				} else {
-					strProduct = line.split(",");
-					listResult.add(new Product(Integer.parseInt(strProduct[0]), strProduct[1], Integer.parseInt(strProduct[2]), Float.parseFloat(strProduct[3]), Integer.parseInt(strProduct[4])));
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("Read file error");
-			e.printStackTrace();
-		} finally {
-			//close file
-			try{
-				bReader.close();
-				isr.close();
-				fis.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		}
-		return listResult;
-	}
+	
 
 	@Override
 	public int getQuantityByOrderAndProdId(int orderID, int prodID) {
@@ -771,6 +742,60 @@ public class SQLiteJDBC implements IDataAccess {
       	return temp;
 	}
 
-
+	public ArrayList<Product> getProductListFromXLS (String fileName) {
+		ArrayList<Product> listResult = new ArrayList<Product>();
+		int prodID = 0;
+		String name = null;
+		int quantity = 0;
+		float price = 0;
+		int discount = 0;
+		try {
+			
+	        FileInputStream inputStream = new FileInputStream(new File(fileName));
+	        Workbook workbook = new XSSFWorkbook(inputStream);
+	        Sheet firstSheet = workbook.getSheetAt(0);
+	        Iterator<Row> iterator = firstSheet.iterator();
+	        while (iterator.hasNext()) {
+	            Row nextRow = iterator.next();
+	            Iterator<Cell> cellIterator = nextRow.cellIterator();
+	             
+	            while (cellIterator.hasNext()) {
+	                Cell nextCell = cellIterator.next();
+	                int columnIndex = nextCell.getColumnIndex();
+	                
+	                switch (columnIndex) {
+	                case 0:
+	                	prodID = (int) nextCell.getNumericCellValue();
+	                	break;
+	                case 1:
+	                	name = nextCell.getStringCellValue();
+	                	break;
+	                case 2:
+	                	quantity = (int) nextCell.getNumericCellValue();
+	                	break;
+	                case 3:
+	                	price = (float) nextCell.getNumericCellValue();
+	                	break;
+	                case 4:
+	                	discount = (int) nextCell.getNumericCellValue();
+	                	break;
+	                }
+	            }
+	            listResult.add(new Product(prodID, name, quantity, price, discount));
+	        }
+	         
+       
+			workbook.close();
+		    inputStream.close();
+		} catch (IOException e) {
+		
+    	// TODO Auto-generated catch block
+		e.printStackTrace();
+		}
+        
+        return listResult;
+    }
+		
+	
 
 }
