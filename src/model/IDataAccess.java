@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,5 +33,7 @@ public interface IDataAccess {
 	void setLoyaltyPoints(int custID, int points);
 	public int getQuantityByOrderAndProdId(int orderID, int prodID);
 	public float getPriceByOrderAndProdId(int orderID, int prodID);
+	public ArrayList<Item> getItemsByOrderID(int orderID);
+	public void removeItemsByOrderID(int orderID);
 	
 }

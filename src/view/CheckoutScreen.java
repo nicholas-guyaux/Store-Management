@@ -259,8 +259,10 @@ public class CheckoutScreen extends Screen {
 	
 	/** updates view for any changes that was made */
 	private void updateOrder() {
+		
+		
 		DefaultListModel<Item> itemListModel = new DefaultListModel<Item>();
-		for (Item item : mOrder.getOrderList()) {
+		for (Item item : mOrder.getmItemList()) {
 			itemListModel.addElement(item);
 		}
 		mItemList.setModel(itemListModel);
@@ -275,7 +277,7 @@ public class CheckoutScreen extends Screen {
 		if (q != null) {
 			Item selected = mItemList.getSelectedValue();
 			if(q == 0){
-				mOrder.removeItem(selected.getProduct());
+				mOrder.removeItem(selected.getProductId());
 				updateOrder();
 				return;
 			}
@@ -283,7 +285,7 @@ public class CheckoutScreen extends Screen {
 				JOptionPane.showMessageDialog(mMainFrame, "Quantity must be a positive number");
 				return;
 			}
-			mOrder.editItem(selected.getProduct(), q);
+			mOrder.editItem(selected.getProductId(), q, selected.getmPrice());
 			updateOrder();
 		}
 	}
@@ -293,7 +295,7 @@ public class CheckoutScreen extends Screen {
 		int n = JOptionPane.showConfirmDialog(mMainFrame, "Are you sure?", "Remove item confirmation", JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
 			Item selected = mItemList.getSelectedValue();
-			mOrder.removeItem(selected.getProduct());
+			mOrder.removeItem(selected.getProductId());
 			updateOrder();
 		}
 	}
@@ -302,8 +304,13 @@ public class CheckoutScreen extends Screen {
 	private void AddProduct() {
 		Product p = askForProductId();
 		if (p != null) {
-			mOrder.addItem(p, 1);
+			if(customerID!=0) {
+				mOrder.addItem(p.getId(), 1, p.getUnitPrice()*(100-p.getDiscount())/100);
+				updateOrder();
+			} else {
+			mOrder.addItem(p.getId(), 1, p.getUnitPrice());
 			updateOrder();
+			}
 		}
 	}
 	
@@ -320,8 +327,13 @@ public class CheckoutScreen extends Screen {
 					JOptionPane.showMessageDialog(mMainFrame, "Quantity must be a positive number");
 					return;
 				}
-				mOrder.addItem(p, q);
+				if(customerID!=0) {
+					mOrder.addItem(p.getId(), q, p.getUnitPrice()*(100-p.getDiscount())/100);
+					updateOrder();
+				} else {
+				mOrder.addItem(p.getId(), q, p.getUnitPrice());
 				updateOrder();
+				}
 			}
 		}
 	}

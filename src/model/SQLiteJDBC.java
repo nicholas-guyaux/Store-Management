@@ -489,11 +489,11 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public void SaveOrder(Order o) {
-		String query1 = "insert or replace into Orders (OrderID, CustomerID, TotalPrice, EmployeeID) VALUES(?, ?, ?, ?)";
+		String query = "insert or replace into Orders (OrderID, CustomerID, TotalPrice, OrderDate, EmployeeID) VALUES(?, ?, ?, DateTime('now'), ?)";
 		//Create prepare statement
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = c.prepareStatement(query1);
+			preparedStatement = c.prepareStatement(query);
 			preparedStatement.setInt(1,  o.getId());
 			preparedStatement.setInt(2,  o.getmCustomerID());
 			preparedStatement.setFloat(3,  o.getTotal());
@@ -501,23 +501,18 @@ public class SQLiteJDBC implements IDataAccess {
 			
 			preparedStatement.executeUpdate();
 			System.out.println("Insert order success");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} try {
-			String query2 = "insert or replace into Contains (Quantity, Price) VALUES(?, ?) WHERE OrderID = " + o.getId() + " and ProductID = ?";
-			preparedStatement = c.prepareStatement(query2);
-			for (Entry<Product, Integer> entry : o.getMItemsList().entrySet()) { 			
-				preparedStatement.setInt(1,  entry.getValue()); 
-				if(o.getCustomerID()!=0) {
-					preparedStatement.setFloat(2,  entry.getKey().getUnitPrice()*(100-entry.getKey().getDiscount())/100); 
-				} else {
-					preparedStatement.setFloat(2,  entry.getKey().getUnitPrice()); 
-				}
-				preparedStatement.setInt(3,  entry.getKey().getId()); 
+			query = "insert or replace into Contains (OrderID, ProductID, Quantity, Price) VALUES(?, ?, ?, ?)";
+			preparedStatement = c.prepareStatement(query);
+			//Insert list to db
+			for(int i =0; i< o.getItemList().size(); i++) {
+				preparedStatement.setInt(1,  o.getId());
+				preparedStatement.setInt(2,  o.getItemList().get(i).getProductID());
+				preparedStatement.setInt(3,  o.getItemList().get(i).getQuantity());
+				preparedStatement.setFloat(4,  o.getItemList().get(i).getmPrice());
+				
 				preparedStatement.executeUpdate();
+				System.out.println("Insert success record:" + (i + 1));
 			}
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -551,6 +546,7 @@ public class SQLiteJDBC implements IDataAccess {
 	
       	return temp;
 	}
+	
 	
 
 	@Override
@@ -596,7 +592,7 @@ public class SQLiteJDBC implements IDataAccess {
 	}
 	
 	
-
+/*
 	@Override
 	public Map<Product, Integer> getOrderAndProducts(int mOrderID) {
 		String query = "SELECT * FROM Contains WHERE OrderID = " + mOrderID;
@@ -619,6 +615,7 @@ public class SQLiteJDBC implements IDataAccess {
 	
       	return temp;
 	}
+	*/
 
 	@Override
 	public String getCustomerNameById(int custID) {
@@ -697,7 +694,49 @@ public class SQLiteJDBC implements IDataAccess {
 	}
 	
 	
-
+	@Override
+	public ArrayList<Item> getItemsByOrderID (int orderID) {
+		ArrayList<Item> itemList = new ArrayList<Item> ();
+		int prodID;
+		int quantity;
+		float price;
+		String query = "SELECT * FROM Contains WHERE OrderID = " + orderID;
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				prodID = rs.getInt("ProductID");
+				quantity = rs.getInt("Quantity");
+				price = rs.getInt("Price");
+				itemList.add(new Item(orderID, prodID, quantity, price));
+		    }
+			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		return itemList;
+		
+	}
+	
+	@Override
+	public void removeItemsByOrderID (int orderID) {
+		String query = "DELETE FROM Contains WHERE OrderID = " + orderID;
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return;
+	}
+	
+	/*
 	@Override
 	public int getQuantityByOrderAndProdId(int orderID, int prodID) {
 		String query = "SELECT * FROM Contains WHERE OrderID = " + orderID + " and ProductID = " + prodID;
@@ -741,6 +780,8 @@ public class SQLiteJDBC implements IDataAccess {
 	
       	return temp;
 	}
+	*/
+	
 
 	public ArrayList<Product> getProductListFromXLS (String fileName) {
 		ArrayList<Product> listResult = new ArrayList<Product>();
@@ -795,6 +836,24 @@ public class SQLiteJDBC implements IDataAccess {
         
         return listResult;
     }
+
+	@Override
+	public Map<Product, Integer> getOrderAndProducts(int mOrderID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getQuantityByOrderAndProdId(int orderID, int prodID) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public float getPriceByOrderAndProdId(int orderID, int prodID) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 		
 	
 

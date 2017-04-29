@@ -5,32 +5,36 @@ import controller.Program;
 public class Item {
 
 	private int mOrderID;
-	private Product mProduct;
+	private int mProductID;
 	private int mQuantity;
 	private float mPrice;
 
 	public Item(int orderID, int prodID, int quantity, float price) {
 		mOrderID = orderID;
-		mProduct = Program.getInstance().getDataAccess().getProductById(prodID);
+		mProductID = prodID;
 		mQuantity = quantity;
 		mPrice = price;
 	}
 
-	public int getId() {
-		return mProduct.getId();
+	public int getProductId() {
+		return mProductID;
 	}
 
-	public Product getProduct() {
-		return mProduct;
+	public int getProductID() {
+		return mProductID;
 	}
 	
 	public int getQuantity(){
 		return mQuantity;
 	}
+	
+	public void setQuantity(int quant){
+		this.mQuantity = quant;
+	}
 
 	@Override
 	public String toString() {
-		return mProduct.getName() + "        " + getmPrice() + "        " + getQuantity() + "        " + String.format("%.2f", getmPrice() * mQuantity);
+		return Program.getInstance().getDataAccess().getProductById(mProductID).getName() + "        " + getmPrice() + "        " + getQuantity() + "        " + String.format("%.2f", getmPrice() * mQuantity);
 	}
 
 	public float getmPrice() {
