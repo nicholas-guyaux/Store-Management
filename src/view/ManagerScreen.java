@@ -23,6 +23,7 @@ public class ManagerScreen  extends Screen {
 	
 	private JButton mCheckoutButton = new JButton("Checkout");
 	private JButton mEditAccountButton = new JButton("Edit Account");
+	private JButton mReportsButton = new JButton("Reports");
 	
 	private JButton mInventoryButton = new JButton("Inventory");
 	private JButton mReturnsButton = new JButton("Returns");
@@ -87,7 +88,7 @@ public class ManagerScreen  extends Screen {
 			}
 		});
 		mid.add(mCheckoutButton);
-		  
+
 		mid.add(Box.createHorizontalStrut(30));
 		  
 		mEditAccountButton.setMaximumSize(new Dimension(900, 600));
@@ -99,6 +100,18 @@ public class ManagerScreen  extends Screen {
 			}
 		});
 		mid.add(mEditAccountButton);
+
+		mid.add(Box.createHorizontalStrut(30));
+		  
+		mReportsButton.setMaximumSize(new Dimension(900, 600));
+		mReportsButton.setFont(new Font("Arial", Font.BOLD, 90));
+		mReportsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				openReports();
+			}
+		});
+		mid.add(mReportsButton);
 		
 
 		mainPanel.add(Box.createVerticalStrut(30));
@@ -143,6 +156,11 @@ public class ManagerScreen  extends Screen {
 		managerOptions.add(mEditAccountsButton);
 	}
 	
+	protected void openReports() {
+		removePanel(mainPanel);
+		new ReportsScreen(mMainFrame);
+	}
+
 	/** logs out */
 	private void logout(){
 		Program.getInstance().getDataAccess().logOut();
