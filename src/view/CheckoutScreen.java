@@ -262,7 +262,7 @@ public class CheckoutScreen extends Screen {
 		
 		
 		DefaultListModel<Item> itemListModel = new DefaultListModel<Item>();
-		for (Item item : mOrder.getmItemList()) {
+		for (Item item : mOrder.getItemList()) {
 			itemListModel.addElement(item);
 		}
 		mItemList.setModel(itemListModel);

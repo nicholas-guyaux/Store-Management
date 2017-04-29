@@ -1,30 +1,19 @@
 package model;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 
 public class SQLiteJDBC implements IDataAccess {
@@ -594,30 +583,7 @@ public class SQLiteJDBC implements IDataAccess {
 	}
 	
 	
-/*
-	@Override
-	public Map<Product, Integer> getOrderAndProducts(int mOrderID) {
-		String query = "SELECT * FROM Contains WHERE OrderID = " + mOrderID;
-		Map<Product, Integer> temp = new HashMap<Product, Integer>();
-		PreparedStatement preparedStatement;
-		try {
-			preparedStatement = c.prepareStatement(query);
-			ResultSet rs = preparedStatement.executeQuery();
-			while ( rs.next() ) {
-				int prodID = rs.getInt("ProductID");
-				int quant = rs.getInt("Quantity");
-				float price = rs.getFloat("Price");;
-		    }
-			
-			rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-      	return temp;
-	}
-	*/
+
 
 	@Override
 	public String getCustomerNameById(int custID) {
@@ -727,62 +693,20 @@ public class SQLiteJDBC implements IDataAccess {
 	@Override
 	public void removeItemsByOrderID (int orderID) {
 		String query = "DELETE FROM Contains WHERE OrderID = " + orderID;
+		System.out.println("trying to remove from contains");
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		return;
 	}
 	
-	/*
-	@Override
-	public int getQuantityByOrderAndProdId(int orderID, int prodID) {
-		String query = "SELECT * FROM Contains WHERE OrderID = " + orderID + " and ProductID = " + prodID;
-		int temp = 0;
-		PreparedStatement preparedStatement;
-		try {
-			preparedStatement = c.prepareStatement(query);
-			ResultSet rs = preparedStatement.executeQuery();
-			while ( rs.next() ) {
-				int quantity = rs.getInt("Quantity");
-				temp = quantity;
-		    }
-			
-			rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	
-      	return temp;
-	}
-
-	@Override
-	public float getPriceByOrderAndProdId(int orderID, int prodID) {
-		String query = "SELECT * FROM Contains WHERE OrderID = " + orderID + " and ProductID = " + prodID;
-		float temp = 0;
-		PreparedStatement preparedStatement;
-		try {
-			preparedStatement = c.prepareStatement(query);
-			ResultSet rs = preparedStatement.executeQuery();
-			while ( rs.next() ) {
-				float price = rs.getInt("Price");
-				temp = price;
-		    }
-			
-			rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-      	return temp;
-	}
-	*/
 	
 
 	public ArrayList<Product> getProductListFromXLS (String fileName) {

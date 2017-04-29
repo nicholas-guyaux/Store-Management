@@ -232,7 +232,7 @@ public class ReturnScreen extends Screen {
 			try {
 				int id = Integer.parseInt(s);
 				int p = id;
-				if (mOrder.getProdPosition(mOrder.getmItemList(), id)>=0) {
+				if (mOrder.getProdPosition(mOrder.getItemList(), id)>=0) {
 					return p;
 				} else {
 					JOptionPane.showMessageDialog(mMainFrame, "Product id is not found");
@@ -314,7 +314,8 @@ public class ReturnScreen extends Screen {
 	private void returnProduct() {
 		int p = askForProductId();
 		if (p != 0) {
-			int q = mOrder.getProdPosition(mOrder.getmItemList(), p);
+			int pos = mOrder.getProdPosition(mOrder.getItemList(), p);
+			int q = mOrder.getItemList().get(pos).getQuantity();
 			if(q <= 0){
 				JOptionPane.showMessageDialog(mMainFrame, "can only return products that are left in the current order");
 				return;
@@ -326,7 +327,9 @@ public class ReturnScreen extends Screen {
 						JOptionPane.showMessageDialog(mMainFrame, "can only return up to the quantity of items that are left in the order");
 						return;
 					}
-					mOrder.returnProduct(p, rq);
+					System.out.println("trying to return product");
+					mOrder.returnProduct(p, (int) rq);
+					System.out.println("returned product product");
 					updateOrder();
 				}
 			}

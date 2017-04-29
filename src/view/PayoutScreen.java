@@ -233,6 +233,7 @@ public class PayoutScreen extends Screen {
 	/** saves the order and returns to main screen for the current user */
 	private void PaymentSuccess(){
 		mOrder.saveReturn();
+		mOrder.setTotal(mOrder.getTotal()- mOrder.getReturnTotal());
 		Program.getInstance().getDataAccess().SaveOrder(mOrder);
 		removePanel(mainPanel);
 		openUserMainMenu();

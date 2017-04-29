@@ -22,7 +22,7 @@ public class Order {
 	private int mEmployeeID;
 	
 	
-	private double mReturnTotal;
+	private float mReturnTotal;
 	public Object getItemList;
 
 	private int productID;
@@ -36,7 +36,7 @@ public class Order {
 		//mItemsList = new HashMap<Product, Integer>();
 		//mReturnList = new HashMap<Product, Integer>();
 		setmItemList(new ArrayList<Item>());
-		
+		mReturnList = new ArrayList<Item>();
 		
 		mReturnTotal = 0;
 		
@@ -156,6 +156,10 @@ public class Order {
 		return itemList;
 	}
 	*/
+	
+	public void setTotal(float total) {
+		mTotal = total;
+	}
 
 	public float getTotal() {
 		return mTotal;
@@ -203,6 +207,7 @@ public class Order {
 		int pos = getProdPosition(mReturnList, productID);
 		int q;
 		if(pos<0) {
+			System.out.println("Item not in return list");
 			q = quantity;
 			mReturnList.add(new Item(mOrderID, product, quantity, mItemList.get(getProdPosition(mItemList, product)).getmPrice()));
 		} else {
@@ -210,7 +215,7 @@ public class Order {
 			mReturnList.get(pos).setQuantity(quantity + q);
 		}
 	
-		mReturnTotal = mReturnTotal + mReturnList.get(getProdPosition(mReturnList, productID)).getmPrice() * q;
+		mReturnTotal = mReturnTotal + mReturnList.get(getProdPosition(mReturnList, product)).getmPrice() * q;
 	
 	}
 	
@@ -240,23 +245,24 @@ public class Order {
 				mItemList.get(pos).setQuantity(orderQuant);
 			}
 			Program.getInstance().getDataAccess().removeItemsByOrderID(mOrderID);
-			Program.getInstance().getDataAccess().SaveOrder(this);
 			
-			mReturnTotal = 0;
+			
 		}
 		
 	}
 
-	public ArrayList<Item> getmItemList() {
-		return mItemList;
-	}
-
+	
 	public void setmItemList(ArrayList<Item> mItemList) {
 		this.mItemList = mItemList;
 	}
 	
 	public void setmReturnItemList(ArrayList<Item> mReturnList) {
 		this.mReturnList = mReturnList;
+	}
+
+	public float getReturnTotal() {
+		// TODO Auto-generated method stub
+		return mReturnTotal;
 	}
 	
 	

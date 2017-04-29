@@ -186,7 +186,7 @@ public class PaymentScreen extends Screen {
 	/** updates the view for changes in the order */
 	private void updateOrder() {
 		DefaultListModel<Item> itemListModel = new DefaultListModel<Item>();
-		for (Item item : mOrder.getmItemList()) {
+		for (Item item : mOrder.getItemList()) {
 			itemListModel.addElement(item);
 		}
 		mItemList.setModel(itemListModel);
