@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,8 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import controller.Program;
+import model.CustomerReport;
 import model.Item;
+import model.OrderReport;
 import model.Product;
+import model.ProductReport;
 
 public class ReportsScreen extends Screen {
 	// View
@@ -25,7 +29,9 @@ public class ReportsScreen extends Screen {
 	private JButton mOrderButton;
 	private JButton mCancelButton;
 
-	private JList<Item> mItemList;
+	private JList<OrderReport> mOrderList;
+	private JList<CustomerReport> mCustomerList;
+	private JList<ProductReport> mProductList;
 	
 	private JPanel mainPanel = new JPanel();
 
@@ -53,11 +59,21 @@ public class ReportsScreen extends Screen {
 		title.setMaximumSize(new Dimension(Integer.MAX_VALUE, title.getMinimumSize().height));
 		listPanel.add(title);
 
-		mItemList = new JList<>();
+		mOrderList = new JList<>();
+		mCustomerList = new JList<>();
+		mProductList = new JList<>();
 		
-		JScrollPane scrolPane = new JScrollPane(mItemList);
-		scrolPane.setPreferredSize(new Dimension(300, 500));
-		listPanel.add(scrolPane);		
+		JScrollPane scrolPane1 = new JScrollPane(mOrderList);
+		scrolPane1.setPreferredSize(new Dimension(300, 500));
+		listPanel.add(scrolPane1);		
+		
+		JScrollPane scrolPane2 = new JScrollPane(mCustomerList);
+		scrolPane2.setPreferredSize(new Dimension(300, 500));
+		listPanel.add(scrolPane2);	
+		
+		JScrollPane scrolPane3 = new JScrollPane(mProductList);
+		scrolPane3.setPreferredSize(new Dimension(300, 500));
+		listPanel.add(scrolPane3);	
 		
 
 		JPanel buttonPanel = new JPanel();
@@ -122,56 +138,48 @@ public class ReportsScreen extends Screen {
 	
 	private void productReport() {
 		// TODO Auto-generated method stub
-		askForDate();
+		if ("2 weeks".equals(askForDate())) {
+			removePanel(mainPanel);
+			new ProductReportScreen(mMainFrame,14);
+		} else if ("1 month".equals(askForDate())) {
+			removePanel(mainPanel);
+			new ProductReportScreen(mMainFrame,30);
+		} else if ("Quarter".equals(askForDate())) {
+			removePanel(mainPanel);
+			new ProductReportScreen(mMainFrame,90);
+		}
 	}
 
 	private void orderReport() {
 		// TODO Auto-generated method stub
-		askForDate();
+		if ("2 weeks".equals(askForDate())) {
+			removePanel(mainPanel);
+			new OrderReportScreen(mMainFrame,14);
+		} else if ("1 month".equals(askForDate())) {
+			removePanel(mainPanel);
+			new OrderReportScreen(mMainFrame,30);
+		} else if ("Quarter".equals(askForDate())) {
+			removePanel(mainPanel);
+			new OrderReportScreen(mMainFrame,90);
+		}
 	}
 
 	private void customerReport() {
 		// TODO Auto-generated method stub
-		askForDate();
-	}
-
-	/** shows a input dialog asking for a product id */
-	private Product askForProductId() {
-		String s = JOptionPane.showInputDialog(mMainFrame, "Enter the id of the product that you want:", "Product Id", JOptionPane.PLAIN_MESSAGE);
-
-		if ((s != null) && (s.length() > 0)) {
-			try {
-				int id = Integer.parseInt(s);
-				Product p = Program.getInstance().getDataAccess().getProductById(id);
-				if (p != null) {
-					return p;
-				} else {
-					JOptionPane.showMessageDialog(mMainFrame, "Product id is not found");
-				}
-			} catch (NumberFormatException ex) {
-				JOptionPane.showMessageDialog(mMainFrame, "You need to enter an integer");
-			}
-		} else {
-			JOptionPane.showMessageDialog(mMainFrame, "You need to enter something");
+		if ("2 weeks".equals(askForDate())) {
+			removePanel(mainPanel);
+			new CustomerReportScreen(mMainFrame,14);
+		} else if ("1 month".equals(askForDate())) {
+			removePanel(mainPanel);
+			new CustomerReportScreen(mMainFrame,30);
+		} else if ("Quarter".equals(askForDate())) {
+			removePanel(mainPanel);
+			new CustomerReportScreen(mMainFrame,90);
 		}
-		return null;
+	
 	}
-	/** shows a input dialog asking for the quantity of the desired item */
-	private Integer askForQuantity() {
-		String s = JOptionPane.showInputDialog(mMainFrame, "Enter the quantity of the product:", "Quantity", JOptionPane.PLAIN_MESSAGE);
 
-		if ((s != null) && (s.length() > 0)) {
-			try {
-				int q = Integer.parseInt(s);
-				return q;
-			} catch (NumberFormatException ex) {
-				JOptionPane.showMessageDialog(mMainFrame, "You need to enter an integer");
-			}
-		} else {
-			JOptionPane.showMessageDialog(mMainFrame, "You need to enter something");
-		}
-		return null;
-	}
+
 
 	
 	

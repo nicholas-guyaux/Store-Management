@@ -3,11 +3,16 @@ package model;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -480,7 +485,7 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public void SaveOrder(Order o) {
-		String query = "insert or replace into Orders (OrderID, CustomerID, TotalPrice, OrderDate, EmployeeID) VALUES(?, ?, ?, DateTime('now'), ?)";
+		String query = "insert or replace into Orders (OrderID, CustomerID, TotalPrice, OrderDate, EmployeeID) VALUES(?, ?, ?, ?, ?)";
 		//Create prepare statement
 		PreparedStatement preparedStatement;
 		try {
@@ -488,7 +493,8 @@ public class SQLiteJDBC implements IDataAccess {
 			preparedStatement.setInt(1,  o.getId());
 			preparedStatement.setInt(2,  o.getmCustomerID());
 			preparedStatement.setFloat(3,  o.getTotal());
-			preparedStatement.setInt(4,  currentUser.getId());
+			preparedStatement.setString(4, o.getDate());
+			preparedStatement.setInt(5,  currentUser.getId());
 			
 			preparedStatement.executeUpdate();
 			System.out.println("Insert order success");
@@ -763,22 +769,102 @@ public class SQLiteJDBC implements IDataAccess {
         return listResult;
     }
 
+	
+
 	@Override
-	public Map<Product, Integer> getOrderAndProducts(int mOrderID) {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<CustomerReport> getCustomerReportList(int range) {
+		ArrayList<CustomerReport> customerList = new ArrayList<CustomerReport> ();
+		int orderID;
+		int custID;
+		float total;
+		String date;
+		int employID;
+		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + orderID + " AND " + new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				orderID = rs.getInt("OrderID");
+				custID = rs.getInt("CustomerID");
+				total = rs.getFloat("TotalPrice");
+				date = rs.getString("OrderDate");
+				employID = rs.getInt("EmployeeID");
+				if(custID != 0) {
+					customerList.add(new CustomerReport(orderID, custID, total, date, employID));
+				}
+				
+		    }
+			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		return customerList;
 	}
 
 	@Override
-	public int getQuantityByOrderAndProdId(int orderID, int prodID) {
-		// TODO Auto-generated method stub
-		return 0;
+	public ArrayList<OrderReport> getOrderReportList(int range) {
+		ArrayList<OrderReport> orderList = new ArrayList<OrderReport> ();
+		int orderID;
+		int custID;
+		float total;
+		String date;
+		int employID;
+		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + orderID + " AND " + new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				orderID = rs.getInt("OrderID");
+				custID = rs.getInt("CustomerID");
+				total = rs.getFloat("TotalPrice");
+				date = rs.getString("OrderDate");
+				employID = rs.getInt("EmployeeID");
+				orderList.add(new OrderReport(orderID, custID, total, date, employID));
+		    }
+			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		return orderList;
 	}
 
 	@Override
-	public float getPriceByOrderAndProdId(int orderID, int prodID) {
-		// TODO Auto-generated method stub
-		return 0;
+	public ArrayList<ProductReport> getProductReportList(int range) {
+		ArrayList<ProductReport> productList = new ArrayList<ProductReport> ();
+		int orderID;
+		int custID;
+		float total;
+		String date;
+		int employID;
+		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + orderID + " AND " + new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = c.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while ( rs.next() ) {
+				orderID = rs.getInt("OrderID");
+				custID = rs.getInt("CustomerID");
+				total = rs.getFloat("TotalPrice");
+				date = rs.getString("OrderDate");
+				employID = rs.getInt("EmployeeID");
+				productList.add(new ProductReport(orderID, custID, total, date, employID));
+		    }
+			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		return productList;
 	}
 		
 	

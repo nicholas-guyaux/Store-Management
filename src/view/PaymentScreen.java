@@ -204,7 +204,8 @@ public class PaymentScreen extends Screen {
 			Program.getInstance().getDataAccess().setLoyaltyPoints(mOrder.getCustomerID(), loyaltyPoints);
 			PaymentSuccess();
 		} else {
-			
+			JOptionPane.showMessageDialog(mMainFrame, "You do not have enough points to cover your total");
+			return;	
 		}
 	}
 	

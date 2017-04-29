@@ -1,7 +1,9 @@
 package model;
 
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +21,7 @@ public class Order {
 	private int mOrderID;
 	private int mCustomerID;
 	private float mTotal;
+	private String date;
 	private int mEmployeeID;
 	
 	
@@ -31,6 +34,7 @@ public class Order {
 		mOrderID = id;
 		mCustomerID = custID;
 		mTotal = total;
+		date = new SimpleDateFormat("yyyy-MM-dd").format(currentDate());
 		mEmployeeID = Program.getInstance().getDataAccess().getCurrentUser().getId();
 		
 		//mItemsList = new HashMap<Product, Integer>();
@@ -47,6 +51,7 @@ public class Order {
 		this.mOrderID = o.getId();
 		this.mCustomerID = o.getmCustomerID();
 		this.mTotal = o.getTotal();
+		this.date = o.getDate();
 		this.mEmployeeID = o.getmEmployeeID();
 		mReturnTotal = 0;
 		//mItemsList = Program.getInstance().getDataAccess().getOrderAndProducts(mOrderID);
@@ -55,6 +60,11 @@ public class Order {
 	}
 
 
+	public Date currentDate() {
+		Date date = new Date();
+		return date;
+	}
+	
 	public int getmEmployeeID() {
 		return mEmployeeID;
 	}
@@ -263,6 +273,14 @@ public class Order {
 	public float getReturnTotal() {
 		// TODO Auto-generated method stub
 		return mReturnTotal;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 	
 	

@@ -26,14 +26,15 @@ public interface IDataAccess {
 	public int getNextOrderId();
 	
 	public boolean checkCustomerById(int id);
-	public Map<Product, Integer> getOrderAndProducts(int mOrderID);
 	public String getCustomerNameById(int custID);
 	int getLoyaltyPointsById(int custID);
 	void addLoyaltyPoints(int custID, int points);
 	void setLoyaltyPoints(int custID, int points);
-	public int getQuantityByOrderAndProdId(int orderID, int prodID);
-	public float getPriceByOrderAndProdId(int orderID, int prodID);
 	public ArrayList<Item> getItemsByOrderID(int orderID);
 	public void removeItemsByOrderID(int orderID);
+	public ArrayList<CustomerReport> getCustomerReportList(int range);
+	public ArrayList<OrderReport> getOrderReportList(int range);
+	public ArrayList<ProductReport> getProductReportList(int range);
+	
 	
 }
