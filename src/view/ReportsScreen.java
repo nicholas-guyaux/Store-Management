@@ -30,8 +30,6 @@ public class ReportsScreen extends Screen {
 	private JButton mCancelButton;
 
 	private JList<OrderReport> mOrderList;
-	private JList<CustomerReport> mCustomerList;
-	private JList<ProductReport> mProductList;
 	
 	private JPanel mainPanel = new JPanel();
 
@@ -60,20 +58,10 @@ public class ReportsScreen extends Screen {
 		listPanel.add(title);
 
 		mOrderList = new JList<>();
-		mCustomerList = new JList<>();
-		mProductList = new JList<>();
 		
 		JScrollPane scrolPane1 = new JScrollPane(mOrderList);
 		scrolPane1.setPreferredSize(new Dimension(300, 500));
 		listPanel.add(scrolPane1);		
-		
-		JScrollPane scrolPane2 = new JScrollPane(mCustomerList);
-		scrolPane2.setPreferredSize(new Dimension(300, 500));
-		listPanel.add(scrolPane2);	
-		
-		JScrollPane scrolPane3 = new JScrollPane(mProductList);
-		scrolPane3.setPreferredSize(new Dimension(300, 500));
-		listPanel.add(scrolPane3);	
 		
 
 		JPanel buttonPanel = new JPanel();
@@ -133,58 +121,56 @@ public class ReportsScreen extends Screen {
 	        dates[0]);
 
 	    System.out.printf("Date Range: %s.\n", dateRange);
+	    System.out.println(dateRange);
 	    return dateRange;
 	}
 	
 	private void productReport() {
 		// TODO Auto-generated method stub
-		if ("2 weeks".equals(askForDate())) {
+		String range = askForDate();
+		if ("2 weeks".equals(range)) {
 			removePanel(mainPanel);
-			new ProductReportScreen(mMainFrame,14);
-		} else if ("1 month".equals(askForDate())) {
+			
+			new ProductReportScreen(mMainFrame, -14);
+		} else if ("1 month".equals(range)) {
 			removePanel(mainPanel);
-			new ProductReportScreen(mMainFrame,30);
-		} else if ("Quarter".equals(askForDate())) {
+			new ProductReportScreen(mMainFrame, -30);
+		} else if ("Quarter".equals(range)) {
 			removePanel(mainPanel);
-			new ProductReportScreen(mMainFrame,90);
+			new ProductReportScreen(mMainFrame, -90);
 		}
 	}
 
 	private void orderReport() {
 		// TODO Auto-generated method stub
-		if ("2 weeks".equals(askForDate())) {
+		String range = askForDate();
+		if ("2 weeks".equals(range)) {
 			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame,14);
-		} else if ("1 month".equals(askForDate())) {
+			new OrderReportScreen(mMainFrame, -14);
+		} else if ("1 month".equals(range)) {
 			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame,30);
-		} else if ("Quarter".equals(askForDate())) {
+			new OrderReportScreen(mMainFrame, -30);
+		} else if ("Quarter".equals(range)) {
 			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame,90);
+			new OrderReportScreen(mMainFrame, -90);
 		}
 	}
 
 	private void customerReport() {
 		// TODO Auto-generated method stub
-		if ("2 weeks".equals(askForDate())) {
+		String range = askForDate();
+		if ("2 weeks".equals(range)) {
 			removePanel(mainPanel);
-			new CustomerReportScreen(mMainFrame,14);
-		} else if ("1 month".equals(askForDate())) {
+			System.out.println("Customer 2 weeks");
+			new CustomerReportScreen(mMainFrame, -14);
+		} else if ("1 month".equals(range)) {
 			removePanel(mainPanel);
-			new CustomerReportScreen(mMainFrame,30);
-		} else if ("Quarter".equals(askForDate())) {
+			new CustomerReportScreen(mMainFrame, -30);
+		} else if ("Quarter".equals(range)) {
 			removePanel(mainPanel);
-			new CustomerReportScreen(mMainFrame,90);
+			new CustomerReportScreen(mMainFrame, -90);
 		}
-	
 	}
-
-
-
-	
-	
-	
-	
 	
 	/** cancels the current order and returns to the Main Screen for the current user */
 	private void CancelCheckout() {

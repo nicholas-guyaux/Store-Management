@@ -130,49 +130,53 @@ public class OrderReportScreen extends Screen {
 	        dates, 
 	        dates[0]);
 
-	    System.out.printf("Date Range: %s.\n", dateRange);
+	   // System.out.printf("Date Range: %s.\n", dateRange);
+	    System.out.println(dateRange);
 	    return dateRange;
 	}
 	
 	private void productReport() {
 		// TODO Auto-generated method stub
-		if ("2 weeks".equals(askForDate())) {
+		String range = askForDate();
+		if ("2 weeks".equals(range)) {
 			removePanel(mainPanel);
-			new ProductReportScreen(mMainFrame,14);
-		} else if ("1 month".equals(askForDate())) {
+			new ProductReportScreen(mMainFrame, -14);
+		} else if ("1 month".equals(range)) {
 			removePanel(mainPanel);
-			new ProductReportScreen(mMainFrame,30);
-		} else if ("Quarter".equals(askForDate())) {
+			new ProductReportScreen(mMainFrame, -30);
+		} else if ("Quarter".equals(range)) {
 			removePanel(mainPanel);
-			new ProductReportScreen(mMainFrame,90);
+			new ProductReportScreen(mMainFrame, -90);
 		}
 	}
 
 	private void orderReport() {
 		// TODO Auto-generated method stub
-		if ("2 weeks".equals(askForDate())) {
+		String range = askForDate();
+		if ("2 weeks".equals(range)) {
 			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame,14);
-		} else if ("1 month".equals(askForDate())) {
+			new OrderReportScreen(mMainFrame, -14);
+		} else if ("1 month".equals(range)) {
 			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame,30);
-		} else if ("Quarter".equals(askForDate())) {
+			new OrderReportScreen(mMainFrame, -30);
+		} else if ("Quarter".equals(range)) {
 			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame,90);
+			new OrderReportScreen(mMainFrame, -90);
 		}
 	}
 
 	private void customerReport() {
 		// TODO Auto-generated method stub
-		if ("2 weeks".equals(askForDate())) {
+		String range = askForDate();
+		if ("2 weeks".equals(range)) {
 			removePanel(mainPanel);
-			new CustomerReportScreen(mMainFrame,14);
-		} else if ("1 month".equals(askForDate())) {
+			new CustomerReportScreen(mMainFrame, -14);
+		} else if ("1 month".equals(range)) {
 			removePanel(mainPanel);
-			new CustomerReportScreen(mMainFrame,30);
-		} else if ("Quarter".equals(askForDate())) {
+			new CustomerReportScreen(mMainFrame, -30);
+		} else if ("Quarter".equals(range)) {
 			removePanel(mainPanel);
-			new CustomerReportScreen(mMainFrame,90);
+			new CustomerReportScreen(mMainFrame, -90);
 		}
 	}
 

@@ -21,7 +21,7 @@ public class CustomerReport {
 	
 	@Override
 	public String toString() {
-		return "Order:" + getOrderID() + "    Customer:" + Program.getInstance().getDataAccess().getCustomerNameById(getCustomerID()) + "    Total:" + getTotal() + "    OrderDate:" + getOrderDate() + "    Employee:" + Program.getInstance().getDataAccess().getEmployeeById(getEmployeeID()).getName();		
+		return "Order:" + getOrderID() + "   Customer:" + Program.getInstance().getDataAccess().getCustomerNameById(getCustomerID()) + "  Total:" + getTotal() + "   OrderDate:" + getOrderDate() + "    Employee:" + Program.getInstance().getDataAccess().getEmployeeById(getEmployeeID()).getName();		
 	}
 
 

@@ -17,10 +17,6 @@ import javax.swing.JScrollPane;
 
 import controller.Program;
 import model.CustomerReport;
-import model.Item;
-import model.OrderReport;
-import model.Product;
-import model.ProductReport;
 
 public class CustomerReportScreen extends Screen {
 
@@ -42,14 +38,13 @@ public class CustomerReportScreen extends Screen {
 		
 		createView();
 		
-		DefaultListModel<CustomerReport> CustomerListModel = new DefaultListModel<CustomerReport>();
-		for (CustomerReport customer : Program.getInstance().getDataAccess().getCustomerReportList(range)) {
-			CustomerListModel.addElement(customer);
-		}
-		mCustomerList.setModel(CustomerListModel);
+		updateScreen(range);
+		
+		
 
 		mMainFrame.pack();
 		mMainFrame.setVisible(true);
+		System.out.println("Customer 2 created");
 	}
 	
 	/** creates view */
@@ -67,6 +62,8 @@ public class CustomerReportScreen extends Screen {
 		listPanel.add(title);
 
 		mCustomerList = new JList<>();
+		
+		
 				
 		JScrollPane scrolPane1 = new JScrollPane(mCustomerList);
 		scrolPane1.setPreferredSize(new Dimension(300, 500));
@@ -136,13 +133,13 @@ public class CustomerReportScreen extends Screen {
 		// TODO Auto-generated method stub
 		if ("2 weeks".equals(askForDate())) {
 			removePanel(mainPanel);
-			new ProductReportScreen(mMainFrame,14);
+			new ProductReportScreen(mMainFrame, -14);
 		} else if ("1 month".equals(askForDate())) {
 			removePanel(mainPanel);
-			new ProductReportScreen(mMainFrame,30);
+			new ProductReportScreen(mMainFrame, -30);
 		} else if ("Quarter".equals(askForDate())) {
 			removePanel(mainPanel);
-			new ProductReportScreen(mMainFrame,90);
+			new ProductReportScreen(mMainFrame, -90);
 		}
 	}
 
@@ -150,13 +147,13 @@ public class CustomerReportScreen extends Screen {
 		// TODO Auto-generated method stub
 		if ("2 weeks".equals(askForDate())) {
 			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame,14);
+			new OrderReportScreen(mMainFrame, -14);
 		} else if ("1 month".equals(askForDate())) {
 			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame,30);
+			new OrderReportScreen(mMainFrame, -30);
 		} else if ("Quarter".equals(askForDate())) {
 			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame,90);
+			new OrderReportScreen(mMainFrame, -90);
 		}
 	}
 
@@ -164,18 +161,24 @@ public class CustomerReportScreen extends Screen {
 		// TODO Auto-generated method stub
 		if ("2 weeks".equals(askForDate())) {
 			removePanel(mainPanel);
-			new CustomerReportScreen(mMainFrame,14);
+			new CustomerReportScreen(mMainFrame, -14);
 		} else if ("1 month".equals(askForDate())) {
 			removePanel(mainPanel);
-			new CustomerReportScreen(mMainFrame,30);
+			new CustomerReportScreen(mMainFrame, -30);
 		} else if ("Quarter".equals(askForDate())) {
 			removePanel(mainPanel);
-			new CustomerReportScreen(mMainFrame,90);
+			new CustomerReportScreen(mMainFrame, -90);
 		}
 	}
 
 
-
+	private void updateScreen(int range){
+		DefaultListModel<CustomerReport> CustomerListModel = new DefaultListModel<CustomerReport>();
+		for (CustomerReport customer : Program.getInstance().getDataAccess().getCustomerReportList(range)) {
+			CustomerListModel.addElement(customer);
+		}
+		mCustomerList.setModel(CustomerListModel);
+	}
 	
 	
 	

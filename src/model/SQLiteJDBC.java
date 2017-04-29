@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.apache.poi.ss.usermodel.Cell;
@@ -779,7 +780,7 @@ public class SQLiteJDBC implements IDataAccess {
 		float total;
 		String date;
 		int employID;
-		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + orderID + " AND " + new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + getBackDate(range) + " AND " + getBackDate(-1);
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
@@ -813,7 +814,7 @@ public class SQLiteJDBC implements IDataAccess {
 		float total;
 		String date;
 		int employID;
-		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + orderID + " AND " + new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + getBackDate(range) + " AND " + getBackDate(-1);
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
@@ -844,7 +845,7 @@ public class SQLiteJDBC implements IDataAccess {
 		float total;
 		String date;
 		int employID;
-		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + orderID + " AND " + new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + getBackDate(range) + " AND " + getBackDate(-1);
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
@@ -867,6 +868,13 @@ public class SQLiteJDBC implements IDataAccess {
 		return productList;
 	}
 		
+	public String getBackDate(int range) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.add(Calendar.DATE, range);
 	
+		return sdf.format(c.getTime());
+	}
 
 }

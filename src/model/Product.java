@@ -58,21 +58,6 @@ public class Product {
 	}
 
 	
-	
-	@Override
-	public boolean equals(Object other) {
-		if(other instanceof Product){
-			Product otherProduct = (Product) other;
-			return otherProduct.mId == mId;
-		}else{
-			return false;
-		}
-	}
-	
-	@Override
-	public int hashCode() {
-		return new Integer(mId).hashCode();
-	}
 	@Override
 	public String toString() {
 		return "ID:" + mId + "    " + getName() + "    Price:" + getUnitPrice() + "    Quantity:" + mQuantity + "    Discount:" + mDiscount + "%";
