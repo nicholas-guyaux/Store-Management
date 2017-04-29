@@ -199,33 +199,31 @@ public class Order {
 	}
 	
 	public void returnProduct(int product, int quantity){
-		int pos = getProdPosition(mItemList, productID);
+		int pos = getProdPosition(mReturnList, productID);
 		int q;
 		if(pos<0) {
 			q = quantity;
+			mReturnList.add(new Item(mOrderID, product, quantity, mItemList.get(getProdPosition(mItemList, product)).getmPrice()));
 		} else {
-			q = mItemList.get(pos).getQuantity() + quantity;
+			q = mReturnList.get(pos).getQuantity();
+			mReturnList.get(pos).setQuantity(quantity + q);
 		}
-		mItemList.get(pos).setQuantity(q);
 	
-		mReturnTotal = mReturnTotal + mItemList.get(pos).getmPrice() * q;
+		mReturnTotal = mReturnTotal + mReturnList.get(getProdPosition(mReturnList, productID)).getmPrice() * q;
 	
 	}
 	
-	public void editReturn(Product product, int quantity) {
-		Integer q = mReturnList.get(product);
-		if (q != null) {
-			mReturnList.put(product, quantity);
-			mReturnTotal = mReturnTotal - product.getUnitPrice() * (q - quantity);
-		}
+	public void editReturn(int productID, int quantity) {
+		int pos = getProdPosition(mReturnList, productID);
+		int q = mReturnList.get(pos).getQuantity();
+		mReturnList.get(pos).setQuantity(quantity);
+		mReturnTotal = mReturnTotal - mReturnList.get(pos).getmPrice() * (q - quantity);
 	}
 
-	public void removeReturn(Product product) {
-		Integer q = mReturnList.get(product);
-		if (q != null) {
-			mReturnList.remove(product);
-			mReturnTotal = mReturnTotal - product.getUnitPrice() * q;
-		}
+	public void removeReturn(int productID) {
+		int pos = getProdPosition(mReturnList, productID);
+		mReturnTotal = mReturnTotal - mReturnList.get(pos).getmPrice()* mReturnList.get(pos).getQuantity();
+		mReturnList.remove(pos);
 	}
 	
 	public void saveReturn(){

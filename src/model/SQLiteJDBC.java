@@ -31,6 +31,8 @@ public class SQLiteJDBC implements IDataAccess {
 
 	public Connection c = null;
 	
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	
     public Statement stmt = null;
     
 	Employee currentUser = null;

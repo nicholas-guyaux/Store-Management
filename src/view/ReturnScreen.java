@@ -282,11 +282,11 @@ public class ReturnScreen extends Screen {
 			if(q < 0)
 				q *= -1;
 			Item selected = mItemList.getSelectedValue();
-			if(q > mOrder.getQuantityOfProduct(selected.getProduct()) - selected.getQuantity()){
+			if(q > mOrder.getQuantityOfProduct(selected.getProductID()) - selected.getQuantity()){
 				JOptionPane.showMessageDialog(mMainFrame, "Cannot return a quantity more than the items that were bought");
 				return;
 			}
-			mOrder.editReturn(selected.getProduct(), q);
+			mOrder.editReturn(selected.getProductID(), q);
 			updateOrder();
 		}
 	}
@@ -296,14 +296,14 @@ public class ReturnScreen extends Screen {
 		int n = JOptionPane.showConfirmDialog(mMainFrame, "Are you sure?", "Remove item confirmation", JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
 			Item selected = mItemList.getSelectedValue();
-			mOrder.removeReturn(selected.getProduct());
+			mOrder.removeReturn(selected.getProductID());
 			updateOrder();
 		}
 	}
 	
 	private void ReturnItem(){
 		Item selected = mItemList.getSelectedValue();
-		mOrder.returnProduct(selected.getProduct(), mOrder.getQuantityOfProduct(selected.getProduct()), mOrder.getCustomerID());
+		mOrder.returnProduct(selected.getProductID(), mOrder.getQuantityOfProduct(selected.getProductID()), mOrder.getCustomerID());
 		updateOrder();
 	}
 	
