@@ -526,7 +526,7 @@ public class SQLiteJDBC implements IDataAccess {
 
 	@Override
 	public Order getOrderById(int id) {
-		String query = "SELECT * FROM Orders WHERE ID = ?";
+		String query = "SELECT * FROM Orders WHERE OrderID = ?";
 		Order temp = null;
 		PreparedStatement preparedStatement;
 		try {

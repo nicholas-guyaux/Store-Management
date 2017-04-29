@@ -265,8 +265,11 @@ public class ReturnScreen extends Screen {
 	/** updates view for any changes that was made */
 	private void updateOrder() {
 		DefaultListModel<Item> itemListModel = new DefaultListModel<Item>();
-		for (Item item : mOrder.getReturnList()) {
+		for (Item item : mOrder.getItemList()) {
 			itemListModel.addElement(item);
+		}
+		for (Item returnItem : mOrder.getReturnList()) {
+			itemListModel.addElement(returnItem);
 		}
 		mItemList.setModel(itemListModel);
 		mSubTotalLabel.setText("$" + String.format("%.2f", mOrder.getTotal()));
@@ -310,9 +313,9 @@ public class ReturnScreen extends Screen {
 	/** Adds a quantity of an item to the checkout */
 	private void returnProduct() {
 		int p = askForProductId();
-		if (p != null) {
-			int q = mOrder.getQuantityOfProduct(p);
-			if(q == 0){
+		if (p != 0) {
+			int q = mOrder.getProdPosition(mOrder.getmItemList(), p);
+			if(q <= 0){
 				JOptionPane.showMessageDialog(mMainFrame, "can only return products that are left in the current order");
 				return;
 			}

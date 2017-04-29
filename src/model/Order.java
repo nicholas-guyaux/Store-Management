@@ -51,6 +51,7 @@ public class Order {
 		mReturnTotal = 0;
 		//mItemsList = Program.getInstance().getDataAccess().getOrderAndProducts(mOrderID);
 		setmItemList(Program.getInstance().getDataAccess().getItemsByOrderID(mOrderID));
+		mReturnList = new ArrayList<Item>();
 	}
 
 
@@ -171,8 +172,6 @@ public class Order {
 
 	public int getQuantityOfProduct(int productID){
 		int pos1 = getProdPosition(mItemList, productID);
-		if(pos1 < 0)
-			return 0;
 		int pos2 = getProdPosition(mReturnList, productID);
 		if(pos2 < 0)
 			return mItemList.get(pos1).getQuantity();
@@ -229,16 +228,23 @@ public class Order {
 	}
 	
 	public void saveReturn(){
-		for (Entry<Product, Integer> entry : mReturnList.entrySet()) {
-			Product p = entry.getKey();
-			Integer q = entry.getValue();
-			if(q == mItemsList.get(p))
-				removeItem(p);
-			else
-				editItem(p, mItemsList.get(p) - q);
+		for (int i =0; i< mReturnList.size(); i++) {
+			int prodID = mReturnList.get(i).getProductId();
+			int quant = mReturnList.get(i).getQuantity();
+			int pos = getProdPosition(mItemList, prodID);
+			int orderQuant = mItemList.get(pos).getQuantity();
+			orderQuant -= quant;
+			if(orderQuant == 0) {
+				mItemList.remove(pos);
+			} else {
+				mItemList.get(pos).setQuantity(orderQuant);
+			}
+			Program.getInstance().getDataAccess().removeItemsByOrderID(mOrderID);
+			Program.getInstance().getDataAccess().SaveOrder(this);
+			
+			mReturnTotal = 0;
 		}
-		mReturnList = new HashMap<Product, Integer>();
-		mReturnTotal = 0;
+		
 	}
 
 	public ArrayList<Item> getmItemList() {
