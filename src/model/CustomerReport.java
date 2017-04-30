@@ -16,7 +16,7 @@ public class CustomerReport {
 	
 	@Override
 	public String toString() {
-		return getOrderDate() + "   CustomerID: " + getCustomerID() + "  MoneySpent:" + getMoneySpent();		
+		return getOrderDate() + "   CustomerID: " + getCustomerID() + "   MoneySpent: $" + String.format("%.2f", getMoneySpent());		
 	}
 
 
