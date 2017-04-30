@@ -25,7 +25,6 @@ public class CustomerReportScreen extends Screen {
 	// View
 	private JButton mProductButton;
 	private JButton mCustomerButton;
-	private JButton mOrderButton;
 	private JButton mCancelButton;
 
 	private JList<CustomerReport> mCustomerList;
@@ -117,13 +116,14 @@ public class CustomerReportScreen extends Screen {
 	
 	private void productReport() {
 		// TODO Auto-generated method stub
-		if ("2 weeks".equals(askForDate())) {
+		String range = askForDate();
+		if ("2 weeks".equals(range)) {
 			removePanel(mainPanel);
 			new ProductReportScreen(mMainFrame, -14);
-		} else if ("1 month".equals(askForDate())) {
+		} else if ("1 month".equals(range)) {
 			removePanel(mainPanel);
 			new ProductReportScreen(mMainFrame, -30);
-		} else if ("Quarter".equals(askForDate())) {
+		} else if ("Quarter".equals(range)) {
 			removePanel(mainPanel);
 			new ProductReportScreen(mMainFrame, -90);
 		}
@@ -132,13 +132,14 @@ public class CustomerReportScreen extends Screen {
 
 	private void customerReport() {
 		// TODO Auto-generated method stub
-		if ("2 weeks".equals(askForDate())) {
+		String range = askForDate();
+		if ("2 weeks".equals(range)) {
 			removePanel(mainPanel);
 			new CustomerReportScreen(mMainFrame, -14);
-		} else if ("1 month".equals(askForDate())) {
+		} else if ("1 month".equals(range)) {
 			removePanel(mainPanel);
 			new CustomerReportScreen(mMainFrame, -30);
-		} else if ("Quarter".equals(askForDate())) {
+		} else if ("Quarter".equals(range)) {
 			removePanel(mainPanel);
 			new CustomerReportScreen(mMainFrame, -90);
 		}
