@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -780,7 +781,7 @@ public class SQLiteJDBC implements IDataAccess {
 		float total;
 		String date;
 		int employID;
-		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + getBackDate(range) + " AND " + getBackDate(-1);
+		String query = "SELECT * FROM Orders WHERE DATE(OrderDate) BETWEEN " + getBackDate(range) + " AND " + getBackDate(-1);
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
@@ -845,7 +846,7 @@ public class SQLiteJDBC implements IDataAccess {
 		float total;
 		String date;
 		int employID;
-		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + getBackDate(range) + " AND " + getBackDate(-1);
+		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + getBackDate(range) + " AND " + getBackDate(0);
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
@@ -869,12 +870,12 @@ public class SQLiteJDBC implements IDataAccess {
 	}
 		
 	public String getBackDate(int range) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar c = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
+		Calendar c = new GregorianCalendar();
 		c.setTime(new Date());
 		c.add(Calendar.DATE, range);
-	
-		return sdf.format(c.getTime());
+		String retDate = sdf.format(c.getTime());
+		return retDate;
 	}
 
 }

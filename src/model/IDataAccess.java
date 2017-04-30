@@ -35,6 +35,7 @@ public interface IDataAccess {
 	public ArrayList<CustomerReport> getCustomerReportList(int range);
 	public ArrayList<OrderReport> getOrderReportList(int range);
 	public ArrayList<ProductReport> getProductReportList(int range);
+	public String getBackDate(int i);
 	
 	
 }

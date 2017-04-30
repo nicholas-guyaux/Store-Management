@@ -34,7 +34,8 @@ public class Order {
 		mOrderID = id;
 		mCustomerID = custID;
 		mTotal = total;
-		date = new SimpleDateFormat("yyyy-MM-dd").format(currentDate());
+		date = Program.getInstance().getDataAccess().getBackDate(0);
+		
 		mEmployeeID = Program.getInstance().getDataAccess().getCurrentUser().getId();
 		
 		//mItemsList = new HashMap<Product, Integer>();
@@ -69,11 +70,7 @@ public class Order {
 		return mEmployeeID;
 	}
 	
-	/*
-	public Map<Product, Integer> getMItemsList() {
-		return mItemsList;
-	}
-*/
+
 
 	public void setmEmployeeID(int mEmployeeID) {
 		this.mEmployeeID = mEmployeeID;
@@ -100,17 +97,7 @@ public class Order {
 	}
 
 
-	/** makes an copy of copy */
-//	public Order(Order copy){
-//		this(copy.getId());
-//		for (Item i : copy.getReturnList()){
-//			if(i.getQuantity() > 0)
-//				addItem(i.getProduct(), i.getQuantity());
-//			else
-//				returnProduct(i.getProduct(),i.getQuantity());
-//		}
-//		
-//	}
+
 
 	/** adds a product to the order */
 	public void addItem(int productID, int quantity, float price) {
@@ -155,17 +142,7 @@ public class Order {
 		}
 	}
 
-	/*
-	public ArrayList<Item> getOrderList() {
-		ArrayList<Item> itemList = new LinkedList<>();
-		for (Entry<Product, Integer> entry : mItemsList.entrySet()) {
-			Product p = entry.getKey();
-			Integer q = entry.getValue();
-			itemList.add(new Item(p, q));
-		}
-		return itemList;
-	}
-	*/
+
 	
 	public void setTotal(float total) {
 		mTotal = total;
