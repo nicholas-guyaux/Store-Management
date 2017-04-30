@@ -87,6 +87,7 @@ public class InventoryScreen extends Screen {
 				}
 			}
 		});
+		
 		JScrollPane scrolPane = new JScrollPane(mProductList);
 		scrolPane.setPreferredSize(new Dimension(300, 500));
 		listPanel.add(scrolPane);

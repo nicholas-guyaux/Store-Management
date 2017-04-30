@@ -40,11 +40,8 @@ public class CustomerReportScreen extends Screen {
 		
 		updateScreen(range);
 		
-		
-
 		mMainFrame.pack();
 		mMainFrame.setVisible(true);
-		System.out.println("Customer 2 created");
 	}
 	
 	/** creates view */
@@ -62,9 +59,7 @@ public class CustomerReportScreen extends Screen {
 		listPanel.add(title);
 
 		mCustomerList = new JList<>();
-		
-		
-				
+						
 		JScrollPane scrolPane1 = new JScrollPane(mCustomerList);
 		scrolPane1.setPreferredSize(new Dimension(300, 500));
 		listPanel.add(scrolPane1);	
@@ -93,16 +88,7 @@ public class CustomerReportScreen extends Screen {
 		});
 		buttonPanel.add(mProductButton);
 
-		mOrderButton = new JButton("Order Report");
-		mOrderButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mOrderButton.getMinimumSize().height));
-		mOrderButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				orderReport();
-			}
-		});
-		buttonPanel.add(mOrderButton);
-
+	
 		mCancelButton = new JButton("Cancel");
 		mCancelButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mCancelButton.getMinimumSize().height));
 		mCancelButton.addActionListener(new ActionListener() {
@@ -143,19 +129,6 @@ public class CustomerReportScreen extends Screen {
 		}
 	}
 
-	private void orderReport() {
-		// TODO Auto-generated method stub
-		if ("2 weeks".equals(askForDate())) {
-			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame, -14);
-		} else if ("1 month".equals(askForDate())) {
-			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame, -30);
-		} else if ("Quarter".equals(askForDate())) {
-			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame, -90);
-		}
-	}
 
 	private void customerReport() {
 		// TODO Auto-generated method stub

@@ -18,7 +18,6 @@ import javax.swing.JScrollPane;
 import controller.Program;
 import model.CustomerReport;
 import model.Item;
-import model.OrderReport;
 import model.Product;
 import model.ProductReport;
 
@@ -26,10 +25,9 @@ public class ReportsScreen extends Screen {
 	// View
 	private JButton mProductButton;
 	private JButton mCustomerButton;
-	private JButton mOrderButton;
 	private JButton mCancelButton;
 
-	private JList<OrderReport> mOrderList;
+	private JList<CustomerReport> mOrderList;
 	
 	private JPanel mainPanel = new JPanel();
 
@@ -88,15 +86,7 @@ public class ReportsScreen extends Screen {
 		});
 		buttonPanel.add(mProductButton);
 
-		mOrderButton = new JButton("Order Report");
-		mOrderButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mOrderButton.getMinimumSize().height));
-		mOrderButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				orderReport();
-			}
-		});
-		buttonPanel.add(mOrderButton);
+		
 
 		mCancelButton = new JButton("Cancel");
 		mCancelButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, mCancelButton.getMinimumSize().height));
@@ -141,20 +131,7 @@ public class ReportsScreen extends Screen {
 		}
 	}
 
-	private void orderReport() {
-		// TODO Auto-generated method stub
-		String range = askForDate();
-		if ("2 weeks".equals(range)) {
-			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame, -14);
-		} else if ("1 month".equals(range)) {
-			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame, -30);
-		} else if ("Quarter".equals(range)) {
-			removePanel(mainPanel);
-			new OrderReportScreen(mMainFrame, -90);
-		}
-	}
+
 
 	private void customerReport() {
 		// TODO Auto-generated method stub

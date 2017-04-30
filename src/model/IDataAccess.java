@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public interface IDataAccess {
 	public Product getProductById(int id);
@@ -33,7 +32,6 @@ public interface IDataAccess {
 	public ArrayList<Item> getItemsByOrderID(int orderID);
 	public void removeItemsByOrderID(int orderID);
 	public ArrayList<CustomerReport> getCustomerReportList(int range);
-	public ArrayList<OrderReport> getOrderReportList(int range);
 	public ArrayList<ProductReport> getProductReportList(int range);
 	public String getBackDate(int i);
 	

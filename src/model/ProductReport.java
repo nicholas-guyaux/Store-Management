@@ -3,74 +3,51 @@ package model;
 import controller.Program;
 
 public class ProductReport {
-	private int mOrderID;
-	private int mCustomerID;
-	private float mTotal;
-	private String mOrderDate;
-	private int mEmployeeID;
+	private String mDate;
+	private int mProductID;
+	private int quantitySold;
 	
 	
-	public ProductReport(int orderId, int custID, float total, String orderDate, int employID) {
-		setOrderID(orderId);
-		setCustomerID(custID);
-		setTotal(total);
-		setOrderDate(orderDate);
-		setEmployeeID(employID);
+	public ProductReport(String date, int prodID, int quantSold) {
+		setDate(date);
+		setProductID(prodID);
+		setQuantSold(quantSold);
 	}
 
 	
 	@Override
 	public String toString() {
-		return "Order:" + getOrderID() + "    Customer:" + Program.getInstance().getDataAccess().getCustomerNameById(getCustomerID()) + "    Total:" + getTotal() + "    OrderDate:" + getOrderDate() + "    Employee:" + Program.getInstance().getDataAccess().getEmployeeById(getEmployeeID()).getName();		
+		return getDate() + "    ProductID: " + getProductID() + "    QuantitySold: " + getQuantSold();		
 	}
 
 
-	public int getOrderID() {
-		return mOrderID;
+
+	public String getDate() {
+		return mDate;
 	}
 
 
-	public void setOrderID(int mOrderID) {
-		this.mOrderID = mOrderID;
+	public void setDate(String mDate) {
+		this.mDate = mDate;
 	}
 
 
-	public int getCustomerID() {
-		return mCustomerID;
+	public int getProductID() {
+		return mProductID;
 	}
 
 
-	public void setCustomerID(int mCustomerID) {
-		this.mCustomerID = mCustomerID;
+	public void setProductID(int mProductID) {
+		this.mProductID = mProductID;
 	}
 
 
-	public float getTotal() {
-		return mTotal;
+	public int getQuantSold() {
+		return quantitySold;
 	}
 
 
-	public void setTotal(float mTotal) {
-		this.mTotal = mTotal;
-	}
-
-
-	public String getOrderDate() {
-		return mOrderDate;
-	}
-
-
-	public void setOrderDate(String mOrderDate) {
-		this.mOrderDate = mOrderDate;
-	}
-
-
-	public int getEmployeeID() {
-		return mEmployeeID;
-	}
-
-
-	public void setEmployeeID(int mEmployeeID) {
-		this.mEmployeeID = mEmployeeID;
+	public void setQuantSold(int quantitySold) {
+		this.quantitySold = quantitySold;
 	}
 }

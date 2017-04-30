@@ -26,9 +26,7 @@ import java.util.Iterator;
 public class SQLiteJDBC implements IDataAccess {
 
 	public Connection c = null;
-	
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
+		
     public Statement stmt = null;
     
 	Employee currentUser = null;
@@ -180,6 +178,19 @@ public class SQLiteJDBC implements IDataAccess {
 	                   		"`EmployeeID`	INTEGER NOT NULL)"; 
 			stmt.execute(sql);
 			stmt.close();
+			
+			stmt = c.createStatement();
+			sql = "CREATE TABLE IF NOT EXISTS PurchaseHistory " +
+	                   "(	date string primary key, productId integer, quantitySold integer )";
+			stmt.execute(sql);
+			stmt.close();
+			
+			stmt = c.createStatement();
+			sql = "CREATE TABLE IF NOT EXISTS CustomerHistory " +
+	                   "(	date string primary key, customerId integer, moneySpent double )";
+			stmt.execute(sql);
+			stmt.close();
+			
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -512,6 +523,29 @@ public class SQLiteJDBC implements IDataAccess {
 				preparedStatement.executeUpdate();
 				System.out.println("Insert success record:" + (i + 1));
 			}
+			
+			query = "insert or replace into PurchaseHistory (date, productId, quantitySold) VALUES(?, ?, ?)";
+			preparedStatement = c.prepareStatement(query);
+			for(int i =0; i< o.getItemList().size(); i++) {
+				preparedStatement.setString(1,  o.getDate());
+				preparedStatement.setInt(2,  o.getItemList().get(i).getProductID());
+				preparedStatement.setInt(3,  o.getItemList().get(i).getQuantity());
+				
+				preparedStatement.executeUpdate();
+				System.out.println("Insert PurchaseHistory record:" + (i + 1));
+			}
+			
+			query = "insert or replace into CustomerHistory (date, customerId, moneySpent) VALUES(?, ?, ?)";
+			preparedStatement = c.prepareStatement(query);
+			for(int i =0; i< o.getItemList().size(); i++) {
+				preparedStatement.setString(1,  o.getDate());
+				preparedStatement.setInt(2,  o.getCustomerID());
+				preparedStatement.setDouble(3,  o.getTotal());
+				
+				preparedStatement.executeUpdate();
+				System.out.println("Insert CustomerHistory record:" + (i + 1));
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -776,24 +810,20 @@ public class SQLiteJDBC implements IDataAccess {
 	@Override
 	public ArrayList<CustomerReport> getCustomerReportList(int range) {
 		ArrayList<CustomerReport> customerList = new ArrayList<CustomerReport> ();
-		int orderID;
+		double moneySpent;
 		int custID;
-		float total;
 		String date;
-		int employID;
-		String query = "SELECT * FROM Orders WHERE DATE(OrderDate) BETWEEN " + getBackDate(range) + " AND " + getBackDate(-1);
+		String query = "SELECT * FROM CustomerHistory WHERE date BETWEEN '" + getBackDate(range) + "' AND '" + getBackDate(0) + "'";
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
 			ResultSet rs = preparedStatement.executeQuery();
 			while ( rs.next() ) {
-				orderID = rs.getInt("OrderID");
-				custID = rs.getInt("CustomerID");
-				total = rs.getFloat("TotalPrice");
-				date = rs.getString("OrderDate");
-				employID = rs.getInt("EmployeeID");
+				date = rs.getString("date");
+				custID = rs.getInt("customerID");
+				moneySpent = rs.getFloat("moneySpent");
 				if(custID != 0) {
-					customerList.add(new CustomerReport(orderID, custID, total, date, employID));
+					customerList.add(new CustomerReport(date, custID, moneySpent));
 				}
 				
 		    }
@@ -807,57 +837,25 @@ public class SQLiteJDBC implements IDataAccess {
 		return customerList;
 	}
 
-	@Override
-	public ArrayList<OrderReport> getOrderReportList(int range) {
-		ArrayList<OrderReport> orderList = new ArrayList<OrderReport> ();
-		int orderID;
-		int custID;
-		float total;
-		String date;
-		int employID;
-		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + getBackDate(range) + " AND " + getBackDate(-1);
-		PreparedStatement preparedStatement;
-		try {
-			preparedStatement = c.prepareStatement(query);
-			ResultSet rs = preparedStatement.executeQuery();
-			while ( rs.next() ) {
-				orderID = rs.getInt("OrderID");
-				custID = rs.getInt("CustomerID");
-				total = rs.getFloat("TotalPrice");
-				date = rs.getString("OrderDate");
-				employID = rs.getInt("EmployeeID");
-				orderList.add(new OrderReport(orderID, custID, total, date, employID));
-		    }
-			
-			rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-		return orderList;
-	}
+
 
 	@Override
 	public ArrayList<ProductReport> getProductReportList(int range) {
 		ArrayList<ProductReport> productList = new ArrayList<ProductReport> ();
-		int orderID;
-		int custID;
-		float total;
 		String date;
-		int employID;
-		String query = "SELECT * FROM Orders WHERE OrderDate BETWEEN " + getBackDate(range) + " AND " + getBackDate(0);
+		int prodID;
+		int quant;
+		String query = "SELECT * FROM PurchaseHistory WHERE date BETWEEN '" + getBackDate(range) + "' AND '" + getBackDate(0) + "'";
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = c.prepareStatement(query);
 			ResultSet rs = preparedStatement.executeQuery();
 			while ( rs.next() ) {
-				orderID = rs.getInt("OrderID");
-				custID = rs.getInt("CustomerID");
-				total = rs.getFloat("TotalPrice");
-				date = rs.getString("OrderDate");
-				employID = rs.getInt("EmployeeID");
-				productList.add(new ProductReport(orderID, custID, total, date, employID));
+				System.out.println("Getting purchasehistor");
+				date = rs.getString("date");
+				prodID = rs.getInt("productId");
+				quant = rs.getInt("quantitySold");
+				productList.add(new ProductReport(date, prodID, quant));
 		    }
 			
 			rs.close();
@@ -870,7 +868,7 @@ public class SQLiteJDBC implements IDataAccess {
 	}
 		
 	public String getBackDate(int range) {
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar c = new GregorianCalendar();
 		c.setTime(new Date());
 		c.add(Calendar.DATE, range);
