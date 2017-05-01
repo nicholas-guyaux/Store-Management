@@ -2,17 +2,9 @@ package controller;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
 
 import model.IDataAccess;
-//import model.MockDataAccess;
-import model.Product;
 import model.SQLiteJDBC;
 import view.LoginScreen;
 

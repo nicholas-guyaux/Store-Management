@@ -1,7 +1,5 @@
 package model;
 
-import controller.Program;
-
 public class ProductReport {
 	private String mDate;
 	private int mProductID;

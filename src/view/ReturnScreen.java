@@ -22,10 +22,8 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import controller.Program;
 import model.Item;
 import model.Order;
-import model.Product;
 
 public class ReturnScreen extends Screen {
 	// View
