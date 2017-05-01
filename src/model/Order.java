@@ -5,8 +5,6 @@ import java.util.Date;
 import controller.Program;
 
 public class Order {
-	//private Map<Product, Integer> mItemsList;
-	//private Map<Product, Integer> mReturnList;
 	private ArrayList<Item> mItemList;
 	private ArrayList<Item> mReturnList;
 
@@ -30,8 +28,6 @@ public class Order {
 		
 		mEmployeeID = Program.getInstance().getDataAccess().getCurrentUser().getId();
 		
-		//mItemsList = new HashMap<Product, Integer>();
-		//mReturnList = new HashMap<Product, Integer>();
 		setmItemList(new ArrayList<Item>());
 		mReturnList = new ArrayList<Item>();
 		
@@ -47,7 +43,6 @@ public class Order {
 		this.date = o.getDate();
 		this.mEmployeeID = o.getmEmployeeID();
 		mReturnTotal = 0;
-		//mItemsList = Program.getInstance().getDataAccess().getOrderAndProducts(mOrderID);
 		setmItemList(Program.getInstance().getDataAccess().getItemsByOrderID(mOrderID));
 		mReturnList = new ArrayList<Item>();
 	}
@@ -161,22 +156,7 @@ public class Order {
 		return mItemList.get(pos1).getQuantity() - mReturnList.get(pos2).getQuantity();
 	}
 	
-/*	
-	public List<Item> getReturnList(){
-		List<Item> itemList = new LinkedList<>();
-		for (Entry<Product, Integer> entry : mItemsList.entrySet()) {
-			Product p = entry.getKey();
-			Integer q = entry.getValue();
-			itemList.add(new Item(p, q));
-		}
-		for (Entry<Product, Integer> entry : mReturnList.entrySet()) {
-			Product p = entry.getKey();
-			Integer q = entry.getValue();
-			itemList.add(new Item(p, -q));
-		}
-		return itemList;
-	}
-	*/
+
 	
 	public double getReturnPrice(){
 		return (mTotal*1.06) - ((mTotal - mReturnTotal) * 1.06);

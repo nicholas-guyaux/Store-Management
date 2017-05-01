@@ -54,13 +54,13 @@ public class CheckoutScreen extends Screen {
 
 		if (order == null) {
 			int id = Program.getInstance().getDataAccess().getNextOrderId();
-			int custID = 0;
+			customerID = 0;
 			String loyalty = JOptionPane.showInputDialog(mMainFrame, "Enter the Loyalty ID of the customer", "Loyalty ID", JOptionPane.PLAIN_MESSAGE);
 			if(loyalty != null  && loyalty.compareTo("") != 0 && Program.getInstance().getDataAccess().checkCustomerById(Integer.parseInt(loyalty))) {
-				custID = Integer.parseInt(loyalty);
-				Program.getInstance().getDataAccess().getCustomerNameById(custID);
+				customerID = Integer.parseInt(loyalty);
+				System.out.println(customerID);
 			}
-			mOrder = new Order(id, custID, 0);
+			mOrder = new Order(id, customerID, 0);
 		} else {
 			mOrder = order;
 			updateOrder();

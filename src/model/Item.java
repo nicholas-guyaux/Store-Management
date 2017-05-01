@@ -34,7 +34,7 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return getProductID() + "   " + Program.getInstance().getDataAccess().getProductById(mProductID).getName() + "        " + getmPrice() + "        " + getQuantity() + "        " + String.format("%.2f", getmPrice() * mQuantity);
+		return getProductID() + "   " + Program.getInstance().getDataAccess().getProductById(mProductID).getName() + "        " + String.format("%.2f", getmPrice()) + "        " + getQuantity() + "        " + String.format("%.2f", getmPrice() * mQuantity);
 	}
 
 	public float getmPrice() {
