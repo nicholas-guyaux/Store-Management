@@ -181,13 +181,13 @@ public class SQLiteJDBC implements IDataAccess {
 			
 			stmt = c.createStatement();
 			sql = "CREATE TABLE IF NOT EXISTS PurchaseHistory " +
-	                   "(	date string primary key, productId integer, quantitySold integer )";
+	                   "(	rowid integer primary key autoincrement, date string, productId integer, quantitySold integer )";
 			stmt.execute(sql);
 			stmt.close();
 			
 			stmt = c.createStatement();
 			sql = "CREATE TABLE IF NOT EXISTS CustomerHistory " +
-	                   "(	date string primary key, customerId integer, moneySpent double )";
+	                   "(	rowid integer primary key autoincrement, date string, customerId integer, moneySpent double )";
 			stmt.execute(sql);
 			stmt.close();
 			
@@ -823,7 +823,15 @@ public class SQLiteJDBC implements IDataAccess {
 				custID = rs.getInt("customerID");
 				moneySpent = rs.getFloat("moneySpent");
 				if(custID != 0) {
-					customerList.add(new CustomerReport(date, custID, moneySpent));
+					boolean found = false;
+					for(CustomerReport pr : customerList){
+						if(pr.getOrderDate().compareTo(date) == 0 && pr.getCustomerID() == custID){
+							found = true;
+							pr.setMoneySpent(pr.getMoneySpent() + moneySpent);
+						}
+					}
+					if(!found)
+						customerList.add(new CustomerReport(date, custID, moneySpent));
 				}
 				
 		    }
@@ -855,7 +863,15 @@ public class SQLiteJDBC implements IDataAccess {
 				date = rs.getString("date");
 				prodID = rs.getInt("productId");
 				quant = rs.getInt("quantitySold");
-				productList.add(new ProductReport(date, prodID, quant));
+				boolean found = false;
+				for(ProductReport pr : productList){
+					if(pr.getDate().compareTo(date) == 0 && pr.getProductID() == prodID){
+						found = true;
+						pr.setQuantSold(pr.getQuantSold() + quant);
+					}
+				}
+				if(!found)
+					productList.add(new ProductReport(date, prodID, quant));
 		    }
 			
 			rs.close();
